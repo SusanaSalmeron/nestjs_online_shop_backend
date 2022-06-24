@@ -1,10 +1,10 @@
 {
   "name": "online_shop_backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Online Shop backend",
+  "author": "Susana Salmeron",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -24,9 +24,17 @@
     "@nestjs/common": "8.4.7",
     "@nestjs/core": "8.4.7",
     "@nestjs/platform-express": "8.4.7",
+    "@nestjs/swagger": "5.2.1",
+    "@nestjs/config": "2.1.0",
+    "swagger-ui-express": "4.4.0",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
-    "rxjs": "7.5.5"
+    "rxjs": "7.5.5",
+    "lokijs": "1.5.12",
+    "bcrypt": "5.0.1",
+    "dayjs": "1.11.3",
+    "jsonwebtoken": "8.5.1",
+    "dotenv": "16.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "8.2.7",
