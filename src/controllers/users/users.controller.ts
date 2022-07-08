@@ -1,16 +1,17 @@
-import { Body, Controller, HttpStatus, Logger, Post, Res } from "@nestjs/common";
-import { UsersService } from "src/services/users.service";
+import { Body, Controller, HttpStatus, Logger, Post, Get, Res } from "@nestjs/common";
+import { UsersService } from "../../services/users.service";
 import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse } from "@nestjs/swagger";
-import { CreateUserDto } from "src/dto/createUserDto";
+import { CreateUserDto } from "../../dto/createUserDto";
 import * as bcrypt from 'bcrypt';
-import { TokenService } from "src/services/token.service";
+import { TokenService } from "../../services/token.service";
+import { SearchService } from "../../services/search.service";
 
 
 
 @Controller('users')
 export class UsersController {
     private readonly logger = new Logger(UsersController.name)
-    constructor(private usersService: UsersService, private tokenService: TokenService) { }
+    constructor(private usersService: UsersService, private tokenService: TokenService, private readonly searchService: SearchService) { }
 
     @Post('/login')
     @ApiBody({
@@ -45,7 +46,26 @@ export class UsersController {
             this.logger.error('Internal server error', err)
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).json('Internal Server Error ')
         }
-
     }
+
+    @Get("/search")
+    @ApiOkResponse({ description: 'Getting products successfully' })
+    @ApiNotFoundResponse({ description: 'No products' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async userSearch(@Res() response) {
+        try {
+            const products = await this.searchService.findAllBrandsAndNames()
+            if (products) {
+                this.logger.log('products getting successfully')
+                response.status(HttpStatus.OK).send(products)
+            } else {
+                this.logger.error('products not found')
+            }
+        } catch (err) {
+            this.logger.error('Internal Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Error')
+        }
+    }
+
 
 }

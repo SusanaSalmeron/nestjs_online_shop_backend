@@ -26,6 +26,7 @@
     "@nestjs/platform-express": "8.4.7",
     "@nestjs/swagger": "5.2.1",
     "@nestjs/config": "2.1.0",
+    "@nestjs/axios": "0.0.8",
     "swagger-ui-express": "4.4.0",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
@@ -34,7 +35,8 @@
     "bcrypt": "5.0.1",
     "dayjs": "1.11.3",
     "jsonwebtoken": "8.5.1",
-    "dotenv": "16.0.1"
+    "dotenv": "16.0.1",
+    "axios": "0.27.2"
   },
   "devDependencies": {
     "@nestjs/cli": "8.2.7",
