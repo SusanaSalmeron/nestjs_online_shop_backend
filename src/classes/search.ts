@@ -1,12 +1,11 @@
 export class Search {
-    id: number;
     name: string;
-    brand: string;
+    value: string;
 
 
-    constructor(id, name, brand) {
-        this.id = id;
+    constructor(name, value) {
+
         this.name = name;
-        this.brand = brand
+        this.value = value
     }
 }
