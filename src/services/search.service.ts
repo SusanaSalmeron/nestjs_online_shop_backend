@@ -35,6 +35,7 @@ export class SearchService {
     }
     private toProduct = (element) => {
         return new Product(
+            element.id.toString(),
             element.name.trim(),
             element.brand,
             element.price,
@@ -44,6 +45,7 @@ export class SearchService {
 
 
     async searchList(keyword): Promise<Product[]> {
+        console.log(keyword)
         const response = await this.httpService.axiosRef(this.baseUrl)
         const list = response.data.filter(el => this.filterByKeyword(el, keyword))
             .map(this.toProduct)

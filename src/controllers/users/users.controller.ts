@@ -5,7 +5,7 @@ import { CreateUserDto } from "../../dto/createUserDto";
 import * as bcrypt from 'bcrypt';
 import { TokenService } from "../../services/token.service";
 import { SearchService } from "../../services/search.service";
-import { Product } from "src/classes/product";
+import { Product } from "../../classes/product";
 
 
 
@@ -49,7 +49,7 @@ export class UsersController {
         }
     }
 
-    @Get("/search")
+    @Get('/search')
     @ApiOkResponse({ description: 'Getting products successfully' })
     @ApiNotFoundResponse({ description: 'No products' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
@@ -68,7 +68,7 @@ export class UsersController {
         }
     }
 
-    @Get("/search/list")
+    @Get('/search/:keyword')
     @ApiQuery({
         name: 'keyword',
         required: true

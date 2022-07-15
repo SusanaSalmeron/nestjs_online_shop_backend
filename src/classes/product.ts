@@ -1,14 +1,16 @@
 export class Product {
+    id: string
     name: string;
     brand: string;
     price: number;
-    image: string;
+    api_featured_image: string;
 
-    constructor(name, brand, price, image) {
+    constructor(id, name, brand, price, api_featured_image) {
+        this.id = id
         this.name = name;
         this.brand = brand;
         this.price = price;
-        this.image = image;
+        this.api_featured_image = api_featured_image;
     }
 
 }
