@@ -8,17 +8,41 @@ import {
     ProductCard
 } from "../../classes/productCard";
 
-@Controller('product')
+
+@Controller('products')
 export class ProductController {
     private readonly logger = new Logger(ProductController.name)
     constructor(private productService: ProductService) { }
 
-    @Get('/:id')
+    @Get('new')
     @ApiOkResponse({
-        description: 'find appointments successfully',
+        description: 'New Products finded successfully',
         type: ProductCard
     })
-    @ApiNotFoundResponse({ description: 'appointments not found' })
+    @ApiNotFoundResponse({ description: 'No new products' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async showNewProducts(@Res() response) {
+        try {
+            const newProducts = await this.productService.findNewProducts()
+            if (newProducts) {
+                this.logger.log('Products find successfully')
+                response.status(HttpStatus.OK).json(newProducts)
+            } else {
+                this.logger.error('No new products')
+                response.status(HttpStatus.NOT_FOUND).send('No new products to show')
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error')
+        }
+    }
+
+    @Get('/:id')
+    @ApiOkResponse({
+        description: 'find product successfully',
+        type: ProductCard
+    })
+    @ApiNotFoundResponse({ description: 'product not found' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async showProduct(@Param('id') id: string, @Res() response) {
         try {
@@ -28,10 +52,13 @@ export class ProductController {
                 response.status(HttpStatus.OK).json(product)
             } else {
                 this.logger.error(`Product does not exist with id ${id}`)
+                response.status(HttpStatus.NOT_FOUND).send('`Product does not exist with id ${id}`')
             }
         } catch (err) {
             this.logger.error('Internal Server Error', err)
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error')
         }
     }
+
+
 }

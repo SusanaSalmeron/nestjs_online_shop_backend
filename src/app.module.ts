@@ -11,10 +11,11 @@ import { HttpModule } from '@nestjs/axios';
 import { SearchService } from './services/search.service';
 import { ProductController } from './controllers/products/product.controller';
 import { ProductService } from './services/product.service';
+import { ShadowCopyService } from './services/shadowCopy.service';
 
 @Module({
   imports: [ConfigModule.forRoot(), DatabaseModule, UsersModule, HttpModule],
   controllers: [AppController, UsersController, ProductController],
-  providers: [AppService, UsersService, TokenService, SearchService, ProductService],
+  providers: [AppService, UsersService, TokenService, SearchService, ProductService, ShadowCopyService],
 })
 export class AppModule { }

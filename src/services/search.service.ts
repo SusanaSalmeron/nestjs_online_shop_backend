@@ -1,22 +1,37 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject, Logger } from "@nestjs/common";
 import { Search } from "src/classes/search";
 import { Product } from "src/classes/product";
+import * as loki from 'lokijs';
+import { ShadowCopyService } from "./shadowCopy.service";
 
 
 @Injectable()
 export class SearchService {
     private catalog = []
-    private baseUrl = 'https://makeup-api.herokuapp.com/api/v1/products.json'
-    constructor(private readonly httpService: HttpService) { }
+    private readonly logger = new Logger(SearchService.name)
+    private baseUrl = 'https://makeup-api.herokuapp.com/api/v1/product.json'
+    constructor(private readonly httpService: HttpService, @Inject('DATABASE_CONNECTION') private db: loki, private readonly shadowCopyService: ShadowCopyService) { }
 
     async findAllBrandsAndNames(): Promise<Search[]> {
         if (!this.catalog.length) {
-            const response = await this.httpService.axiosRef.get(this.baseUrl);
-            const list = response.data.flatMap(res => {
+            let response
+            try {
+                response = (await this.httpService.axiosRef.get(this.baseUrl)).data;
+            } catch (err) {
+                this.logger.warn('', err)
+                response = await this.shadowCopyService.getShadowCopy()
+            }
+            const newProductsTable = this.db.getCollection('newProducts')
+            const newProducts = newProductsTable.find(true)
+            const allBrandsAndNamesFromNewProducts = newProducts.flatMap(p => {
+                return [p.brand, p.name]
+            })
+            const list = response.flatMap(res => {
                 return [res.brand, res.name]
             })
-            const brandsAndNamesSet: Set<string> = new Set(list)
+            const newList = [...allBrandsAndNamesFromNewProducts, ...list]
+            const brandsAndNamesSet: Set<string> = new Set(newList)
             const brandsAndNamesList: Search[] = Array.from<string>(brandsAndNamesSet.values()).filter(el => {
                 return el !== null
             }).map(el => {
@@ -43,13 +58,22 @@ export class SearchService {
         )
     }
 
+    //TODO - not working properly
 
     async searchList(keyword): Promise<Product[]> {
-        console.log(keyword)
-        const response = await this.httpService.axiosRef(this.baseUrl)
-        const list = response.data.filter(el => this.filterByKeyword(el, keyword))
+        let response
+        try {
+            response = (await this.httpService.axiosRef(this.baseUrl)).data
+        } catch (err) {
+            this.logger.warn('', err)
+            response = await this.shadowCopyService.getShadowCopy()
+        }
+        const newProductsTable = this.db.getCollection('newProducts')
+        const newProducts = newProductsTable.find(true).filter(p => this.filterByKeyword(p, keyword)).map(this.toProduct)
+        const list = response.filter(el => this.filterByKeyword(el, keyword))
             .map(this.toProduct)
-        return list
+        const allProductsList = [...newProducts, ...list]
+        return allProductsList
     }
 }
 

@@ -1,0 +1,818 @@
+[
+    {
+        "id": 1049,
+        "brand": "Rare Beauty",
+        "name": "Soft Pinch",
+        "price": 20,
+        "description": "Create a pinch-perfect flush using this featherweight formula infused with long-lasting pigments that last all day. Available in matte or dewy finishes, this liquid blush blends beautifully to create soft, buildable color with a natural, second-skin finish.",
+        "category": "Liquid",
+        "product_type": "Blush",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2362085-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "#d84c44",
+                "colour_name": "Joy"
+            },
+            {
+                "hex_value": "#f07494",
+                "colour_name": "Happy"
+            },
+            {
+                "hex_value": "#e8447c",
+                "colour_name": "Lucky"
+            },
+            {
+                "hex_value": "#d02c44",
+                "colour_name": "Grateful"
+            },
+            {
+                "hex_value": "#c86494",
+                "colour_name": "Grace"
+            },
+            {
+                "hex_value": "#f08c84",
+                "colour_name": "Bliss"
+            },
+            {
+                "hex_value": "#801c54",
+                "colour_name": "Faith"
+            },
+            {
+                "hex_value": "#c8443c",
+                "colour_name": "Love"
+            },
+            {
+                "hex_value": "#c8443c",
+                "colour_name": "Encourage"
+            },
+            {
+                "hex_value": "#e08c84",
+                "colour_name": "Hope"
+            },
+            {
+                "hex_value": "#d87c84",
+                "colour_name": "Believe"
+            }
+        ]
+    },
+    {
+        "id": 1050,
+        "brand": "Rare Beauty",
+        "name": "Stay Vulnerable Meltin Cream Blush",
+        "price": 21,
+        "description": "his first-of-its-kind water-resistant blush combines pigments with a non-greasy blend of weightless oils and spherical powders for a natural flush you can’t mess up. The ultralightweight, liquid-like cream melts on contact and blends to a smooth, satin finish that won’t cake, crease, or clog pores.",
+        "category": "Cream",
+        "product_type": "Blush",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2418663-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "#e8544c",
+                "colour_name": "Nearly Neutral"
+            },
+            {
+                "hex_value": "#ff4c6c",
+                "colour_name": "Nearly Rose"
+            },
+            {
+                "hex_value": "#a83444",
+                "colour_name": "Nearly Berry"
+            },
+            {
+                "hex_value": "#f86464",
+                "colour_name": "Nearly Mauve"
+            },
+            {
+                "hex_value": "#ff5c4c",
+                "colour_name": "Nearly Apricot"
+            }
+        ]
+    },
+    {
+        "id": 1051,
+        "brand": "Rare Beauty",
+        "name": "Warm Wishes Effortless Bronzer Sticks",
+        "price": 23,
+        "description": "This innovative liquid-like cream bronzer stick melts into skin for a visible sunkissed warmth that won’t fade. Ultra blendable and buildable, it glides on weightlessly, making it easy to softly sculpt the face. The non-greasy, water-resistant formula won’t cake, crease, or clog pores.",
+        "category": "Cream",
+        "product_type": "Bronzer",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2518934-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "#a86444",
+                "colour_name": "Always Sunny"
+            },
+            {
+                "hex_value": "#904c34",
+                "colour_name": "Full of Life"
+            },
+            {
+                "hex_value": "#b98263",
+                "colour_name": "Happy Sol"
+            },
+            {
+                "hex_value": "#c79269",
+                "colour_name": "Power Boost"
+            },
+            {
+                "hex_value": "#883d2d",
+                "colour_name": "True Warmth"
+            }
+        ]
+    },
+    {
+        "id": 1052,
+        "brand": "Rare Beauty",
+        "name": "Kind Words Matte Lipstick",
+        "price": 20,
+        "description": "Selena wanted to create a classic lipstick that’s truly comfortable. This innovative, flexible formula moves with your lips for cushiony, pigment-rich color that lasts all day while keeping lips soft, nourished, and moisturized",
+        "category": "Lipstick",
+        "product_type": "Lipstick",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2589471-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "#874b43",
+                "colour_name": "Gifted"
+            },
+            {
+                "hex_value": "#a3453d",
+                "colour_name": "Bold"
+            },
+            {
+                "hex_value": "#c07563",
+                "colour_name": "Creative"
+            },
+            {
+                "hex_value": "#a65d4f",
+                "colour_name": "Fun"
+            },
+            {
+                "hex_value": "#a76361",
+                "colour_name": "Humble"
+            },
+            {
+                "hex_value": "#c56f6a",
+                "colour_name": "Lively"
+            },
+            {
+                "hex_value": "#6e4037",
+                "colour_name": "Strong"
+            },
+            {
+                "hex_value": "#c27959",
+                "colour_name": "Talented"
+            },
+            {
+                "hex_value": "#6e3f33",
+                "colour_name": "Wise"
+            },
+            {
+                "hex_value": "#aa7064",
+                "colour_name": "Worthy"
+            }
+        ]
+    },
+    {
+        "id": 1053,
+        "brand": "Rare Beauty",
+        "name": "Always an Optimist Soft Radiance Setting Powder",
+        "price": 22,
+        "description": "Super-finely milled and silky to the touch, this powder goes on light and airy to provide sheer, seamless coverage with a subtle but visible radiance and a natural finish. Extend makeup wear, blur the look of pores, and smooth skin’s texture. The custom-designed sifter locks for mess-free storage on the go. ",
+        "category": "Powder",
+        "product_type": "Foundation",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2519080-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "#d19f87",
+                "colour_name": "Light-Medium"
+            },
+            {
+                "hex_value": "#fae3d7",
+                "colour_name": "Light"
+            }
+        ]
+    },
+    {
+        "id": 1054,
+        "brand": "Rare Beauty",
+        "name": "Perfect Strokes Universal Volumizing Mascara",
+        "price": 20,
+        "description": "Finding the perfect mascara comes down to your lash type, which differs from person to person. This weightless, easy-to-build formula and curvy, multi-length brush are made to give every lash type (fine/sparse, full/thick, straight, and curly) more lift, length, curl, and volume.",
+        "category": "Mascara",
+        "product_type": "Mascara",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2474138-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "#101010",
+                "colour_name": "Black"
+            }
+        ]
+    },
+    {
+        "id": 1055,
+        "brand": "Rare Beauty",
+        "name": "Liquid Touch Weightless Foundation",
+        "price": 29,
+        "description": "The super-fluid, serum-like texture makes it easy to build and blend your coverage just how you like it while evening out skin tone and smoothing the look of pores—no clogging or caking. Plus, the mess-free, doe-foot applicator lets you apply one dot at a time, which is all you need to cover your entire face. ",
+        "category": "Foundation",
+        "product_type": "Foundation",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2361392-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "#f6d3bd",
+                "colour_name": "110N"
+            },
+            {
+                "hex_value": "#f4d5b7",
+                "colour_name": "120C"
+            },
+            {
+                "hex_value": "#e9be9f",
+                "colour_name": "130N"
+            },
+            {
+                "hex_value": "#f4c9ae",
+                "colour_name": "140C"
+            },
+            {
+                "hex_value": "#f0c7ac",
+                "colour_name": "150C"
+            },
+            {
+                "hex_value": "#f7c4ac",
+                "colour_name": "160C"
+            },
+            {
+                "hex_value": "#e5c39e",
+                "colour_name": "170W"
+            },
+            {
+                "hex_value": "#e6c0a2",
+                "colour_name": "180W"
+            },
+            {
+                "hex_value": "#e9c49c",
+                "colour_name": "190W"
+            },
+            {
+                "hex_value": "#f2c298",
+                "colour_name": "200C"
+            },
+            {
+                "hex_value": "#e9bf96",
+                "colour_name": "210N"
+            },
+            {
+                "hex_value": "#e8c398",
+                "colour_name": "230N"
+            },
+            {
+                "hex_value": "#e3b482",
+                "colour_name": "240W"
+            },
+            {
+                "hex_value": "#e5c1a1",
+                "colour_name": "250W"
+            },
+            {
+                "hex_value": "#efc39d",
+                "colour_name": "270N"
+            },
+            {
+                "hex_value": "#e1b584",
+                "colour_name": "280N"
+            },
+            {
+                "hex_value": "#dca97c",
+                "colour_name": "290N"
+            },
+            {
+                "hex_value": "#cd9d74",
+                "colour_name": "310W"
+            },
+            {
+                "hex_value": "#e8b68c",
+                "colour_name": "320W"
+            },
+            {
+                "hex_value": "#d3a77f",
+                "colour_name": "340C"
+            },
+            {
+                "hex_value": "#d8a67b",
+                "colour_name": "360W"
+            },
+            {
+                "hex_value": "#dba577",
+                "colour_name": "380W"
+            },
+            {
+                "hex_value": "#c7926b",
+                "colour_name": "400W"
+            },
+            {
+                "hex_value": "#bf8965",
+                "colour_name": "420N"
+            },
+            {
+                "hex_value": "#c7906a",
+                "colour_name": "430W"
+            },
+            {
+                "hex_value": "#a6694c",
+                "colour_name": "450N"
+            },
+            {
+                "hex_value": "#9e5c3d",
+                "colour_name": "470C"
+            },
+            {
+                "hex_value": "#9d6f56",
+                "colour_name": "480W"
+            },
+            {
+                "hex_value": "#894d34",
+                "colour_name": "500N"
+            },
+            {
+                "hex_value": "#784522",
+                "colour_name": "520W"
+            },
+            {
+                "hex_value": "#653027",
+                "colour_name": "540C"
+            },
+            {
+                "hex_value": "#58322a",
+                "colour_name": "560W"
+            }
+        ]
+    },
+    {
+        "id": 1056,
+        "brand": "Rare Beauty",
+        "name": "Liquid Touch Brightening Concealer",
+        "price": 19,
+        "description": "This concealer instantly hides blemishes, dark circles, and redness, with buildable coverage and a skin-like finish that won’t cake or settle into fine lines. With a botanical blend, it’s creamy and hydrating, yet long-lasting and sweat-resistant. Plus, it comes in the same 48 shades as Liquid Touch Foundation.",
+        "category": "Concealer",
+        "product_type": "Foundation",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2362028-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "#f6d3bd",
+                "colour_name": "110N"
+            },
+            {
+                "hex_value": "#f4d5b7",
+                "colour_name": "120C"
+            },
+            {
+                "hex_value": "#e9be9f",
+                "colour_name": "130N"
+            },
+            {
+                "hex_value": "#f4c9ae",
+                "colour_name": "140C"
+            },
+            {
+                "hex_value": "#f0c7ac",
+                "colour_name": "150C"
+            },
+            {
+                "hex_value": "#f7c4ac",
+                "colour_name": "160C"
+            },
+            {
+                "hex_value": "#e5c39e",
+                "colour_name": "170W"
+            },
+            {
+                "hex_value": "#e6c0a2",
+                "colour_name": "180W"
+            },
+            {
+                "hex_value": "#e9c49c",
+                "colour_name": "190W"
+            },
+            {
+                "hex_value": "#f2c298",
+                "colour_name": "200C"
+            },
+            {
+                "hex_value": "#e9bf96",
+                "colour_name": "210N"
+            },
+            {
+                "hex_value": "#e8c398",
+                "colour_name": "230N"
+            },
+            {
+                "hex_value": "#e3b482",
+                "colour_name": "240W"
+            },
+            {
+                "hex_value": "#e5c1a1",
+                "colour_name": "250W"
+            },
+            {
+                "hex_value": "#efc39d",
+                "colour_name": "270N"
+            },
+            {
+                "hex_value": "#e1b584",
+                "colour_name": "280N"
+            },
+            {
+                "hex_value": "#dca97c",
+                "colour_name": "290N"
+            },
+            {
+                "hex_value": "#cd9d74",
+                "colour_name": "310W"
+            },
+            {
+                "hex_value": "#e8b68c",
+                "colour_name": "320W"
+            },
+            {
+                "hex_value": "#d3a77f",
+                "colour_name": "340C"
+            },
+            {
+                "hex_value": "#d8a67b",
+                "colour_name": "360W"
+            },
+            {
+                "hex_value": "#dba577",
+                "colour_name": "380W"
+            },
+            {
+                "hex_value": "#c7926b",
+                "colour_name": "400W"
+            },
+            {
+                "hex_value": "#bf8965",
+                "colour_name": "420N"
+            },
+            {
+                "hex_value": "#c7906a",
+                "colour_name": "430W"
+            },
+            {
+                "hex_value": "#a6694c",
+                "colour_name": "450N"
+            },
+            {
+                "hex_value": "#9e5c3d",
+                "colour_name": "470C"
+            },
+            {
+                "hex_value": "#9d6f56",
+                "colour_name": "480W"
+            },
+            {
+                "hex_value": "#894d34",
+                "colour_name": "500N"
+            },
+            {
+                "hex_value": "#784522",
+                "colour_name": "520W"
+            },
+            {
+                "hex_value": "#653027",
+                "colour_name": "540C"
+            },
+            {
+                "hex_value": "#58322a",
+                "colour_name": "560W"
+            }
+        ]
+    },
+    {
+        "id": 1057,
+        "brand": "Rare Beauty",
+        "name": "Always An Optimist 4-in-1 Prime & Set Mist",
+        "price": 24,
+        "description": "Layer this all-in-one mist under or over makeup for a refreshed complexion. Infused with a botanical blend of lotus, gardenia, and white waterlily to help soothe and calm skin, this bi-phase formula also features niacinamide and sodium hyaluronate for the appearance of plumper, smoother skin. ",
+        "category": "Mist",
+        "product_type": "Foundation",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2362465-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "",
+                "colour_name": "No colour"
+            }
+        ]
+    },
+    {
+        "id": 1058,
+        "brand": "Rare Beauty",
+        "name": "Kind Words Lip Liner",
+        "price": 15,
+        "description": "Define and shape lips with one-swipe color and a soft matte finish. With an incredibly smooth, balm-like glide that won’t skip or tug, this waterproof liner not only stays put all day without smudging, but it keeps your lipstick in place, too. Keep the retractable tip sharp with the built-in sharpener.",
+        "category": "Lips",
+        "product_type": "Lip_liner",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2589554-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "#874b43",
+                "colour_name": "Gifted"
+            },
+            {
+                "hex_value": "#a3453d",
+                "colour_name": "Bold"
+            },
+            {
+                "hex_value": "#c07563",
+                "colour_name": "Creative"
+            },
+            {
+                "hex_value": "#a65d4f",
+                "colour_name": "Fun"
+            },
+            {
+                "hex_value": "#a76361",
+                "colour_name": "Humble"
+            },
+            {
+                "hex_value": "#c56f6a",
+                "colour_name": "Lively"
+            },
+            {
+                "hex_value": "#6e4037",
+                "colour_name": "Strong"
+            },
+            {
+                "hex_value": "#c27959",
+                "colour_name": "Talented"
+            },
+            {
+                "hex_value": "#6e3f33",
+                "colour_name": "Wise"
+            },
+            {
+                "hex_value": "#aa7064",
+                "colour_name": "Worthy"
+            }
+        ]
+    },
+    {
+        "id": 1059,
+        "brand": "Natasha Denona",
+        "name": "Glam Eyeshadow Palette",
+        "price": 69,
+        "description": " This palette includes shades named after the ideal place to apply them, helping you recreate glam makeup looks. It‘s as if you have special insider makeup tips from Natasha Denona herself when you apply these shades.",
+        "category": "Eyes",
+        "product_type": "Eyeshadow",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2378313-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "",
+                "colour_name": "Glam Palette"
+            }
+        ]
+    },
+    {
+        "id": 1060,
+        "brand": "Natasha Denona",
+        "name": "Hy-Gen Skinglass Energizing & Hydrating Primer Serum",
+        "price": 48,
+        "description": "This primer serum has a moisturizing, lightweight texture that delivers a natural-looking, transparent, glass skin effect. It includes a special peptide that provides energizing effects on the skin. The primer serum comes in a universal shade suitable for every skin tone and can be used before or after makeup application.",
+        "category": "Face",
+        "product_type": "Foundation",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2569499-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "",
+                "colour_name": "Serum"
+            }
+        ]
+    },
+    {
+        "id": 1061,
+        "brand": "Natasha Denona",
+        "name": "Pastel Eyeshadow Palette",
+        "price": 65,
+        "description": "Anything but ordinary, the Pastel Eyeshadow Palette‘s unique color story offers buildable intensity for everything from subtle to statement looks. Go monochrome with the same pastel shade in different tones or use the palette to add a pop of pastel to an otherwise neutral eye—the only limit is your imagination. Whatever you choose all formulas in this palette blend seamlessly for long-lasting, effortless, pro-level looks.",
+        "category": "Eyes",
+        "product_type": "Eyeshadow",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2512556-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "",
+                "colour_name": "Pastel Palette"
+            }
+        ]
+    },
+    {
+        "id": 1062,
+        "brand": "Natasha Denona",
+        "name": "Puff Paint Liquid Blush",
+        "price": 24,
+        "description": "Puff Paint Liquid Blush is made with a lightweight, easy-to-apply, buildable formula. It’s infused with a skin thirst-relief complex, a super-active ingredient that brings fast-acting and long-lasting deep moisturization even after you take your makeup off. The three shades complement all skin tones and textures.",
+        "category": "Face",
+        "product_type": "Blush",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2451961-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "#702838",
+                "colour_name": "Bloom"
+            },
+            {
+                "hex_value": "#c69887",
+                "colour_name": "Tan"
+            },
+            {
+                "hex_value": "#d48390",
+                "colour_name": "Darya"
+            }
+        ]
+    },
+    {
+        "id": 1063,
+        "brand": "Natasha Denona",
+        "name": "Love Cheek Duo Palette",
+        "price": 42,
+        "description": "Create playfully bold or effortlessly wearable looks with this palette. The resplendent shades provide maximum color payoff with minimal effort, blending seamlessly to achieve vibrant, ultra-pigmented, and long-lasting results.",
+        "category": "Face",
+        "product_type": "Blush",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2435840-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "",
+                "colour_name": "Blush duo love"
+            }
+        ]
+    },
+    {
+        "id": 1064,
+        "brand": "Natasha Denona",
+        "name": "Contour Sculpting Powder",
+        "price": 38,
+        "description": "Encapsulated hyaluronic acid acts like a micro-sponge, supporting skin’s moisture levels and reducing the appearance of fine lines, texture, and wrinkles. The velvety-smooth powder glides onto skin for effortless blending and maximum comfort.",
+        "category": "Face",
+        "product_type": "Bronzer",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2223659-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "#faac7f",
+                "colour_name": "Light"
+            },
+            {
+                "hex_value": "#faa683",
+                "colour_name": "Medium"
+            },
+            {
+                "hex_value": "#f8935f",
+                "colour_name": "Warm"
+            },
+            {
+                "hex_value": "#bf744d",
+                "colour_name": "Dark"
+            }
+        ]
+    },
+    {
+        "id": 1066,
+        "brand": "Natasha Denona",
+        "name": "Biba All Neutral Eyeshadow Palette",
+        "price": 129,
+        "description": "Biba features 15 brand-new shades of Natasha Denona’s signature formulas. It includes neutral, warm, and cool tones, from light to dark, in different textures. This eyeshadow palette is very user-friendly, and covers a shade range that varies from mauves, burgundies, and browns to warm greys and black.",
+        "category": "eyes",
+        "product_type": "eyeshadow",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2192821-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "",
+                "colour_name": "Biba palette"
+            }
+        ]
+    },
+    {
+        "id": 1067,
+        "brand": "Natasha Denona",
+        "name": "Mini Love Eyeshadow Palette",
+        "price": 27,
+        "description": "This palette provides maximum color payoff with minimal effort, blending seamlessly to achieve vibrant, ultra-pigmented, long lasting looks. Its compact size is perfect for travelling, allowing you to complete a whole look on the go. ",
+        "category": "Eyes",
+        "product_type": "Eyeshadow",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2435832-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "",
+                "colour_name": "Mini Love palette"
+            }
+        ]
+    },
+    {
+        "id": 1068,
+        "brand": "Natasha Denona",
+        "name": "I Need A Nude Lipstick",
+        "price": 27,
+        "description": "Natasha was compelled to create this collection after years of mixing nude lipsticks to achieve her vision: a nude that would flatter everyone. Featuring a lightweight, creamy, comfortable-to-wear formula, this luxurious lipstick delivers that nude look you‘ve been dreaming of while also hydrating and nourishing lips.",
+        "category": "Lips",
+        "product_type": "Lipstick",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2378289-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "#bc7371",
+                "colour_name": "14NB Judith"
+            },
+            {
+                "hex_value": "#c67f6d",
+                "colour_name": "13N Alison"
+            },
+            {
+                "hex_value": "#c87a70",
+                "colour_name": "15NB Claudia"
+            },
+            {
+                "hex_value": "#bc8582",
+                "colour_name": "33NP Noa"
+            },
+            {
+                "hex_value": "#b8707b",
+                "colour_name": "23P Averyl"
+            },
+            {
+                "hex_value": "#db9f9f",
+                "colour_name": "32NP Susanna"
+            },
+            {
+                "hex_value": "#b8827b",
+                "colour_name": "34NP Yana"
+            },
+            {
+                "hex_value": "#8e5248",
+                "colour_name": "4B Naya"
+            },
+            {
+                "hex_value": "#b3705d",
+                "colour_name": "3B Sami"
+            },
+            {
+                "hex_value": "#ce9f85",
+                "colour_name": "1B Charlotte"
+            },
+            {
+                "hex_value": "#d39782",
+                "colour_name": "2B Liron"
+            },
+            {
+                "hex_value": "#4c211b",
+                "colour_name": "5B Nati"
+            },
+            {
+                "hex_value": "#d69d8a",
+                "colour_name": "11B Natasha"
+            },
+            {
+                "hex_value": "#c58b7b",
+                "colour_name": "12B Michelle"
+            },
+            {
+                "hex_value": "#d79d9b",
+                "colour_name": "31NP Beatrice"
+            },
+            {
+                "hex_value": "#c37177",
+                "colour_name": "22P Jeniffer"
+            },
+            {
+                "hex_value": "#432720",
+                "colour_name": "6B Lala"
+            },
+            {
+                "hex_value": "#a96f5e",
+                "colour_name": "35NP Athena"
+            },
+            {
+                "hex_value": "#9c6f5d",
+                "colour_name": "30NP Maria"
+            },
+            {
+                "hex_value": "#9c6951",
+                "colour_name": "10Nb Andrea"
+            },
+            {
+                "hex_value": "#ad6957",
+                "colour_name": "36NP Amorosa"
+            }
+        ]
+    },
+    {
+        "id": 1069,
+        "brand": "Natasha Denona",
+        "name": "Mini Bronze Eyeshadow Palette",
+        "price": 27,
+        "description": "This mini palette is inspired by Natasha Denona’s bestselling Bronze Eyeshadow Palette and brings together five warm-toned neutrals in creamy matte and metallic finishes perfect for summer or fall. These innovative, easy-to-use formulas offer the high performance and versatility Natasha is known for. This travel-size palette easily takes your look from day to night and allows you to complete a whole look on the go. These shades also wear beautifully on all skin tones.",
+        "category": "Eyes",
+        "product_type": "Eyeshadow",
+        "api_featured_image": "https://www.sephora.com/productimages/sku/s2592012-main-zoom.jpg?imwidth=1224",
+        "product_colors": [
+            {
+                "hex_value": "",
+                "colour_name": "Mini Bronze palette"
+            }
+        ]
+    }
+]
