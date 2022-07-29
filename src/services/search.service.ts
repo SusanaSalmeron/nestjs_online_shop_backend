@@ -1,16 +1,17 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, Inject, Logger } from "@nestjs/common";
-import { Search } from "src/classes/search";
-import { Product } from "src/classes/product";
-import * as loki from 'lokijs';
+import { Search } from "../classes/search";
+import { Product } from "../classes/product";
 import { ShadowCopyService } from "./shadowCopy.service";
+import * as loki from 'lokijs';
+
 
 
 @Injectable()
 export class SearchService {
     private catalog = []
     private readonly logger = new Logger(SearchService.name)
-    private baseUrl = 'https://makeup-api.herokuapp.com/api/v1/product.json'
+    private baseUrl = 'https://makeup-api.herokuapp.com/api/v1/products.json'
     constructor(private readonly httpService: HttpService, @Inject('DATABASE_CONNECTION') private db: loki, private readonly shadowCopyService: ShadowCopyService) { }
 
     async findAllBrandsAndNames(): Promise<Search[]> {
@@ -46,7 +47,9 @@ export class SearchService {
     }
 
     private filterByKeyword = (element, keyword) => {
-        return element.brand !== null && (element.name.includes(keyword) || element.brand.includes(keyword))
+        console.log(element.brand)
+        return element.brand !== null && (element.name.toLowerCase().includes(keyword.toLowerCase()) || element.brand.toLowerCase().includes(keyword.toLowerCase()))
+
     }
     private toProduct = (element) => {
         return new Product(
@@ -58,7 +61,6 @@ export class SearchService {
         )
     }
 
-    //TODO - not working properly
 
     async searchList(keyword): Promise<Product[]> {
         let response
@@ -70,6 +72,7 @@ export class SearchService {
         }
         const newProductsTable = this.db.getCollection('newProducts')
         const newProducts = newProductsTable.find(true).filter(p => this.filterByKeyword(p, keyword)).map(this.toProduct)
+        console.log(newProducts)
         const list = response.filter(el => this.filterByKeyword(el, keyword))
             .map(this.toProduct)
         const allProductsList = [...newProducts, ...list]

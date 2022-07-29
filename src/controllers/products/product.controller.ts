@@ -1,12 +1,8 @@
-import { Controller, Get, Logger, Param, HttpStatus, Res } from "@nestjs/common";
+import { Controller, Get, Logger, Param, HttpStatus, Res, Query } from "@nestjs/common";
 import { ProductService } from "../../services/product.service";
-import {
-    ApiOkResponse, ApiNotFoundResponse, ApiInternalServerErrorResponse
-
-} from "@nestjs/swagger";
-import {
-    ProductCard
-} from "../../classes/productCard";
+import { ApiOkResponse, ApiNotFoundResponse, ApiInternalServerErrorResponse } from "@nestjs/swagger";
+import { ProductDto } from "src/dto/productDto";
+import { ProductCardDto } from "src/dto/productCardDto";
 
 
 @Controller('products')
@@ -17,7 +13,7 @@ export class ProductController {
     @Get('new')
     @ApiOkResponse({
         description: 'New Products finded successfully',
-        type: ProductCard
+        type: ProductCardDto
     })
     @ApiNotFoundResponse({ description: 'No new products' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
@@ -36,11 +32,33 @@ export class ProductController {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error')
         }
     }
+    @Get('type')
+    @ApiOkResponse({
+        description: "All products found successfully",
+        type: ProductDto
+    })
+    @ApiNotFoundResponse({ description: "Products not found" })
+    @ApiInternalServerErrorResponse({ description: "Internal Server Error" })
+    async showAllProducts(@Query('type') type: string, @Res() response) {
+        try {
+            const allProducts = await this.productService.findProductsBy(type)
+            if (allProducts) {
+                this.logger.debug('Finded all products successfully')
+                response.status(HttpStatus.OK).json(allProducts)
+            } else {
+                this.logger.error('Products not found')
+                response.status(HttpStatus.NOT_FOUND).send('Products not found')
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error')
+        }
+    }
 
     @Get('/:id')
     @ApiOkResponse({
         description: 'find product successfully',
-        type: ProductCard
+        type: ProductCardDto
     })
     @ApiNotFoundResponse({ description: 'product not found' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
@@ -59,6 +77,4 @@ export class ProductController {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error')
         }
     }
-
-
 }

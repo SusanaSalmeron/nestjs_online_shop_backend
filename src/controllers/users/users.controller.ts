@@ -1,12 +1,12 @@
 import { Body, Controller, HttpStatus, Logger, Post, Get, Res, Query } from "@nestjs/common";
-import { UsersService } from "../../services/users.service";
 import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse, ApiQuery } from "@nestjs/swagger";
-import { CreateUserDto } from "../../dto/createUserDto";
-import * as bcrypt from 'bcrypt';
+import { UsersService } from "../../services/users.service";
 import { TokenService } from "../../services/token.service";
 import { SearchService } from "../../services/search.service";
-import { Product } from "../../classes/product";
-
+import { CreateUserDto } from "../../dto/createUserDto";
+import { OptionsMenuDto } from "../../dto/optionsMenuDto";
+import { ProductDto } from "../../dto/productDto";
+import * as bcrypt from 'bcrypt';
 
 
 @Controller('users')
@@ -50,7 +50,10 @@ export class UsersController {
     }
 
     @Get('/search')
-    @ApiOkResponse({ description: 'Getting products successfully' })
+    @ApiOkResponse({
+        description: 'Getting products successfully',
+        type: OptionsMenuDto
+    })
     @ApiNotFoundResponse({ description: 'No products' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async userSearch(@Res() response) {
@@ -75,7 +78,7 @@ export class UsersController {
     })
     @ApiOkResponse({
         description: 'Products found successfully',
-        type: Product
+        type: ProductDto
     })
     @ApiNotFoundResponse({
         description: "No products found"
