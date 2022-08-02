@@ -8,12 +8,12 @@ import * as loki from 'lokijs';
 
 @Injectable()
 export class ProductService {
-    private baseUrl = 'https://makeup-api.herokuapp.com/api/v1/product.json'
+    private baseUrl = 'https://makeup-api.herokuapp.com/api/v1/products.json'
     private readonly logger = new Logger(ProductService.name)
     constructor(private readonly httpService: HttpService, @Inject('DATABASE_CONNECTION') private db: loki, private readonly shadowCopyService: ShadowCopyService) { }
 
 
-    async findProductById(id): Promise<ProductCard[]> {
+    async findProductById(id: string): Promise<ProductCard[]> {
         let response
         try {
             response = (await this.httpService.axiosRef.get(this.baseUrl)).data

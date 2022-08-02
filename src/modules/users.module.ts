@@ -3,15 +3,15 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config'
 import { SearchService } from 'src/services/search.service';
 import { ShadowCopyService } from 'src/services/shadowCopy.service';
-import { UsersController } from '../controllers/users/users.controller';
+import { UserController } from '../controllers/users/user.controller';
 import { DatabaseModule } from '../database/database.module';
 import { TokenService } from '../services/token.service';
-import { UsersService } from '../services/users.service';
+import { UserService } from '../services/user.service';
 
 @Module({
-    providers: [UsersService, TokenService, ConfigService, SearchService, ShadowCopyService
+    providers: [UserService, TokenService, ConfigService, SearchService, ShadowCopyService
     ],
-    controllers: [UsersController],
+    controllers: [UserController],
     imports: [DatabaseModule, HttpModule]
 })
 export class UsersModule { }

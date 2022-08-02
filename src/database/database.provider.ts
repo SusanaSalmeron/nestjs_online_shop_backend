@@ -10,10 +10,18 @@ async function passwordEncrypt(data) {
         const saltRounds = 10
         const hash = await bcrypt.hash(d.password, saltRounds)
         return {
-            name: d.name,
+            id: d.id,
+            user_name: d.user_name,
+            surname: d.surname,
+            address: d.address,
+            postalZip: d.postalZip,
+            city: d.city,
+            country: d.country,
+            phone: d.phone,
             email: d.email,
-            password: hash,
-            id: d.id
+            date_of_birth: d.date_of_birth,
+            identification: d.identification,
+            password: hash
         }
     })
     return await Promise.all(allPromises)
