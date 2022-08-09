@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger } from "@nestjs/common";
 import { LoginUser } from "../classes/loginUser";
 import { AccountUserData } from '../classes/accountUserData'
 import * as loki from 'lokijs';
+import { AccountUserAddresses } from "src/classes/accountUserAddresses";
 
 @Injectable()
 export class UserService {
@@ -27,6 +28,7 @@ export class UserService {
         const usersTable = this.db.getCollection('users')
         try {
             const foundUserData: AccountUserData = usersTable.findOne({ id: parseInt(id) })
+            console.log(foundUserData)
             if (foundUserData) {
                 return new AccountUserData(
                     foundUserData.id,
@@ -45,7 +47,35 @@ export class UserService {
                 return null
             }
         } catch (err) {
-            this.logger.error('', err)
+            this.logger.error('Internal Server Error', err)
         }
+    }
+
+    async findAddressesBy(userId: string): Promise<AccountUserAddresses[]> {
+        const addressesTable = this.db.getCollection('addresses')
+        let addresses
+        try {
+            const foundAddresses: AccountUserAddresses[] = addressesTable.find({ userId: parseInt(userId) })
+            if (foundAddresses) {
+                addresses = foundAddresses.map(a => {
+                    return new AccountUserAddresses(
+                        a.id,
+                        a.user_name,
+                        a.surname,
+                        a.address,
+                        a.postalZip,
+                        a.city,
+                        a.country,
+                        a.defaultAddress,
+                        a.userId
+                    )
+                })
+            } else {
+                return null
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error, err')
+        }
+        return addresses
     }
 }

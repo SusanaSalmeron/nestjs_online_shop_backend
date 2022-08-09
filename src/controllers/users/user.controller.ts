@@ -9,6 +9,7 @@ import { ProductDto } from "../../dto/productDto";
 import { UserDataDto } from "../../dto/userDataDto";
 import * as bcrypt from 'bcrypt';
 import { AccountUserData } from "src/classes/accountUserData";
+import { AccountUserAddresses } from "src/classes/accountUserAddresses";
 
 
 @Controller('users')
@@ -73,6 +74,25 @@ export class UserController {
 
         }
     }
+
+    @Get('/:id/addresses/')
+    async userAccountAdresses(@Param('id') id: string, @Res() response) {
+        try {
+            const addresses: AccountUserAddresses[] = await this.userService.findAddressesBy(id)
+            if (addresses) {
+                this.logger.log(`Addresses from user id ${id} found`)
+                response.status(HttpStatus.OK).json(addresses)
+            } else {
+                this.logger.log(`the user id ${id} has not addresses`)
+                response.status(HttpStatus.NOT_FOUND).json(addresses)
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error')
+        }
+    }
+
+
 
     @Get('/search')
     @ApiOkResponse({

@@ -1,4 +1,3 @@
-
 export class AccountUserData {
     id: number;
     user_name: string;

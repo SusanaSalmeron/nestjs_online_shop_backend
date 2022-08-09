@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger"
+import { ApiProperty } from "@nestjs/swagger";
 
-export class UserDataDto {
+export class UserAddressDto {
     @ApiProperty()
     readonly id: number;
     @ApiProperty()
@@ -16,13 +16,7 @@ export class UserDataDto {
     @ApiProperty()
     readonly country: string;
     @ApiProperty()
-    readonly phone: string;
+    readonly defaultAddress: boolean;
     @ApiProperty()
-    readonly email: string;
-    @ApiProperty()
-    readonly date_of_birth: string;
-    @ApiProperty()
-    readonly identification: string;
-    @ApiProperty()
-    readonly password: string
+    readonly useId: number;
 }

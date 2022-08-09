@@ -1,28 +1,30 @@
 /* import { Logger } from '@nestjs/common';
- */import * as loki from 'lokijs';
+ */
+import * as loki from 'lokijs';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as bcrypt from 'bcrypt';
+import { AccountUserData } from '../classes/accountUserData';
 
 
 async function passwordEncrypt(data) {
     const allPromises = data.map(async d => {
         const saltRounds = 10
         const hash = await bcrypt.hash(d.password, saltRounds)
-        return {
-            id: d.id,
-            user_name: d.user_name,
-            surname: d.surname,
-            address: d.address,
-            postalZip: d.postalZip,
-            city: d.city,
-            country: d.country,
-            phone: d.phone,
-            email: d.email,
-            date_of_birth: d.date_of_birth,
-            identification: d.identification,
-            password: hash
-        }
+        return new AccountUserData(
+            d.id,
+            d.user_name,
+            d.surname,
+            d.address,
+            d.postalZip,
+            d.city,
+            d.country,
+            d.phone,
+            d.email,
+            d.date_of_birth,
+            d.identification,
+            hash
+        )
     })
     return await Promise.all(allPromises)
 }
@@ -33,7 +35,7 @@ export const databaseProviders = [
         useFactory: async (): Promise<loki.Db> => {
             try {
                 const client = await new loki('beautyshop.db')
-                const tables = ['users', 'newProducts']
+                const tables = ['users', 'newProducts', "addresses"]
                 for (let i = 0; i < tables.length; i++) {
                     const rawdata = fs.readFileSync(path.resolve(__dirname, 'data', `${tables[i]}.json`));
                     let data = JSON.parse(rawdata.toString());
