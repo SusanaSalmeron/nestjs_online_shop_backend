@@ -1,10 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { OrderProductsOverviewDto } from "./orderProductsOverviewDto";
 
-export class UserAddressDto {
+export class OrderOverviewDto {
     @ApiProperty()
-    readonly id: number;
+    readonly order_id: number;
     @ApiProperty()
-    readonly user_name: string;
+    readonly name: string;
     @ApiProperty()
     readonly surname: string;
     @ApiProperty()
@@ -16,7 +17,15 @@ export class UserAddressDto {
     @ApiProperty()
     readonly country: string;
     @ApiProperty()
-    readonly defaultAddress: boolean;
+    readonly order_date: string;
     @ApiProperty()
-    readonly userId: number;
+    readonly status: string;
+    @ApiProperty()
+    readonly products: OrderProductsOverviewDto[];
+    @ApiProperty()
+    readonly total_order: number;
+
+
+
+
 }

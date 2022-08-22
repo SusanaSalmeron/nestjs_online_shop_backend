@@ -1,0 +1,98 @@
+[
+    {
+        "id": 1,
+        "order_id": 1,
+        "product_id": 1048,
+        "colour_name": "BFF Pencil",
+        "units": 1,
+        "total": 5.0
+    },
+    {
+        "id": 2,
+        "order_id": 1,
+        "product_id": 757,
+        "colour_name": "Cocoa Pop",
+        "units": 1,
+        "total": 18.5
+    },
+    {
+        "id": 3,
+        "order_id": 2,
+        "product_id": 701,
+        "colour_name": "088 Pro Anthracite",
+        "units": 1,
+        "total": 25.5
+    },
+    {
+        "id": 4,
+        "order_id": 2,
+        "product_id": 758,
+        "colour_name": "Guava Stain",
+        "units": 1,
+        "total": 17.5
+    },
+    {
+        "id": 5,
+        "order_id": 3,
+        "product_id": 1065,
+        "colour_name": "Biba palette",
+        "units": 1,
+        "total": 129
+    },
+    {
+        "id": 6,
+        "order_id": 4,
+        "product_id": 235,
+        "colour_name": "Black Brown",
+        "units": 1,
+        "total": 12.99
+    },
+    {
+        "id": 7,
+        "order_id": 5,
+        "product_id": 252,
+        "colour_name": "Azure - Navy Blue ",
+        "units": 1,
+        "total": 19.0
+    },
+    {
+        "id": 8,
+        "order_id": 5,
+        "product_id": 1049,
+        "colour_name": "Hope",
+        "units": 1,
+        "total": 20
+    },
+    {
+        "id": 9,
+        "order_id": 5,
+        "product_id": 1053,
+        "colour_name": "Light-Medium",
+        "units": 1,
+        "total": 22
+    },
+    {
+        "id": 10,
+        "order_id": 6,
+        "product_id": 275,
+        "colour_name": "Blackberry (Demi-Matte) ",
+        "units": 1,
+        "total": 11.99
+    },
+    {
+        "id": 11,
+        "order_id": 6,
+        "product_id": 297,
+        "colour_name": "Epic (HS10) Iridescent Violet  ",
+        "units": 1,
+        "total": 5.99
+    },
+    {
+        "id": 12,
+        "order_id": 6,
+        "product_id": 310,
+        "colour_name": "Golden Sand 01 ",
+        "units": 1,
+        "total": 22.00
+    }
+]

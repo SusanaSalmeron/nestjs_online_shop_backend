@@ -14,6 +14,15 @@ export class SearchService {
     private baseUrl = 'https://makeup-api.herokuapp.com/api/v1/products.json'
     constructor(private readonly httpService: HttpService, @Inject('DATABASE_CONNECTION') private db: loki, private readonly shadowCopyService: ShadowCopyService) { }
 
+    private shadowCopy;
+
+    async loadAndGetShadowCopy() {
+        if (!this.shadowCopy) {
+            this.shadowCopy = await this.shadowCopyService.getShadowCopy()
+        }
+        return this.shadowCopy
+    }
+
     async findAllBrandsAndNames(): Promise<Search[]> {
         if (!this.catalog.length) {
             let response
@@ -21,7 +30,7 @@ export class SearchService {
                 response = (await this.httpService.axiosRef.get(this.baseUrl)).data;
             } catch (err) {
                 this.logger.warn('', err)
-                response = await this.shadowCopyService.getShadowCopy()
+                response = await this.loadAndGetShadowCopy()
             }
             const newProductsTable = this.db.getCollection('newProducts')
             const newProducts = newProductsTable.find(true)
@@ -47,7 +56,6 @@ export class SearchService {
     }
 
     private filterByKeyword = (element, keyword) => {
-        console.log(element.brand)
         return element.brand !== null && (element.name.toLowerCase().includes(keyword.toLowerCase()) || element.brand.toLowerCase().includes(keyword.toLowerCase()))
 
     }
@@ -62,17 +70,16 @@ export class SearchService {
     }
 
 
-    async searchList(keyword): Promise<Product[]> {
+    async searchList(keyword: string): Promise<Product[]> {
         let response
         try {
             response = (await this.httpService.axiosRef(this.baseUrl)).data
         } catch (err) {
             this.logger.warn('', err)
-            response = await this.shadowCopyService.getShadowCopy()
+            response = await this.loadAndGetShadowCopy()
         }
         const newProductsTable = this.db.getCollection('newProducts')
         const newProducts = newProductsTable.find(true).filter(p => this.filterByKeyword(p, keyword)).map(this.toProduct)
-        console.log(newProducts)
         const list = response.filter(el => this.filterByKeyword(el, keyword))
             .map(this.toProduct)
         const allProductsList = [...newProducts, ...list]

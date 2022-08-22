@@ -11,31 +11,45 @@ export class ProductService {
     private baseUrl = 'https://makeup-api.herokuapp.com/api/v1/products.json'
     private readonly logger = new Logger(ProductService.name)
     constructor(private readonly httpService: HttpService, @Inject('DATABASE_CONNECTION') private db: loki, private readonly shadowCopyService: ShadowCopyService) { }
+    private shadowCopy;
 
+    async loadAndGetShadowCopy() {
+        if (!this.shadowCopy) {
+            this.shadowCopy = await this.shadowCopyService.getShadowCopy()
+        }
+        return this.shadowCopy
+    }
 
-    async findProductById(id: string): Promise<ProductCard[]> {
+    async findProductById(id: string): Promise<ProductCard> {
         let response
         try {
-            response = (await this.httpService.axiosRef.get(this.baseUrl)).data
+            response = (await this.httpService.axiosRef.get(this.baseUrl, { timeout: 5000 })).data
         } catch (err) {
-            this.logger.warn('', err)
-            response = await this.shadowCopyService.getShadowCopy()
+            this.logger.warn('Api not available', err)
+            response = await this.loadAndGetShadowCopy();
         }
-        const newProducts = await this.findNewProducts()
-        const products = response.map(p => {
-            return new ProductCard(
-                p.id,
-                p.brand,
-                p.name,
-                p.price,
-                p.description,
-                p.product_type,
-                p.api_featured_image,
-                p.product_colors
+        const apiProductsDataFiltered = response.filter(p => p.id.toString() === id)
+        let productResult: ProductCard
+
+        if (apiProductsDataFiltered.length === 0) {
+            const newProducts = await this.findNewProducts()
+            const productFiltered: ProductCard[] = newProducts.filter(p => p.id.toString() === id)
+            if (productFiltered.length > 0) {
+                productResult = productFiltered[0]
+            }
+        } else {
+            productResult = new ProductCard(
+                apiProductsDataFiltered[0].id,
+                apiProductsDataFiltered[0].brand,
+                apiProductsDataFiltered[0].name,
+                apiProductsDataFiltered[0].price,
+                apiProductsDataFiltered[0].description,
+                apiProductsDataFiltered[0].product_type,
+                apiProductsDataFiltered[0].api_featured_image,
+                apiProductsDataFiltered[0].product_colors
             )
-        })
-        const allProducts = [...products, ...newProducts].filter(p => p.id.toString() === id)
-        return allProducts
+        }
+        return productResult
     }
 
     async findNewProducts(): Promise<ProductCard[]> {
@@ -55,13 +69,14 @@ export class ProductService {
         return newProducts
     }
 
-    async findProductsBy(type): Promise<Product[]> {
+    async findProductsBy(type: string): Promise<Product[]> {
         let response
         try {
             response = (await this.httpService.axiosRef.get(`${this.baseUrl}/?product_type=${type}`)).data
         } catch (err) {
-            this.logger.warn('', err)
-            response = (await this.shadowCopyService.getShadowCopy()).filter(p => p.product_type.toLowerCase() === type.toLowerCase())
+            this.logger.warn('Api not available', err)
+            response = await this.loadAndGetShadowCopy()
+            response.filter(p => p.product_type.toLowerCase() === type.toLowerCase())
         }
         const newProducts = await this.findNewProducts()
         const products = response.map(p => {
