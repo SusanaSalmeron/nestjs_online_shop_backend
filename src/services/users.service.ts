@@ -90,7 +90,6 @@ export class UsersService {
     async addNewShippingAddress(userId: string, createUserAddressDto: CreateUserAddressDto): Promise<number> {
         const addressesTable = this.db.getCollection('addresses')
         const { user_name, surname, address, postalZip, city, country, defaultAddress } = createUserAddressDto
-        console.log(userId + "from usersService")
         const newId: number = this.addressId++
         addressesTable.insert(
             {
@@ -105,8 +104,6 @@ export class UsersService {
                 userId: parseInt(userId),
             }
         )
-
-        console.log(newId)
         return newId
     }
 
@@ -114,7 +111,6 @@ export class UsersService {
         const { addressId, userId } = deleteAddressDto
         const addressesTable = this.db.getCollection('addresses')
         const address = addressesTable.findOne({ id: parseInt(addressId) })
-        console.log(userId)
         if (address.userId === parseInt(userId)) {
             addressesTable.remove(address)
             return true

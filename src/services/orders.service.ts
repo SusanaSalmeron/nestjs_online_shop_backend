@@ -116,6 +116,35 @@ export class OrdersService {
         return order
     }
 
+    async findAllOrdersBy(status: string, userId: string): Promise<OrderOverview[]> {
+        const ordersTable = this.db.getCollection('orders')
+        const usersTable = this.db.getCollection('users')
+
+        const orders: OrderOverview[] = []
+
+        try {
+            const foundOrders = ordersTable.find({ user_id: parseInt(userId) })
+            const user: AccountUserData = usersTable.findOne({ id: parseInt(userId) })
+            if (foundOrders) {
+                const filteredOrders = foundOrders.filter(o => {
+                    if (status === "inprocess") {
+                        const newStatus = o.status.replace(/\s+/g, '')
+                        return newStatus.toUpperCase() === status.toUpperCase()
+                    } else {
+                        return o.status.toUpperCase() === status.toUpperCase()
+                    }
+                })
+                for (let i = 0; i < filteredOrders.length; i++) {
+                    const order = await this.buildOrderOverview(filteredOrders[i], user)
+                    orders.push(order)
+                }
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error', err)
+        }
+        return orders
+    }
+
 
 
 }

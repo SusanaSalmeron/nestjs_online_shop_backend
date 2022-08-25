@@ -107,7 +107,6 @@ export class UsersController {
             this.logger.error('Internal Server Error', err)
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error')
         }
-
     }
 
     @Get('/:id/addresses/')
@@ -163,8 +162,6 @@ export class UsersController {
     @ApiInternalServerErrorResponse({ description: "Internal Server Error" })
     async deleteAddress(@Param() deleteAddressDto: DeleteAddressDto, @Res() response) {
         const { addressId, userId } = deleteAddressDto
-        console.log(userId + "hola")
-        console.log(addressId + "fsgdhf")
         try {
             const addressDeleted: boolean = await this.usersService.deleteAddress(deleteAddressDto)
             if (addressDeleted) {
@@ -327,7 +324,24 @@ export class UsersController {
                 response.status(HttpStatus.NOT_FOUND).send()
             }
         } catch (err) {
-            this.logger.error('Internal Server Error')
+            this.logger.error('Internal Server Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
+        }
+    }
+
+    @Get('/:id/orders/:status')
+    async userInProcessOrders(@Param('id') userId: string, @Param('status') status: string, @Res() response) {
+        try {
+            const orders = await this.ordersService.findAllOrdersBy(status, userId)
+            if (orders) {
+                this.logger.log('Orders finded successfully')
+                response.status(HttpStatus.OK).json(orders)
+            } else {
+                this.logger.error(`The user with id ${userId} does not exists`)
+                response.status(HttpStatus.NOT_FOUND).json({ error: `The user with id ${userId} does not exists` })
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error', err)
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
         }
     }
@@ -356,7 +370,6 @@ export class UsersController {
         } catch (err) {
             this.logger.error('Internal Server Error', err)
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
-
         }
     }
 
