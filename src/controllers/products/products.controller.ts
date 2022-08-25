@@ -1,14 +1,14 @@
 import { Controller, Get, Logger, Param, HttpStatus, Res, Query } from "@nestjs/common";
-import { ProductService } from "../../services/product.service";
+import { ProductsService } from "../../services/products.service";
 import { ApiOkResponse, ApiNotFoundResponse, ApiInternalServerErrorResponse } from "@nestjs/swagger";
-import { ProductDto } from "src/dto/productDto";
-import { ProductCardDto } from "src/dto/productCardDto";
+import { ProductDto } from "../../dto/productDto";
+import { ProductCardDto } from "../../dto/productCardDto";
 
 
 @Controller('products')
-export class ProductController {
-    private readonly logger = new Logger(ProductController.name)
-    constructor(private productService: ProductService) { }
+export class ProductsController {
+    private readonly logger = new Logger(ProductsController.name)
+    constructor(private productService: ProductsService) { }
 
     @Get('new')
     @ApiOkResponse({

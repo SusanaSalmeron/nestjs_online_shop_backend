@@ -7,9 +7,9 @@ import * as loki from 'lokijs';
 
 
 @Injectable()
-export class ProductService {
+export class ProductsService {
     private baseUrl = 'https://makeup-api.herokuapp.com/api/v1/products.json'
-    private readonly logger = new Logger(ProductService.name)
+    private readonly logger = new Logger(ProductsService.name)
     constructor(private readonly httpService: HttpService, @Inject('DATABASE_CONNECTION') private db: loki, private readonly shadowCopyService: ShadowCopyService) { }
     private shadowCopy;
 
@@ -23,7 +23,7 @@ export class ProductService {
     async findProductById(id: string): Promise<ProductCard> {
         let response
         try {
-            response = (await this.httpService.axiosRef.get(this.baseUrl, { timeout: 5000 })).data
+            response = (await this.httpService.axiosRef.get(this.baseUrl, { timeout: 500 })).data
         } catch (err) {
             this.logger.warn('Api not available', err)
             response = await this.loadAndGetShadowCopy();

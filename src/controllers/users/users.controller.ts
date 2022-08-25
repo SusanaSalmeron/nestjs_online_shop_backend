@@ -1,6 +1,6 @@
-import { Body, Controller, HttpStatus, Logger, Post, Get, Res, Query, Param, Put } from "@nestjs/common";
-import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse, ApiQuery } from "@nestjs/swagger";
-import { UserService } from "../../services/user.service";
+import { Body, Controller, HttpStatus, Logger, Post, Get, Res, Query, Param, Put, Delete } from "@nestjs/common";
+import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse, ApiCreatedResponse, ApiQuery } from "@nestjs/swagger";
+import { UsersService } from "../../services/users.service";
 import { TokenService } from "../../services/token.service";
 import { SearchService } from "../../services/search.service";
 import { CreateUserDto } from "../../dto/createUserDto";
@@ -17,12 +17,16 @@ import { UpdateUserAccountAddressesDto } from "../../dto/updateUserAccountAddres
 import { UpdateBillingAddressDto } from '../../dto/updateBillingAddressDto'
 import { OrderOverviewDto } from "../../dto/orderOverviewDto"
 import { OrderOverview } from "../../classes/orderOverview";
+import { OrdersService } from "src/services/orders.service";
+import { CreateUserAddressDto } from "src/dto/createUserAddressDto";
+import { DeleteAddressDto } from "src/dto/deleteAddressDto";
+
 
 
 @Controller('users')
-export class UserController {
-    private readonly logger = new Logger(UserController.name)
-    constructor(private userService: UserService, private tokenService: TokenService, private readonly searchService: SearchService) { }
+export class UsersController {
+    private readonly logger = new Logger(UsersController.name)
+    constructor(private usersService: UsersService, private tokenService: TokenService, private readonly searchService: SearchService, private ordersService: OrdersService) { }
 
     @Post('/login')
     @ApiBody({
@@ -37,7 +41,7 @@ export class UserController {
     async userLogin(@Res() response, @Body() createUserDto: CreateUserDto) {
         const { email, password } = createUserDto
         try {
-            const user = await this.userService.findUserByEmail(email)
+            const user = await this.usersService.findUserByEmail(email)
             if (!user) {
                 this.logger.error('User not found')
                 response.status(HttpStatus.NOT_FOUND).json({ error: "User not found" })
@@ -66,7 +70,7 @@ export class UserController {
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async userAccountData(@Param('id') id: string, @Res() response) {
         try {
-            const user: AccountUserData = await this.userService.findUserById(id)
+            const user: AccountUserData = await this.usersService.findUserById(id)
             if (user) {
                 this.logger.log(`User with id ${id} finded successfully`)
                 response.status(HttpStatus.OK).json(user)
@@ -91,7 +95,7 @@ export class UserController {
     async updateUserAccountData(@Param('id') id: string, @Res() response, @Body() updateUserAccountData: UpdateUserAccountDataDto) {
         const { user_name, surname, identification, date_of_birth, email, phone } = updateUserAccountData
         try {
-            const newData: boolean = await this.userService.changeUserAccountData(id, user_name, surname, identification, date_of_birth, email, phone)
+            const newData: boolean = await this.usersService.changeUserAccountData(id, user_name, surname, identification, date_of_birth, email, phone)
             if (newData) {
                 this.logger.log('User data successfully updated ')
                 response.status(HttpStatus.OK).json(newData)
@@ -115,7 +119,7 @@ export class UserController {
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async userAccountAdresses(@Param('id') id: string, @Res() response) {
         try {
-            const addresses: AccountUserAddresses[] = await this.userService.findAddressesBy(id)
+            const addresses: AccountUserAddresses[] = await this.usersService.findAddressesBy(id)
             if (addresses) {
                 this.logger.log(`Addresses from user id ${id} found`)
                 response.status(HttpStatus.OK).json(addresses)
@@ -130,19 +134,74 @@ export class UserController {
     }
 
     @Put('/:id/addresses')
+    @ApiOkResponse({
+        description: 'Address updated successfully',
+        type: UpdateUserAccountAddressesDto
+    })
+    @ApiNotFoundResponse({ description: 'User not found' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async updateUserAccountAddresses(@Param('id') userId: string, @Res() response, @Body() updateUserAccountAddresses: UpdateUserAccountAddressesDto) {
         const { id, user_name, surname, address, postalZip, city, country, defaultAddress } = updateUserAccountAddresses
         try {
-            const newAddress: boolean = await this.userService.changeUserAccountAddress(id, user_name, surname, address, postalZip, city, country, defaultAddress, userId)
+            const newAddress: boolean = await this.usersService.changeUserAccountAddress(id, user_name, surname, address, postalZip, city, country, defaultAddress, userId)
             if (newAddress) {
                 this.logger.log('Address updated successfully')
                 response.status(HttpStatus.OK).json(newAddress)
             } else {
                 this.logger.log('Address not updated')
-                response.status(HttpStatus.OK).send()
+                response.status(HttpStatus.NOT_FOUND).json({ error: `user ${userId} not found` })
             }
         } catch (err) {
             this.logger.error('Internal Server Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" })
+        }
+    }
+
+    @Delete('/:userId/addresses/:addressId')
+    @ApiOkResponse({ description: "Address deleted successfully" })
+    @ApiNotFoundResponse({ description: "User or address not found" })
+    @ApiInternalServerErrorResponse({ description: "Internal Server Error" })
+    async deleteAddress(@Param() deleteAddressDto: DeleteAddressDto, @Res() response) {
+        const { addressId, userId } = deleteAddressDto
+        console.log(userId + "hola")
+        console.log(addressId + "fsgdhf")
+        try {
+            const addressDeleted: boolean = await this.usersService.deleteAddress(deleteAddressDto)
+            if (addressDeleted) {
+                this.logger.log('Address deleted successfully')
+                response.status(HttpStatus.OK).send()
+            } else {
+                this.logger.error(`Address ${addressId} or user ${userId} not found`)
+                response.status(HttpStatus.NOT_FOUND).json({ error: `Address ${addressId} or user ${userId} not found` })
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error')
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
+        }
+    }
+
+
+    @Post('/:id/addresses/new')
+    @ApiBody({
+        description: 'New Address',
+        required: true,
+        type: CreateUserAddressDto
+    })
+    @ApiCreatedResponse({ description: "Address Created" })
+    @ApiNotFoundResponse({ description: "User not found" })
+    @ApiInternalServerErrorResponse({ description: "Internal Server Error" })
+    async addUserAccountAddress(@Param('id') userId: string, @Res() response, @Body() createUserAddressDto: CreateUserAddressDto) {
+        try {
+            const newAddress = await this.usersService.addNewShippingAddress(userId, createUserAddressDto)
+            if (newAddress) {
+                this.logger.log('new address created')
+                response.status(HttpStatus.CREATED).json(newAddress)
+            } else {
+                this.logger.error('new address can not be created')
+                response.status(HttpStatus.NOT_FOUND).json({ error: "the user id does not exists" })
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error')
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" })
         }
     }
@@ -158,7 +217,7 @@ export class UserController {
         const { user_name, surname, address, postalZip, city, country
             , identification } = updateBillingAddressDto
         try {
-            const newAddress: boolean = await this.userService.changeUserAccountBillingAddress(userId, user_name, surname, address, postalZip, city, country, identification)
+            const newAddress: boolean = await this.usersService.changeUserAccountBillingAddress(userId, user_name, surname, address, postalZip, city, country, identification)
             if (newAddress) {
                 this.logger.log('Billing Address updated')
                 response.status(HttpStatus.OK).json(newAddress)
@@ -170,7 +229,6 @@ export class UserController {
             this.logger.error('Internal Server Error')
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" })
         }
-
     }
 
     @Get('/search')
@@ -235,7 +293,7 @@ export class UserController {
     async updateUserAccountPassword(@Param('id') id: string, @Res() response, @Body() updateAccountUserPasswordDto: UpdateUserAccountPasswordDto) {
         const { password, newPassword, repeatNew } = updateAccountUserPasswordDto
         try {
-            const newData: boolean = await this.userService.changeUserAccountPassword(id, password, newPassword, repeatNew)
+            const newData: boolean = await this.usersService.changeUserAccountPassword(id, password, newPassword, repeatNew)
             if (newData) {
                 this.logger.log('Password updated successfully')
                 response.status(HttpStatus.OK).json(newData)
@@ -260,7 +318,7 @@ export class UserController {
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async userOrders(@Param('id') userId: string, @Res() response) {
         try {
-            const orders: OrderOverview[] = await this.userService.findOrdersBy(userId)
+            const orders: OrderOverview[] = await this.ordersService.findOrdersBy(userId)
             if (orders) {
                 this.logger.log(`Showing all orders from user ${userId}`)
                 response.status(HttpStatus.OK).json(orders)
@@ -287,7 +345,7 @@ export class UserController {
     })
     async userOrder(@Param('id') userId: string, @Param('orderid') orderId: string, @Res() response) {
         try {
-            const order: OrderOverview = await this.userService.findOrderBy(userId, orderId)
+            const order: OrderOverview = await this.ordersService.findOrderBy(userId, orderId)
             if (order) {
                 this.logger.log(`showing order ${orderId} from user ${userId}`)
                 response.status(HttpStatus.OK).json(order)
@@ -301,7 +359,6 @@ export class UserController {
 
         }
     }
-
 
 
 

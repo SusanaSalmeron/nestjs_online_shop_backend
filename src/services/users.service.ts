@@ -3,19 +3,19 @@ import { LoginUser } from "../classes/loginUser";
 import { AccountUserData } from '../classes/accountUserData'
 import * as loki from 'lokijs';
 import { AccountUserAddresses } from "../classes/accountUserAddresses";
-import { encrypt } from '../services/security.service';
+import { encrypt } from './security.service';
 import * as bcrypt from 'bcrypt'
 import { UpdateBillingAddress } from "../classes/updateBillingAddresses";
-import { Orders } from "../classes/orders";
-import { OrderProductsOverview } from "../classes/orderProductsOverview";
-import { OrderOverview } from "../classes/orderOverview";
-import { ProductService } from "./product.service";
-import { OrderPosition } from "../classes/OrderPosition";
+import { ProductsService } from "./products.service";
+import { CreateUserAddressDto } from "src/dto/createUserAddressDto";
+import { DeleteAddressDto } from "src/dto/deleteAddressDto";
+
 
 @Injectable()
-export class UserService {
-    private readonly logger = new Logger(UserService.name)
-    constructor(@Inject('DATABASE_CONNECTION') private db: loki, private productService: ProductService) { }
+export class UsersService {
+    private readonly logger = new Logger(UsersService.name)
+    private addressId = 32
+    constructor(@Inject('DATABASE_CONNECTION') private db: loki, private productService: ProductsService) { }
 
 
     async findUserByEmail(email: string): Promise<LoginUser> {
@@ -87,6 +87,42 @@ export class UserService {
         return addresses
     }
 
+    async addNewShippingAddress(userId: string, createUserAddressDto: CreateUserAddressDto): Promise<number> {
+        const addressesTable = this.db.getCollection('addresses')
+        const { user_name, surname, address, postalZip, city, country, defaultAddress } = createUserAddressDto
+        console.log(userId + "from usersService")
+        const newId: number = this.addressId++
+        addressesTable.insert(
+            {
+                id: newId,
+                user_name: user_name,
+                surname: surname,
+                address: address,
+                postalZip: postalZip,
+                city: city,
+                country: country,
+                defaultAddress: defaultAddress,
+                userId: parseInt(userId),
+            }
+        )
+
+        console.log(newId)
+        return newId
+    }
+
+    async deleteAddress(deleteAddressDto: DeleteAddressDto): Promise<boolean> {
+        const { addressId, userId } = deleteAddressDto
+        const addressesTable = this.db.getCollection('addresses')
+        const address = addressesTable.findOne({ id: parseInt(addressId) })
+        console.log(userId)
+        if (address.userId === parseInt(userId)) {
+            addressesTable.remove(address)
+            return true
+        } else {
+            return false
+        }
+    }
+
     async changeUserAccountPassword(userId: string, password: string, newPassword: string, repeatNew: string): Promise<boolean> {
         const usersTable = this.db.getCollection('users')
         try {
@@ -122,6 +158,8 @@ export class UserService {
             this.logger.error('Internal Server Error', err)
         }
     }
+
+    //TODO - UPDATE BILLING ADDRESS
 
     async changeUserAccountAddress(addressId: string, user_name: string, surname: string, address: string, postalZip: string, city: string, country: string, defaultAddress: boolean, userId: string): Promise<boolean> {
         const addressesTable = this.db.getCollection('addresses')
@@ -188,104 +226,6 @@ export class UserService {
         }
     }
 
-    async buildOrderOverview(order: Orders, user: AccountUserData): Promise<OrderOverview> {
-        const name = user.user_name
-        const surname = user.surname
-
-        const addressesTable = this.db.getCollection('addresses')
-        const delivery_address = addressesTable.findOne({ id: order.delivery_address_id })
-
-
-        const address = delivery_address.address
-        const postalZip = delivery_address.postalZip
-        const city = delivery_address.city
-        const country = delivery_address.country
-        const date = order.order_date
-        const status = order.status
-
-
-        const orderPositionTable = this.db.getCollection('orderPosition')
-        const foundProductsInOrder: OrderPosition[] = orderPositionTable.find({ order_id: order.id })
-
-        const productsArray = []
-        const totalProductArray = []
-
-
-        for (let i = 0; i < foundProductsInOrder.length; i++) {
-            const productsFromApi = await this.productService.findProductById(foundProductsInOrder[i].product_id.toString())
-
-            const productOverview = new OrderProductsOverview(
-                productsFromApi.name,
-                productsFromApi.brand,
-                foundProductsInOrder[i].colour_name,
-                productsFromApi.price,
-                foundProductsInOrder[i].units,
-                foundProductsInOrder[i].total,
-            )
-            productsArray.push(productOverview)
-            totalProductArray.push(foundProductsInOrder[i].total)
-        }
-        const orderTotal = totalProductArray.reduce(this.sum)
-
-        return new OrderOverview(
-            order.id,
-            name,
-            surname,
-            address,
-            postalZip,
-            city,
-            country,
-            date,
-            status,
-            productsArray,
-            orderTotal
-        )
-    }
-
-    private sum(accum, currentValue) {
-        return accum + currentValue
-    }
-
-    async findOrdersBy(userId: string): Promise<OrderOverview[]> {
-        const ordersTable = this.db.getCollection('orders')
-        const usersTable = this.db.getCollection('users')
-
-        const orders: OrderOverview[] = []
-        try {
-            const foundOrders = ordersTable.find({ user_id: parseInt(userId) })
-            const user: AccountUserData = usersTable.findOne({ id: parseInt(userId) })
-
-            if (foundOrders) {
-                for (let i = 0; i < foundOrders.length; i++) {
-                    const order = await this.buildOrderOverview(foundOrders[i], user)
-                    orders.push(order)
-                }
-            } else {
-                return null
-            }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
-        }
-        return orders
-    }
-
-    async findOrderBy(userId: string, orderId: string): Promise<OrderOverview> {
-        const ordersTable = this.db.getCollection('orders')
-        const usersTable = this.db.getCollection('users')
-
-        let order: OrderOverview = null
-        try {
-            const foundOrder = ordersTable.findOne({ id: parseInt(orderId) })
-            const user: AccountUserData = usersTable.findOne({ id: parseInt(userId) })
-
-            if (foundOrder) {
-                order = await this.buildOrderOverview(foundOrder, user)
-            }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
-        }
-        return order
-    }
 
 
 }
