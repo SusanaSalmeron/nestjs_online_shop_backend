@@ -75,8 +75,8 @@ export class ProductsService {
             response = (await this.httpService.axiosRef.get(`${this.baseUrl}/?product_type=${type}`)).data
         } catch (err) {
             this.logger.warn('Api not available', err)
-            response = await this.loadAndGetShadowCopy()
-            response.filter(p => p.product_type.toLowerCase() === type.toLowerCase())
+            const responseFromCopy = await this.loadAndGetShadowCopy()
+            response = responseFromCopy.filter(p => p.product_type.toLowerCase() === type.toLowerCase())
         }
         const newProducts = await this.findNewProducts()
         const products = response.map(p => {

@@ -17,9 +17,12 @@ import { UpdateUserAccountAddressesDto } from "../../dto/updateUserAccountAddres
 import { UpdateBillingAddressDto } from '../../dto/updateBillingAddressDto'
 import { OrderOverviewDto } from "../../dto/orderOverviewDto"
 import { OrderOverview } from "../../classes/orderOverview";
-import { OrdersService } from "src/services/orders.service";
-import { CreateUserAddressDto } from "src/dto/createUserAddressDto";
-import { DeleteAddressDto } from "src/dto/deleteAddressDto";
+import { OrdersService } from "../../services/orders.service";
+import { CreateUserAddressDto } from "../../dto/createUserAddressDto";
+import { DeleteAddressDto } from "../../dto/deleteAddressDto";
+import { ProductCard } from "../../classes/productCard";
+import { Search } from "../../classes/search";
+import { Product } from "src/classes/product";
 
 
 
@@ -81,7 +84,6 @@ export class UsersController {
         } catch (err) {
             this.logger.error('Internal Server Error', err)
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error')
-
         }
     }
 
@@ -189,7 +191,7 @@ export class UsersController {
     @ApiInternalServerErrorResponse({ description: "Internal Server Error" })
     async addUserAccountAddress(@Param('id') userId: string, @Res() response, @Body() createUserAddressDto: CreateUserAddressDto) {
         try {
-            const newAddress = await this.usersService.addNewShippingAddress(userId, createUserAddressDto)
+            const newAddress: number = await this.usersService.addNewShippingAddress(userId, createUserAddressDto)
             if (newAddress) {
                 this.logger.log('new address created')
                 response.status(HttpStatus.CREATED).json(newAddress)
@@ -237,7 +239,7 @@ export class UsersController {
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async userSearch(@Res() response) {
         try {
-            const products = await this.searchService.findAllBrandsAndNames()
+            const products: Search[] = await this.searchService.findAllBrandsAndNames()
             if (products) {
                 this.logger.log('products getting successfully')
                 response.status(HttpStatus.OK).send(products)
@@ -265,7 +267,7 @@ export class UsersController {
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async userSearchList(@Query('keyword') keyword: string, @Res() response) {
         try {
-            const products = await this.searchService.searchList(keyword)
+            const products: Product[] = await this.searchService.searchList(keyword)
             if (products.length) {
                 this.logger.log('Products found successfully')
                 response.status(HttpStatus.OK).json(products)
@@ -330,9 +332,15 @@ export class UsersController {
     }
 
     @Get('/:id/orders/:status')
+    @ApiOkResponse({
+        description: 'Getting orders successfully',
+        type: OrderOverviewDto
+    })
+    @ApiNotFoundResponse({ description: 'No Orders' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async userInProcessOrders(@Param('id') userId: string, @Param('status') status: string, @Res() response) {
         try {
-            const orders = await this.ordersService.findAllOrdersBy(status, userId)
+            const orders: OrderOverview[] = await this.ordersService.findAllOrdersBy(status, userId)
             if (orders) {
                 this.logger.log('Orders finded successfully')
                 response.status(HttpStatus.OK).json(orders)
@@ -369,6 +377,29 @@ export class UsersController {
             }
         } catch (err) {
             this.logger.error('Internal Server Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
+        }
+    }
+
+    @Get('/:id/wishlist')
+    @ApiOkResponse({
+        description: 'Getting wishlist successfully',
+    })
+    @ApiNotFoundResponse({ description: 'No wishlist' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async findUserWishlist(@Param('id') userId: string, @Res() response) {
+        console.log
+        try {
+            const wishlist: ProductCard[] = await this.usersService.getWishlist(userId)
+            if (wishlist) {
+                this.logger.log('Wishlist finded successfully')
+                response.status(HttpStatus.OK).json(wishlist)
+            } else {
+                this.logger.error('The wishlist is empty')
+                response.status(HttpStatus.NOT_FOUND).json({ error: 'Wishlist not found' })
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error')
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
         }
     }

@@ -1,0 +1,50 @@
+[
+    {
+        "userId": 1000,
+        "productId": 1045
+    },
+    {
+        "userId": 1000,
+        "productId": 1030
+    },
+    {
+        "userId": 1000,
+        "productId": 1005
+    },
+    {
+        "userId": 1000,
+        "productId": 966
+    },
+    {
+        "userId": 1000,
+        "productId": 1065
+    },
+    {
+        "userId": 999,
+        "productId": 965
+    },
+    {
+        "userId": 999,
+        "productId": 928
+    },
+    {
+        "userId": 999,
+        "productId": 868
+    },
+    {
+        "userId": 977,
+        "productId": 863
+    },
+    {
+        "userId": 975,
+        "productId": 849
+    },
+    {
+        "userId": 975,
+        "productId": 702
+    },
+    {
+        "userId": 975,
+        "productId": 1045
+    }
+]
