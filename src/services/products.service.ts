@@ -20,7 +20,7 @@ export class ProductsService {
         return this.shadowCopy
     }
 
-    async findProductById(id: string): Promise<ProductCard> {
+    async findProductById(id: number): Promise<ProductCard> {
         let response
         try {
             response = (await this.httpService.axiosRef.get(this.baseUrl, { timeout: 500 })).data
@@ -28,12 +28,12 @@ export class ProductsService {
             this.logger.warn('Api not available', err)
             response = await this.loadAndGetShadowCopy();
         }
-        const apiProductsDataFiltered = response.filter(p => p.id.toString() === id)
+        const apiProductsDataFiltered = response.filter(p => p.id === id)
         let productResult: ProductCard
 
         if (apiProductsDataFiltered.length === 0) {
             const newProducts = await this.findNewProducts()
-            const productFiltered: ProductCard[] = newProducts.filter(p => p.id.toString() === id)
+            const productFiltered: ProductCard[] = newProducts.filter(p => p.id === id)
             if (productFiltered.length > 0) {
                 productResult = productFiltered[0]
             }

@@ -1,49 +1,61 @@
 [
     {
+        "id": 1,
         "userId": 1000,
         "productId": 1045
     },
     {
+        "id": 2,
         "userId": 1000,
         "productId": 1030
     },
     {
+        "id": 3,
         "userId": 1000,
         "productId": 1005
     },
     {
+        "id": 4,
         "userId": 1000,
         "productId": 966
     },
     {
+        "id": 5,
         "userId": 1000,
         "productId": 1065
     },
     {
+        "id": 6,
         "userId": 999,
         "productId": 965
     },
     {
+        "id": 7,
         "userId": 999,
         "productId": 928
     },
     {
+        "id": 8,
         "userId": 999,
         "productId": 868
     },
     {
+        "id": 9,
         "userId": 977,
         "productId": 863
     },
     {
+        "id": 10,
         "userId": 975,
         "productId": 849
     },
     {
+        "id": 11,
         "userId": 975,
         "productId": 702
     },
     {
+        "id": 12,
         "userId": 975,
         "productId": 1045
     }

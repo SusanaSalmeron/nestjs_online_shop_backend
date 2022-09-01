@@ -17,7 +17,8 @@ import { ProductCard } from "../classes/productCard";
 export class UsersService {
     private readonly logger = new Logger(UsersService.name)
     private addressId = 32
-    constructor(@Inject('DATABASE_CONNECTION') private db: loki, private productService: ProductsService) { }
+    private productWishlistId = 13
+    constructor(@Inject('DATABASE_CONNECTION') private db: loki, private productsService: ProductsService) { }
 
 
     async findUserByEmail(email: string): Promise<LoginUser> {
@@ -35,10 +36,10 @@ export class UsersService {
         }
     }
 
-    async findUserById(id: string): Promise<AccountUserData> {
+    async findUserById(id: number): Promise<AccountUserData> {
         const usersTable = this.db.getCollection('users')
         try {
-            const foundUserData: AccountUserData = usersTable.findOne({ id: parseInt(id) })
+            const foundUserData: AccountUserData = usersTable.findOne({ id: id })
             if (foundUserData) {
                 return new AccountUserData(
                     foundUserData.id,
@@ -61,11 +62,11 @@ export class UsersService {
         }
     }
 
-    async findAddressesBy(userId: string): Promise<AccountUserAddresses[]> {
+    async findAddressesBy(userId: number): Promise<AccountUserAddresses[]> {
         const addressesTable = this.db.getCollection('addresses')
         let addresses
         try {
-            const foundAddresses: AccountUserAddresses[] = addressesTable.find({ userId: parseInt(userId) })
+            const foundAddresses: AccountUserAddresses[] = addressesTable.find({ userId: userId })
             if (foundAddresses) {
                 addresses = foundAddresses.map(a => {
                     return new AccountUserAddresses(
@@ -89,7 +90,7 @@ export class UsersService {
         return addresses
     }
 
-    async addNewShippingAddress(userId: string, createUserAddressDto: CreateUserAddressDto): Promise<number> {
+    async addNewShippingAddress(userId: number, createUserAddressDto: CreateUserAddressDto): Promise<number> {
         const addressesTable = this.db.getCollection('addresses')
         const { user_name, surname, address, postalZip, city, country, defaultAddress } = createUserAddressDto
         const newId: number = this.addressId++
@@ -103,7 +104,7 @@ export class UsersService {
                 city: city,
                 country: country,
                 defaultAddress: defaultAddress,
-                userId: parseInt(userId),
+                userId: userId,
             }
         )
         return newId
@@ -121,10 +122,10 @@ export class UsersService {
         }
     }
 
-    async changeUserAccountPassword(userId: string, password: string, newPassword: string, repeatNew: string): Promise<boolean> {
+    async changeUserAccountPassword(userId: number, password: string, newPassword: string, repeatNew: string): Promise<boolean> {
         const usersTable = this.db.getCollection('users')
         try {
-            const user: AccountUserData = usersTable.findOne({ id: parseInt(userId) })
+            const user: AccountUserData = usersTable.findOne({ id: userId })
             const match = await bcrypt.compare(password, user.password)
             if ((user && match) && newPassword === repeatNew) {
                 user.password = await encrypt(newPassword)
@@ -137,10 +138,10 @@ export class UsersService {
         }
     }
 
-    async changeUserAccountData(userId: string, user_name: string, surname: string, identification: string, date_of_birth: string, email: string, phone: string): Promise<boolean> {
+    async changeUserAccountData(userId: number, user_name: string, surname: string, identification: string, date_of_birth: string, email: string, phone: string): Promise<boolean> {
         const usersTable = this.db.getCollection('users')
         try {
-            const user: AccountUserData = usersTable.findOne({ id: parseInt(userId) })
+            const user: AccountUserData = usersTable.findOne({ id: userId })
             if (user) {
                 user.user_name = user_name;
                 user.surname = surname;
@@ -159,10 +160,10 @@ export class UsersService {
 
     //TODO - UPDATE BILLING ADDRESS
 
-    async changeUserAccountAddress(addressId: string, user_name: string, surname: string, address: string, postalZip: string, city: string, country: string, defaultAddress: boolean, userId: string): Promise<boolean> {
+    async changeUserAccountAddress(addressId: string, user_name: string, surname: string, address: string, postalZip: string, city: string, country: string, defaultAddress: boolean, userId: number): Promise<boolean> {
         const addressesTable = this.db.getCollection('addresses')
         try {
-            const foundAddresses: AccountUserAddresses[] = addressesTable.find({ userId: parseInt(userId) })
+            const foundAddresses: AccountUserAddresses[] = addressesTable.find({ userId: userId })
             if (foundAddresses) {
                 const addresses = foundAddresses.map(a => {
                     return new AccountUserAddresses(
@@ -203,10 +204,10 @@ export class UsersService {
         }
     }
 
-    async changeUserAccountBillingAddress(id: string, user_name: string, surname: string, address: string, postalZip: string, city: string, country: string, identification: string): Promise<boolean> {
+    async changeUserAccountBillingAddress(id: number, user_name: string, surname: string, address: string, postalZip: string, city: string, country: string, identification: string): Promise<boolean> {
         const usersTable = this.db.getCollection('users')
         try {
-            const user: UpdateBillingAddress = usersTable.findOne({ id: parseInt(id) })
+            const user: UpdateBillingAddress = usersTable.findOne({ id: id })
             if (user) {
                 user.user_name = user_name;
                 user.surname = surname;
@@ -224,14 +225,14 @@ export class UsersService {
         }
     }
 
-    async getWishlist(userId: string): Promise<ProductCard[]> {
+    async getWishlist(userId: number): Promise<ProductCard[]> {
         const wishedProductsTable = this.db.getCollection('wishlist')
         const productList: ProductCard[] = []
         try {
-            const wishlist: Wishlist[] = wishedProductsTable.find({ userId: parseInt(userId) })
+            const wishlist: Wishlist[] = wishedProductsTable.find({ userId: userId })
             if (wishlist) {
                 for (let i = 0; i < wishlist.length; i++) {
-                    const product: ProductCard = await this.productService.findProductById(wishlist[i].productId.toString())
+                    const product: ProductCard = await this.productsService.findProductById(wishlist[i].productId)
                     productList.push(product)
                 }
             } else {
@@ -241,6 +242,51 @@ export class UsersService {
             this.logger.error('Internal Server Error', err)
         }
         return productList
+    }
+
+    async addProductFromUserWishlist(userId: number, productId: number): Promise<boolean> {
+        const wishedProductsTable = this.db.getCollection('wishlist')
+        let newWishlistProductId: number
+        const user: AccountUserData = await this.findUserById(userId)
+        const product: ProductCard = await this.productsService.findProductById(productId)
+        try {
+            if (user && product) {
+                const productInWishlist: Wishlist = wishedProductsTable.findOne({ userId: userId, productId: productId })
+                if (!productInWishlist) {
+                    newWishlistProductId = this.productWishlistId++
+                    wishedProductsTable.insert({
+                        id: newWishlistProductId,
+                        userId: userId,
+                        productId: productId
+                    })
+                    this.logger.log(`Product with wishlist id ${newWishlistProductId} added successfully`)
+                    return true
+                } else {
+                    this.logger.warn(`Product with wishlist id ${newWishlistProductId} is already in the wishlist`)
+                    return true
+                }
+            } else {
+                this.logger.error(`The user ${userId} or the product ${productId} does not exists`)
+                return false
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error', err)
+        }
+    }
+
+    async deleteProductFromUserWishlist(userId: number, productId: number): Promise<boolean> {
+        const wishedProductsTable = this.db.getCollection('wishlist')
+        try {
+            const productToBeDeleted: Wishlist = wishedProductsTable.findOne({ productId: productId, userId: userId })
+            if (productToBeDeleted) {
+                wishedProductsTable.remove(productToBeDeleted)
+                return true
+            } else {
+                return false
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error', err)
+        }
     }
 
 

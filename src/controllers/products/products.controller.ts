@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Param, HttpStatus, Res, Query } from "@nestjs/common";
+import { Controller, Get, Logger, Param, HttpStatus, Res, Query, ParseIntPipe } from "@nestjs/common";
 import { ProductsService } from "../../services/products.service";
 import { ApiOkResponse, ApiNotFoundResponse, ApiInternalServerErrorResponse } from "@nestjs/swagger";
 import { ProductDto } from "../../dto/productDto";
@@ -62,7 +62,7 @@ export class ProductsController {
     })
     @ApiNotFoundResponse({ description: 'product not found' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async showProduct(@Param('id') id: string, @Res() response) {
+    async showProduct(@Param('id', ParseIntPipe) id: number, @Res() response) {
         try {
             const product = await this.productService.findProductById(id)
             if (product) {

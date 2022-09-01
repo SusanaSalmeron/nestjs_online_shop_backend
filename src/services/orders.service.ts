@@ -41,7 +41,7 @@ export class OrdersService {
 
 
         for (let i = 0; i < foundProductsInOrder.length; i++) {
-            const productsFromApi = await this.productsService.findProductById(foundProductsInOrder[i].product_id.toString())
+            const productsFromApi = await this.productsService.findProductById(foundProductsInOrder[i].product_id)
 
             const productOverview = new OrderProductsOverview(
                 productsFromApi.name,
@@ -75,14 +75,14 @@ export class OrdersService {
         return accum + currentValue
     }
 
-    async findOrdersBy(userId: string): Promise<OrderOverview[]> {
+    async findOrdersBy(userId: number): Promise<OrderOverview[]> {
         const ordersTable = this.db.getCollection('orders')
         const usersTable = this.db.getCollection('users')
 
         const orders: OrderOverview[] = []
         try {
-            const foundOrders = ordersTable.find({ user_id: parseInt(userId) })
-            const user: AccountUserData = usersTable.findOne({ id: parseInt(userId) })
+            const foundOrders = ordersTable.find({ user_id: userId })
+            const user: AccountUserData = usersTable.findOne({ id: userId })
 
             if (foundOrders) {
                 for (let i = 0; i < foundOrders.length; i++) {
@@ -98,15 +98,13 @@ export class OrdersService {
         return orders
     }
 
-    async findOrderBy(userId: string, orderId: string): Promise<OrderOverview> {
+    async findOrderBy(userId: number, orderId: number): Promise<OrderOverview> {
         const ordersTable = this.db.getCollection('orders')
         const usersTable = this.db.getCollection('users')
-
         let order: OrderOverview = null
         try {
-            const foundOrder = ordersTable.findOne({ id: parseInt(orderId) })
-            const user: AccountUserData = usersTable.findOne({ id: parseInt(userId) })
-
+            const foundOrder = ordersTable.findOne({ id: orderId })
+            const user: AccountUserData = usersTable.findOne({ id: userId })
             if (foundOrder) {
                 order = await this.buildOrderOverview(foundOrder, user)
             }
@@ -116,15 +114,15 @@ export class OrdersService {
         return order
     }
 
-    async findAllOrdersBy(status: string, userId: string): Promise<OrderOverview[]> {
+    async findAllOrdersBy(status: string, userId: number): Promise<OrderOverview[]> {
         const ordersTable = this.db.getCollection('orders')
         const usersTable = this.db.getCollection('users')
 
         const orders: OrderOverview[] = []
 
         try {
-            const foundOrders = ordersTable.find({ user_id: parseInt(userId) })
-            const user: AccountUserData = usersTable.findOne({ id: parseInt(userId) })
+            const foundOrders = ordersTable.find({ user_id: userId })
+            const user: AccountUserData = usersTable.findOne({ id: userId })
             if (foundOrders) {
                 const filteredOrders = foundOrders.filter(o => {
                     if (status === "inprocess") {

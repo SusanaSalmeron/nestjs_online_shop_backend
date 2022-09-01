@@ -1,5 +1,5 @@
-import { Body, Controller, HttpStatus, Logger, Post, Get, Res, Query, Param, Put, Delete } from "@nestjs/common";
-import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse, ApiCreatedResponse, ApiQuery } from "@nestjs/swagger";
+import { Body, Controller, HttpStatus, Logger, Post, Get, Res, Query, Param, Put, Delete, ParseIntPipe } from "@nestjs/common";
+import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse, ApiCreatedResponse, ApiQuery, ApiNoContentResponse } from "@nestjs/swagger";
 import { UsersService } from "../../services/users.service";
 import { TokenService } from "../../services/token.service";
 import { SearchService } from "../../services/search.service";
@@ -22,7 +22,8 @@ import { CreateUserAddressDto } from "../../dto/createUserAddressDto";
 import { DeleteAddressDto } from "../../dto/deleteAddressDto";
 import { ProductCard } from "../../classes/productCard";
 import { Search } from "../../classes/search";
-import { Product } from "src/classes/product";
+import { Product } from "../../classes/product";
+import { Message } from "src/classes/message";
 
 
 
@@ -71,7 +72,7 @@ export class UsersController {
     })
     @ApiNotFoundResponse({ description: 'No user found' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async userAccountData(@Param('id') id: string, @Res() response) {
+    async userAccountData(@Param('id', ParseIntPipe) id: number, @Res() response) {
         try {
             const user: AccountUserData = await this.usersService.findUserById(id)
             if (user) {
@@ -94,7 +95,7 @@ export class UsersController {
     })
     @ApiNotFoundResponse({ description: 'User data has not been updated' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async updateUserAccountData(@Param('id') id: string, @Res() response, @Body() updateUserAccountData: UpdateUserAccountDataDto) {
+    async updateUserAccountData(@Param('id', ParseIntPipe) id: number, @Res() response, @Body() updateUserAccountData: UpdateUserAccountDataDto) {
         const { user_name, surname, identification, date_of_birth, email, phone } = updateUserAccountData
         try {
             const newData: boolean = await this.usersService.changeUserAccountData(id, user_name, surname, identification, date_of_birth, email, phone)
@@ -118,7 +119,7 @@ export class UsersController {
     })
     @ApiNotFoundResponse({ description: 'No Addresses' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async userAccountAdresses(@Param('id') id: string, @Res() response) {
+    async userAccountAdresses(@Param('id', ParseIntPipe) id: number, @Res() response) {
         try {
             const addresses: AccountUserAddresses[] = await this.usersService.findAddressesBy(id)
             if (addresses) {
@@ -141,7 +142,7 @@ export class UsersController {
     })
     @ApiNotFoundResponse({ description: 'User not found' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async updateUserAccountAddresses(@Param('id') userId: string, @Res() response, @Body() updateUserAccountAddresses: UpdateUserAccountAddressesDto) {
+    async updateUserAccountAddresses(@Param('id', ParseIntPipe) userId: number, @Res() response, @Body() updateUserAccountAddresses: UpdateUserAccountAddressesDto) {
         const { id, user_name, surname, address, postalZip, city, country, defaultAddress } = updateUserAccountAddresses
         try {
             const newAddress: boolean = await this.usersService.changeUserAccountAddress(id, user_name, surname, address, postalZip, city, country, defaultAddress, userId)
@@ -189,7 +190,7 @@ export class UsersController {
     @ApiCreatedResponse({ description: "Address Created" })
     @ApiNotFoundResponse({ description: "User not found" })
     @ApiInternalServerErrorResponse({ description: "Internal Server Error" })
-    async addUserAccountAddress(@Param('id') userId: string, @Res() response, @Body() createUserAddressDto: CreateUserAddressDto) {
+    async addUserAccountAddress(@Param('id', ParseIntPipe) userId: number, @Res() response, @Body() createUserAddressDto: CreateUserAddressDto) {
         try {
             const newAddress: number = await this.usersService.addNewShippingAddress(userId, createUserAddressDto)
             if (newAddress) {
@@ -212,7 +213,7 @@ export class UsersController {
     })
     @ApiNotFoundResponse({ description: 'New billing address not found' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async updateUserAccountBillingAddress(@Param('id') userId: string, @Res() response, @Body() updateBillingAddressDto: UpdateBillingAddressDto) {
+    async updateUserAccountBillingAddress(@Param('id', ParseIntPipe) userId: number, @Res() response, @Body() updateBillingAddressDto: UpdateBillingAddressDto) {
         const { user_name, surname, address, postalZip, city, country
             , identification } = updateBillingAddressDto
         try {
@@ -289,7 +290,7 @@ export class UsersController {
     @ApiInternalServerErrorResponse({
         description: 'Internal Server Error'
     })
-    async updateUserAccountPassword(@Param('id') id: string, @Res() response, @Body() updateAccountUserPasswordDto: UpdateUserAccountPasswordDto) {
+    async updateUserAccountPassword(@Param('id', ParseIntPipe) id: number, @Res() response, @Body() updateAccountUserPasswordDto: UpdateUserAccountPasswordDto) {
         const { password, newPassword, repeatNew } = updateAccountUserPasswordDto
         try {
             const newData: boolean = await this.usersService.changeUserAccountPassword(id, password, newPassword, repeatNew)
@@ -315,7 +316,7 @@ export class UsersController {
     })
     @ApiNotFoundResponse({ description: 'No Orders' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async userOrders(@Param('id') userId: string, @Res() response) {
+    async userOrders(@Param('id', ParseIntPipe) userId: number, @Res() response) {
         try {
             const orders: OrderOverview[] = await this.ordersService.findOrdersBy(userId)
             if (orders) {
@@ -331,28 +332,6 @@ export class UsersController {
         }
     }
 
-    @Get('/:id/orders/:status')
-    @ApiOkResponse({
-        description: 'Getting orders successfully',
-        type: OrderOverviewDto
-    })
-    @ApiNotFoundResponse({ description: 'No Orders' })
-    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async userInProcessOrders(@Param('id') userId: string, @Param('status') status: string, @Res() response) {
-        try {
-            const orders: OrderOverview[] = await this.ordersService.findAllOrdersBy(status, userId)
-            if (orders) {
-                this.logger.log('Orders finded successfully')
-                response.status(HttpStatus.OK).json(orders)
-            } else {
-                this.logger.error(`The user with id ${userId} does not exists`)
-                response.status(HttpStatus.NOT_FOUND).json({ error: `The user with id ${userId} does not exists` })
-            }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
-            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
-        }
-    }
 
     @Get('/:id/orders/:orderid')
     @ApiOkResponse({
@@ -365,7 +344,7 @@ export class UsersController {
     @ApiInternalServerErrorResponse({
         description: "Internal Server Error"
     })
-    async userOrder(@Param('id') userId: string, @Param('orderid') orderId: string, @Res() response) {
+    async userOrder(@Param('id', ParseIntPipe) userId: number, @Param('orderid', ParseIntPipe) orderId: number, @Res() response) {
         try {
             const order: OrderOverview = await this.ordersService.findOrderBy(userId, orderId)
             if (order) {
@@ -381,14 +360,36 @@ export class UsersController {
         }
     }
 
+    @Get('/:id/orders/status/:status')
+    @ApiOkResponse({
+        description: 'Getting orders successfully',
+        type: OrderOverviewDto
+    })
+    @ApiNotFoundResponse({ description: 'No Orders' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async userInProcessOrders(@Param('id', ParseIntPipe) userId: number, @Param('status') status: string, @Res() response) {
+        try {
+            const orders: OrderOverview[] = await this.ordersService.findAllOrdersBy(status, userId)
+            if (orders) {
+                this.logger.log('Orders finded successfully')
+                response.status(HttpStatus.OK).json(orders)
+            } else {
+                this.logger.error(`The user with id ${userId} does not exists`)
+                response.status(HttpStatus.NOT_FOUND).json({ error: `The user with id ${userId} does not exists` })
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
+        }
+    }
+
     @Get('/:id/wishlist')
     @ApiOkResponse({
         description: 'Getting wishlist successfully',
     })
     @ApiNotFoundResponse({ description: 'No wishlist' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async findUserWishlist(@Param('id') userId: string, @Res() response) {
-        console.log
+    async findUserWishlist(@Param('id', ParseIntPipe) userId: number, @Res() response) {
         try {
             const wishlist: ProductCard[] = await this.usersService.getWishlist(userId)
             if (wishlist) {
@@ -402,6 +403,54 @@ export class UsersController {
             this.logger.error('Internal Server Error')
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
         }
+    }
+
+    @Put(':userid/wishlist/:productid')
+    @ApiCreatedResponse({
+        description: 'Product from wishlist added successfully',
+    })
+    @ApiNoContentResponse({ description: 'The product already exists in the wishlist' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async addProductToWishlist(@Param('userid', ParseIntPipe) userId: number, @Param('productid', ParseIntPipe) productId: number, @Res() response) {
+        console.log({ from: "controller", userId: userId, productId: productId })
+        try {
+            const newProductToAddToWishlist: boolean = await this.usersService.addProductFromUserWishlist(userId, productId)
+            console.log(`from controller: ${newProductToAddToWishlist}`)
+            if (newProductToAddToWishlist) {
+                this.logger.log('Product added to wishlist successfully')
+                response.status(HttpStatus.CREATED).json(newProductToAddToWishlist)
+            } else {
+                this.logger.error('The product already exists in the wishlist')
+                response.status(HttpStatus.NO_CONTENT).json({ error: 'The product already exists in the wishlist' })
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
+        }
+    }
+
+
+    @Delete('/:id/wishlist/:productid')
+    @ApiOkResponse({
+        description: 'Product from wishlist remove successfully',
+    })
+    @ApiNotFoundResponse({ description: 'User id or product id not found' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async deleteProductFromWishlist(@Param('id', ParseIntPipe) userId: number, @Param('productid', ParseIntPipe) productId: number, @Res() response) {
+        try {
+            const productDeleted: boolean = await this.usersService.deleteProductFromUserWishlist(userId, productId)
+            if (productDeleted) {
+                this.logger.log('Product remove from wishlist successfully')
+                response.status(HttpStatus.OK).send()
+            } else {
+                this.logger.error(`User ${userId} or product id ${productId} does not exists`)
+                response.status(HttpStatus.NOT_FOUND).json({ error: `User ${userId} or product id ${productId} does not exists` })
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" })
+        }
+
     }
 
 
