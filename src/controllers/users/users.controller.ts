@@ -23,8 +23,8 @@ import { DeleteAddressDto } from "../../dto/deleteAddressDto";
 import { ProductCard } from "../../classes/productCard";
 import { Search } from "../../classes/search";
 import { Product } from "../../classes/product";
-import { ProductsService } from "src/services/products.service";
-import { WishlistService } from "src/services/wishlist.service";
+import { ProductsService } from "../../services/products.service";
+import { WishlistService } from "../../services/wishlist.service";
 
 
 
@@ -136,17 +136,17 @@ export class UsersController {
         }
     }
 
-    @Put('/:id/addresses')
+    @Put('/:userid/addresses/:addressid')
     @ApiOkResponse({
         description: 'Address updated successfully',
         type: UpdateUserAccountAddressesDto
     })
     @ApiNotFoundResponse({ description: 'User not found' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async updateUserAccountAddresses(@Param('id', ParseIntPipe) userId: number, @Res() response, @Body() updateUserAccountAddresses: UpdateUserAccountAddressesDto) {
-        const { id, user_name, surname, address, postalZip, city, country, defaultAddress } = updateUserAccountAddresses
+    async updateUserAccountAddresses(@Param('userid', ParseIntPipe) userId: number, @Param('addressid', ParseIntPipe) addressId: number, @Res() response, @Body() updateUserAccountAddresses: UpdateUserAccountAddressesDto) {
+        const { user_name, surname, address, postalZip, city, country, defaultAddress } = updateUserAccountAddresses
         try {
-            const newAddress: boolean = await this.usersService.changeUserAccountAddress(id, user_name, surname, address, postalZip, city, country, defaultAddress, userId)
+            const newAddress: boolean = await this.usersService.changeUserAccountAddress(addressId, user_name, surname, address, postalZip, city, country, defaultAddress, userId)
             if (newAddress) {
                 this.logger.log('Address updated successfully')
                 response.status(HttpStatus.OK).json(newAddress)

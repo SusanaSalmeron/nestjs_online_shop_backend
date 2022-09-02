@@ -158,49 +158,26 @@ export class UsersService {
         }
     }
 
-    //TODO - UPDATE BILLING ADDRESS
-
-    async changeUserAccountAddress(addressId: string, user_name: string, surname: string, address: string, postalZip: string, city: string, country: string, defaultAddress: boolean, userId: number): Promise<boolean> {
+    async changeUserAccountAddress(addressId: number, user_name: string, surname: string, address: string, postalZip: string, city: string, country: string, defaultAddress: boolean, userId: number): Promise<boolean> {
         const addressesTable = this.db.getCollection('addresses')
         try {
-            const foundAddresses: AccountUserAddresses[] = addressesTable.find({ userId: userId })
-            if (foundAddresses) {
-                const addresses = foundAddresses.map(a => {
-                    return new AccountUserAddresses(
-                        a.id,
-                        a.user_name,
-                        a.surname,
-                        a.address,
-                        a.postalZip,
-                        a.city,
-                        a.country,
-                        a.defaultAddress,
-                        a.userId
-                    )
-                })
-                const filteredAddress = addresses.filter(a => {
-                    return a.id.toString() === addressId.toString()
-                }).map(a => {
-                    a.user_name = user_name
-                    return addressesTable.update(filteredAddress)
-                })
-
-
-
-                /* filteredAddress[0].user_name = user_name;
-                filteredAddress[0].surname = surname;
-                filteredAddress[0].address = address;
-                filteredAddress[0].postalZip = postalZip;
-                filteredAddress[0].city = city;
-                filteredAddress[0].country = country;
-                filteredAddress[0].defaultAddress = defaultAddress;
-                filteredAddress[0].id = parseInt(userId);
-                return addressesTable.update(filteredAddress) */
+            const addressFound: AccountUserAddresses = addressesTable.findOne({ userId: userId, id: addressId })
+            if (addressFound) {
+                addressFound.id = addressId
+                addressFound.user_name = user_name;
+                addressFound.surname = surname;
+                addressFound.address = address;
+                addressFound.postalZip = postalZip;
+                addressFound.city = city;
+                addressFound.country = country;
+                addressFound.defaultAddress = defaultAddress;
+                addressFound.userId = userId;
+                return addressesTable.update(addressFound)
             } else {
                 return false
             }
         } catch (err) {
-            this.logger.error('Internal Server Error', err)
+            this.logger.error('Internal Server Error, err')
         }
     }
 

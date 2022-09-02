@@ -4,7 +4,7 @@ import { Orders } from "../classes/orders";
 import { OrderProductsOverview } from "../classes/orderProductsOverview";
 import { OrderOverview } from "../classes/orderOverview";
 import { OrderPosition } from "../classes/OrderPosition";
-import { AccountUserData } from "src/classes/accountUserData";
+import { AccountUserData } from "../classes/accountUserData";
 import { ProductsService } from "./products.service";
 
 

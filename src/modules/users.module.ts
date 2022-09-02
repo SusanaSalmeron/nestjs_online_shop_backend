@@ -8,8 +8,8 @@ import { UsersController } from '../controllers/users/users.controller';
 import { DatabaseModule } from '../database/database.module';
 import { TokenService } from '../services/token.service';
 import { UsersService } from '../services/users.service';
-import { OrdersService } from 'src/services/orders.service';
-import { WishlistService } from 'src/services/wishlist.service';
+import { OrdersService } from '../services/orders.service';
+import { WishlistService } from '../services/wishlist.service';
 
 @Module({
     providers: [UsersService, TokenService, ConfigService, SearchService, ShadowCopyService, ProductsService, OrdersService, WishlistService
