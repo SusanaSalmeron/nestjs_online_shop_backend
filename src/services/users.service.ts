@@ -247,30 +247,19 @@ export class UsersService {
     async addProductFromUserWishlist(userId: number, productId: number): Promise<boolean> {
         const wishedProductsTable = this.db.getCollection('wishlist')
         let newWishlistProductId: number
-        const user: AccountUserData = await this.findUserById(userId)
-        const product: ProductCard = await this.productsService.findProductById(productId)
-        try {
-            if (user && product) {
-                const productInWishlist: Wishlist = wishedProductsTable.findOne({ userId: userId, productId: productId })
-                if (!productInWishlist) {
-                    newWishlistProductId = this.productWishlistId++
-                    wishedProductsTable.insert({
-                        id: newWishlistProductId,
-                        userId: userId,
-                        productId: productId
-                    })
-                    this.logger.log(`Product with wishlist id ${newWishlistProductId} added successfully`)
-                    return true
-                } else {
-                    this.logger.warn(`Product with wishlist id ${newWishlistProductId} is already in the wishlist`)
-                    return true
-                }
-            } else {
-                this.logger.error(`The user ${userId} or the product ${productId} does not exists`)
-                return false
-            }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
+        const productInWishlist: Wishlist = wishedProductsTable.findOne({ userId: userId, productId: productId })
+        if (!productInWishlist) {
+            newWishlistProductId = this.productWishlistId++
+            wishedProductsTable.insert({
+                id: newWishlistProductId,
+                userId: userId,
+                productId: productId
+            })
+            this.logger.log(`Product with wishlist id ${newWishlistProductId} added successfully`)
+            return true
+        } else {
+            this.logger.warn(`Product ${productId} is already in the wishlist`)
+            return false
         }
     }
 
@@ -288,6 +277,18 @@ export class UsersService {
             this.logger.error('Internal Server Error', err)
         }
     }
+
+    async exists(userId: number): Promise<boolean> {
+        const userFound: AccountUserData = await this.findUserById(userId)
+        if (userFound) {
+            this.logger.log(`The user ${userId} exists`)
+            return true
+        } else {
+            this.logger.error(`The user ${userId} does not exists`)
+            return false
+        }
+    }
+
 
 
 }

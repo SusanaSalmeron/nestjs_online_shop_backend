@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Logger, Post, Get, Res, Query, Param, Put, Delete, ParseIntPipe } from "@nestjs/common";
+import { Body, Controller, HttpStatus, Logger, Post, Get, Res, Query, Param, Put, Delete, ParseIntPipe, Head } from "@nestjs/common";
 import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse, ApiCreatedResponse, ApiQuery, ApiNoContentResponse } from "@nestjs/swagger";
 import { UsersService } from "../../services/users.service";
 import { TokenService } from "../../services/token.service";
@@ -23,14 +23,15 @@ import { DeleteAddressDto } from "../../dto/deleteAddressDto";
 import { ProductCard } from "../../classes/productCard";
 import { Search } from "../../classes/search";
 import { Product } from "../../classes/product";
-import { Message } from "src/classes/message";
+import { ProductsService } from "src/services/products.service";
+import { WishlistService } from "src/services/wishlist.service";
 
 
 
 @Controller('users')
 export class UsersController {
     private readonly logger = new Logger(UsersController.name)
-    constructor(private usersService: UsersService, private tokenService: TokenService, private readonly searchService: SearchService, private ordersService: OrdersService) { }
+    constructor(private usersService: UsersService, private tokenService: TokenService, private searchService: SearchService, private ordersService: OrdersService, private productsService: ProductsService, private wishlistService: WishlistService) { }
 
     @Post('/login')
     @ApiBody({
@@ -383,6 +384,38 @@ export class UsersController {
         }
     }
 
+    @Head(':id/wishlist/:productid')
+    @ApiOkResponse({
+        description: 'The product is not in the wishlist',
+    })
+    @ApiNoContentResponse({ description: 'The product is in the wishlist' })
+    @ApiNotFoundResponse({ description: 'The user or product does not exists' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async checkProductOnWishlist(@Param('id', ParseIntPipe) userId: number, @Param('productid', ParseIntPipe) productId: number, @Res() response) {
+        const user = await this.usersService.exists(userId)
+        const product = await this.productsService.exists(productId)
+        if (user && product) {
+            this.logger.log(`User ${userId} and product ${productId} found`)
+            try {
+                const checkedProduct: boolean = await this.wishlistService.findProductOnWishlist(userId, productId)
+                if (!checkedProduct) {
+                    this.logger.log('The product is not in the wishlist')
+                    response.status(HttpStatus.NOT_FOUND).send(checkedProduct)
+                } else {
+                    this.logger.error('The product is in the wishlist')
+                    response.status(HttpStatus.OK).json({ error: 'The product ins in the wishlist' })
+                }
+            } catch (err) {
+                this.logger.error('Internal Server Error')
+                response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
+            }
+        } else {
+            this.logger.error(`User ${userId} and product ${productId} not found`)
+            response.status(HttpStatus.BAD_REQUEST).json({ error: `User ${userId} and product ${productId} not found` })
+        }
+    }
+
+
     @Get('/:id/wishlist')
     @ApiOkResponse({
         description: 'Getting wishlist successfully',
@@ -412,21 +445,27 @@ export class UsersController {
     @ApiNoContentResponse({ description: 'The product already exists in the wishlist' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async addProductToWishlist(@Param('userid', ParseIntPipe) userId: number, @Param('productid', ParseIntPipe) productId: number, @Res() response) {
-        console.log({ from: "controller", userId: userId, productId: productId })
-        try {
-            const newProductToAddToWishlist: boolean = await this.usersService.addProductFromUserWishlist(userId, productId)
-            console.log(`from controller: ${newProductToAddToWishlist}`)
-            if (newProductToAddToWishlist) {
-                this.logger.log('Product added to wishlist successfully')
-                response.status(HttpStatus.CREATED).json(newProductToAddToWishlist)
-            } else {
-                this.logger.error('The product already exists in the wishlist')
-                response.status(HttpStatus.NO_CONTENT).json({ error: 'The product already exists in the wishlist' })
+        const user: boolean = await this.usersService.exists(userId)
+        const product: boolean = await this.productsService.exists(productId)
+        if (user && product) {
+            try {
+                const newProductToAddToWishlist: boolean = await this.usersService.addProductFromUserWishlist(userId, productId)
+                if (newProductToAddToWishlist) {
+                    this.logger.log('Product added to wishlist successfully')
+                    response.status(HttpStatus.CREATED).json(newProductToAddToWishlist)
+                } else {
+                    this.logger.error('The product already exists in the wishlist')
+                    response.status(HttpStatus.NO_CONTENT).json({ error: 'The product already exists in the wishlist' })
+                }
+            } catch (err) {
+                this.logger.error('Internal Server Error', err)
+                response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
             }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
-            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
+        } else {
+            this.logger.error(`The user ${userId} or the product ${productId} does not exists`)
+            response.status(HttpStatus.NOT_FOUND).json({ error: `The user ${userId} or the product ${productId} does not exists` })
         }
+
     }
 
 
