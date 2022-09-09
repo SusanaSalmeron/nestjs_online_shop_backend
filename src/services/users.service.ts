@@ -27,7 +27,7 @@ export class UsersService {
         if (foundUser) {
             return new LoginUser(
                 foundUser.id,
-                foundUser.name,
+                foundUser.user_name,
                 foundUser.email,
                 foundUser.password
             )
@@ -64,7 +64,7 @@ export class UsersService {
 
     async findAddressesBy(userId: number): Promise<AccountUserAddresses[]> {
         const addressesTable = this.db.getCollection('addresses')
-        let addresses
+        let addresses: AccountUserAddresses[]
         try {
             const foundAddresses: AccountUserAddresses[] = addressesTable.find({ userId: userId })
             if (foundAddresses) {
@@ -91,30 +91,34 @@ export class UsersService {
     }
 
     async addNewShippingAddress(userId: number, createUserAddressDto: CreateUserAddressDto): Promise<number> {
-        const addressesTable = this.db.getCollection('addresses')
-        const { user_name, surname, address, postalZip, city, country, defaultAddress } = createUserAddressDto
-        const newId: number = this.addressId++
-        addressesTable.insert(
-            {
-                id: newId,
-                user_name: user_name,
-                surname: surname,
-                address: address,
-                postalZip: postalZip,
-                city: city,
-                country: country,
-                defaultAddress: defaultAddress,
-                userId: userId,
-            }
-        )
-        return newId
+        if (await this.exists(userId)) {
+            const addressesTable = this.db.getCollection('addresses')
+            const { user_name, surname, address, postalZip, city, country, defaultAddress } = createUserAddressDto
+            const newId: number = this.addressId++
+            addressesTable.insert(
+                {
+                    id: newId,
+                    user_name: user_name,
+                    surname: surname,
+                    address: address,
+                    postalZip: postalZip,
+                    city: city,
+                    country: country,
+                    defaultAddress: defaultAddress,
+                    userId: userId,
+                }
+            )
+            return newId
+        } else {
+            return null
+        }
     }
 
     async deleteAddress(deleteAddressDto: DeleteAddressDto): Promise<boolean> {
         const { addressId, userId } = deleteAddressDto
         const addressesTable = this.db.getCollection('addresses')
         const address: AccountUserAddresses = addressesTable.findOne({ id: parseInt(addressId) })
-        if (address.userId === parseInt(userId)) {
+        if (address && address.userId === parseInt(userId)) {
             addressesTable.remove(address)
             return true
         } else {

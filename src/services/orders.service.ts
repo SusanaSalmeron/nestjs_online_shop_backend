@@ -9,8 +9,6 @@ import { ProductsService } from "./products.service";
 
 
 
-
-
 @Injectable()
 export class OrdersService {
     private readonly logger = new Logger(OrdersService.name)
@@ -20,11 +18,8 @@ export class OrdersService {
     async buildOrderOverview(order: Orders, user: AccountUserData): Promise<OrderOverview> {
         const name = user.user_name
         const surname = user.surname
-
         const addressesTable = this.db.getCollection('addresses')
         const delivery_address = addressesTable.findOne({ id: order.delivery_address_id })
-
-
         const address = delivery_address.address
         const postalZip = delivery_address.postalZip
         const city = delivery_address.city
@@ -32,17 +27,14 @@ export class OrdersService {
         const date = order.order_date
         const status = order.status
 
-
         const orderPositionTable = this.db.getCollection('orderPosition')
         const foundProductsInOrder: OrderPosition[] = orderPositionTable.find({ order_id: order.id })
-
         const productsArray = []
         const totalProductArray = []
 
 
         for (let i = 0; i < foundProductsInOrder.length; i++) {
             const productsFromApi = await this.productsService.findProductById(foundProductsInOrder[i].product_id)
-
             const productOverview = new OrderProductsOverview(
                 productsFromApi.name,
                 productsFromApi.brand,
@@ -78,16 +70,18 @@ export class OrdersService {
     async findOrdersBy(userId: number): Promise<OrderOverview[]> {
         const ordersTable = this.db.getCollection('orders')
         const usersTable = this.db.getCollection('users')
-
         const orders: OrderOverview[] = []
         try {
-            const foundOrders = ordersTable.find({ user_id: userId })
             const user: AccountUserData = usersTable.findOne({ id: userId })
-
-            if (foundOrders) {
-                for (let i = 0; i < foundOrders.length; i++) {
-                    const order = await this.buildOrderOverview(foundOrders[i], user)
-                    orders.push(order)
+            if (user) {
+                const foundOrders = ordersTable.find({ user_id: userId })
+                if (foundOrders) {
+                    for (let i = 0; i < foundOrders.length; i++) {
+                        const order = await this.buildOrderOverview(foundOrders[i], user)
+                        orders.push(order)
+                    }
+                } else {
+                    return []
                 }
             } else {
                 return null

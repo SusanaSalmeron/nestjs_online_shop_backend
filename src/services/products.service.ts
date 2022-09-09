@@ -29,8 +29,7 @@ export class ProductsService {
             response = await this.loadAndGetShadowCopy();
         }
         const apiProductsDataFiltered = response.filter(p => p.id === id)
-        let productResult: ProductCard
-
+        let productResult: ProductCard = null
         if (apiProductsDataFiltered.length === 0) {
             const newProducts = await this.findNewProducts()
             const productFiltered: ProductCard[] = newProducts.filter(p => p.id === id)
@@ -54,6 +53,7 @@ export class ProductsService {
 
     async findNewProducts(): Promise<ProductCard[]> {
         const newProductsTable = this.db.getCollection('newProducts')
+
         const newProducts = newProductsTable.find(true).map(p => {
             return new ProductCard(
                 p.id,

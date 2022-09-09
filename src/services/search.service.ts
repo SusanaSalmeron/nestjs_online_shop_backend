@@ -73,13 +73,15 @@ export class SearchService {
     async searchList(keyword: string): Promise<Product[]> {
         let response
         try {
-            response = (await this.httpService.axiosRef(this.baseUrl)).data
+            response = (await this.httpService.axiosRef.get(this.baseUrl)).data
         } catch (err) {
             this.logger.warn('', err)
             response = await this.loadAndGetShadowCopy()
         }
+
         const newProductsTable = this.db.getCollection('newProducts')
         const newProducts = newProductsTable.find(true).filter(p => this.filterByKeyword(p, keyword)).map(this.toProduct)
+
         const list = response.filter(el => this.filterByKeyword(el, keyword))
             .map(this.toProduct)
         const allProductsList = [...newProducts, ...list]
