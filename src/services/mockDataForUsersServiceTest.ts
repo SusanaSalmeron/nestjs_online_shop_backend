@@ -1,12 +1,12 @@
-import { ProductCard } from "../classes/productCard"
-import { Product } from "../classes/product"
+import { ProductCard } from '../classes/productCard'
+import { Product } from '../classes/product'
 
 export const mockFindOneUser = (criteria) => {
     if (criteria.email) {
         return mockUserData.filter(ud => ud.email === criteria['email'])[0]
     }
     else if (criteria.id) {
-        return mockUserData.filter(ud => ud.id === criteria["id"])[0]
+        return mockUserData.filter(ud => ud.id === criteria['id'])[0]
     }
 }
 
@@ -17,15 +17,6 @@ export const mockFindAddresses = (criteria) => {
 
 export const mockFindOneAddress = (criteria) => {
     return mockAddresses.filter(a => a.id === criteria['id'])[0]
-    /* if (criteria === "userId" && criteria === "id") {
-        const hola = mockAddresses.filter(a => a.userId === criteria['userId'] && a.id === criteria['id'])[0]
-        console.log(hola)
-        return hola
-    }
-    if (criteria === "id") {
-        return mockAddresses.filter(a => a.id === criteria['id'])
-    } */
-
 }
 
 export const mockFindWishlist = (criteria) => {
@@ -33,93 +24,94 @@ export const mockFindWishlist = (criteria) => {
 }
 
 export const mockFindOneProductOnWishlist = (criteria) => {
-    return mockWishlistData.filter(wd => wd.
-        userId === criteria['userId'] && wd.productId === criteria['productId'][0])
+    const productOnWishlist = mockWishlistData.filter(wd => wd.
+        userId === criteria['userId'] && wd.productId === criteria['productId'])
+    return productOnWishlist.length ? productOnWishlist[0] : null
 }
 
 
 
 const mockUserData = [
     {
-        "id": 1,
-        "user_name": "Joseph",
-        "surname": "Hinton",
-        "address": "P.O. Box 328, 3703 Et Ave",
-        "postalZip": "859181",
-        "city": "Canela",
-        "country": "Philippines",
-        "phone": "+63765875543",
-        "email": "eu.tellus@outlook.edu",
-        "date_of_birth": "18/01/1943",
-        "identification": "05022081I",
-        "password": "Rwm31Irh7Og!"
+        'id': 1,
+        'user_name': 'Joseph',
+        'surname': 'Hinton',
+        'address': 'P.O. Box 328, 3703 Et Ave',
+        'postalZip': '859181',
+        'city': 'Canela',
+        'country': 'Philippines',
+        'phone': '+63765875543',
+        'email': 'eu.tellus@outlook.edu',
+        'date_of_birth': '18/01/1943',
+        'identification': '05022081I',
+        'password': 'Rwm31Irh7Og!'
     },
     {
-        "id": 2,
-        "user_name": "Evan",
-        "surname": "Pennington",
-        "address": "#254-4210 Mi Avenue",
-        "postalZip": "86276",
-        "city": "Rangiora",
-        "country": "Brazil",
-        "phone": "+55987446634",
-        "email": "ut.molestie.in@icloud.net",
-        "date_of_birth": "02/01/1963",
-        "identification": "24671636T",
-        "password": "WIK74ZWM4CY"
+        'id': 2,
+        'user_name': 'Evan',
+        'surname': 'Pennington',
+        'address': '#254-4210 Mi Avenue',
+        'postalZip': '86276',
+        'city': 'Rangiora',
+        'country': 'Brazil',
+        'phone': '+55987446634',
+        'email': 'ut.molestie.in@icloud.net',
+        'date_of_birth': '02/01/1963',
+        'identification': '24671636T',
+        'password': 'WIK74ZWM4CY'
     },
 ]
 
 const mockAddresses = [
     {
-        "id": 1,
-        "user_name": "Joseph",
-        "surname": "Hinton",
-        "address": "P.O. Box 328, 3703 Et Ave",
-        "postalZip": "859181",
-        "city": "Canela",
-        "country": "Philippines",
-        "defaultAddress": true,
-        "userId": 1
+        'id': 1,
+        'user_name': 'Joseph',
+        'surname': 'Hinton',
+        'address': 'P.O. Box 328, 3703 Et Ave',
+        'postalZip': '859181',
+        'city': 'Canela',
+        'country': 'Philippines',
+        'defaultAddress': true,
+        'userId': 1
     },
     {
-        "id": 2,
-        "user_name": "Joseph",
-        "surname": "Hinton",
-        "address": "Ap #939-7227 Biba Avenue",
-        "postalZip": "859187",
-        "city": "Canela",
-        "country": "Philippines",
-        "defaultAddress": false,
-        "userId": 1
+        'id': 2,
+        'user_name': 'Joseph',
+        'surname': 'Hinton',
+        'address': 'Ap #939-7227 Biba Avenue',
+        'postalZip': '859187',
+        'city': 'Canela',
+        'country': 'Philippines',
+        'defaultAddress': false,
+        'userId': 1
     }
 ]
 
 const mockWishlistData = [
     {
-        "id": 1,
-        "userId": 1,
-        "productId": 1
+        'id': 1,
+        'userId': 1,
+        'productId': 1
     },
     {
-        "id": 2,
-        "userId": 1,
-        "productId": 2
+        'id': 2,
+        'userId': 1,
+        'productId': 2
     },
     {
-        "id": 3,
-        "userId": 1,
-        "productId": 3
+        'id': 3,
+        'userId': 1,
+        'productId': 3
     },
     {
-        "id": 4,
-        "userId": 1,
-        "productId": 4
+        'id': 4,
+        'userId': 1,
+        'productId': 4
     },
     {
-        "id": 5,
-        "userId": 1,
-        "productId": 5
+        'id': 5,
+        'userId': 1,
+        'productId': 5
     }
 ]
 
@@ -129,67 +121,151 @@ export const mockFindProdyctsById = async (id) => {
         products = {
             1: new ProductCard(
                 1,
-                "Natasha Denona",
-                "Biba Palette",
+                'Natasha Denona',
+                'Biba Palette',
                 129,
-                "Biba features 15 brand-new shades of Natasha Denona’s signature formulas. It includes neutral, warm, and cool tones, from light to dark, in different textures. This eyeshadow palette is very user-friendly, and covers a shade range that varies from mauves, burgundies, and browns to warm greys and black.",
-                "eyeshadow",
-                "https://www.sephora.com/productimages/sku/s2192821-main-zoom.jpg?imwidth=1224",
+                'Biba features 15 brand-new shades of Natasha Denona’s signature formulas. It includes neutral, warm, and cool tones, from light to dark, in different textures. This eyeshadow palette is very user-friendly, and covers a shade range that varies from mauves, burgundies, and browns to warm greys and black.',
+                'eyeshadow',
+                'https://www.sephora.com/productimages/sku/s2192821-main-zoom.jpg?imwidth=1224',
                 [
                     {
-                        "hex_value": "",
-                        "colour_name": "Biba Palette"
+                        'hex_value': '',
+                        'colour_name': 'Biba Palette'
                     }
                 ]
             ),
             2: new ProductCard(
                 2,
-                "Natasha Denona",
-                "Mini Bronze Palette",
+                'Natasha Denona',
+                'Mini Bronze Palette',
                 27,
-                "This mini palette is inspired by Natasha Denona’s bestselling Bronze Eyeshadow Palette and brings together five warm- toned neutrals in creamy matte and metallic finishes perfect for summer or fall.These innovative, easy - to - use formulas offer the high performance and versatility Natasha is known for.This travel - size palette easily takes your look from day to night and allows you to complete a whole look on the go.These shades also wear beautifully on all skin tones.",
-                "eyeshadow",
-                "https://www.sephora.com/productimages/sku/s2592012-main-zoom.jpg?imwidth=1224",
+                'This mini palette is inspired by Natasha Denona’s bestselling Bronze Eyeshadow Palette and brings together five warm- toned neutrals in creamy matte and metallic finishes perfect for summer or fall.These innovative, easy - to - use formulas offer the high performance and versatility Natasha is known for.This travel - size palette easily takes your look from day to night and allows you to complete a whole look on the go.These shades also wear beautifully on all skin tones.',
+                'eyeshadow',
+                'https://www.sephora.com/productimages/sku/s2592012-main-zoom.jpg?imwidth=1224',
                 [
                     {
-                        "hex_value": "",
-                        "colour_name": "Mini Bronze Palette"
+                        'hex_value': '',
+                        'colour_name': 'Mini Bronze Palette'
                     }
                 ]
+            ),
+            3: new ProductCard(
+                3,
+                'Rare Beauty',
+                'Always an Optimist Soft Radiance Setting Powder',
+                22,
+                'Super-finely milled and silky to the touch, this powder goes on light and airy to provide sheer, seamless coverage with a subtle but visible radiance and a natural finish. Extend makeup wear, blur the look of pores, and smooth skin’s texture. The custom-designed sifter locks for mess-free storage on the go. ',
+                'Foundation',
+                'https://www.sephora.com/productimages/sku/s2519080-main-zoom.jpg?imwidth=1224',
+                [
+                    {
+                        'hex_value': '#d19f87',
+                        'colour_name': 'Light-Medium'
+                    },
+                    {
+                        'hex_value': '#fae3d7',
+                        'colour_name': 'Light'
+                    }
+                ]
+            ),
+            4: new ProductCard(
+                4,
+                'Rare Beauty',
+                'Always An Optimist 4-in-1 Prime & Set Mist',
+                24,
+                'Layer this all-in-one mist under or over makeup for a refreshed complexion. Infused with a botanical blend of lotus, gardenia, and white waterlily to help soothe and calm skin, this bi-phase formula also features niacinamide and sodium hyaluronate for the appearance of plumper, smoother skin. ',
+                'Foundation',
+                'https://www.sephora.com/productimages/sku/s2362465-main-zoom.jpg?imwidth=1224',
+                [
+                    {
+                        'hex_value': '',
+                        'colour_name': 'No colour'
+                    }
+                ]
+            ),
+            5: new ProductCard(
+                5,
+                'Natasha Denona',
+                'Hy-Gen Skinglass Energizing & Hydrating Primer Serum',
+                48,
+                'This primer serum has a moisturizing, lightweight texture that delivers a natural-looking, transparent, glass skin effect. It includes a special peptide that provides energizing effects on the skin. The primer serum comes in a universal shade suitable for every skin tone and can be used before or after makeup application.',
+                'Foundation',
+                'https://www.sephora.com/productimages/sku/s2569499-main-zoom.jpg?imwidth=1224',
+                [
+                    {
+                        'hex_value': '',
+                        'colour_name': 'Serum'
+                    }
+                ]
+            ),
+            6: new ProductCard(
+                6,
+                'Rare Beauty',
+                'Perfect Strokes Universal Volumizing Mascara',
+                20,
+                'Finding the perfect mascara comes down to your lash type, which differs from person to person. This weightless, easy-to-build formula and curvy, multi-length brush are made to give every lash type (fine/sparse, full/thick, straight, and curly) more lift, length, curl, and volume.',
+                'Mascara',
+                'https://www.sephora.com/productimages/sku/s2474138-main-zoom.jpg?imwidth=1224',
+                [
+                    {
+                        'hex_value': '#101010',
+                        'colour_name': 'Black'
+                    }
+                ]
+
             )
         }
+        return products[id]
     }
-    return products[id]
 }
 
 export async function newProducts() {
     return [new ProductCard(
-        1,
-        "Natasha Denona",
-        "Biba Palette",
-        129,
-        "Biba features 15 brand-new shades of Natasha Denona’s signature formulas. It includes neutral, warm, and cool tones, from light to dark, in different textures. This eyeshadow palette is very user-friendly, and covers a shade range that varies from mauves, burgundies, and browns to warm greys and black.",
-        "eyeshadow",
-        "https://www.sephora.com/productimages/sku/s2192821-main-zoom.jpg?imwidth=1224",
+        3,
+        'Rare Beauty',
+        'Always an Optimist Soft Radiance Setting Powder',
+        22,
+        'Super-finely milled and silky to the touch, this powder goes on light and airy to provide sheer, seamless coverage with a subtle but visible radiance and a natural finish. Extend makeup wear, blur the look of pores, and smooth skin’s texture. The custom-designed sifter locks for mess-free storage on the go. ',
+        'Foundation',
+        'https://www.sephora.com/productimages/sku/s2519080-main-zoom.jpg?imwidth=1224',
         [
             {
-                "hex_value": "",
-                "colour_name": "Biba Palette"
+                'hex_value': '#d19f87',
+                'colour_name': 'Light-Medium'
+            },
+            {
+                'hex_value': '#fae3d7',
+                'colour_name': 'Light'
             }
         ]
     ),
     new ProductCard(
-        2,
-        "Natasha Denona",
-        "Mini Bronze Palette",
-        27,
-        "This mini palette is inspired by Natasha Denona’s bestselling Bronze Eyeshadow Palette and brings together five warm- toned neutrals in creamy matte and metallic finishes perfect for summer or fall.These innovative, easy - to - use formulas offer the high performance and versatility Natasha is known for.This travel - size palette easily takes your look from day to night and allows you to complete a whole look on the go.These shades also wear beautifully on all skin tones.",
-        "eyeshadow",
-        "https://www.sephora.com/productimages/sku/s2592012-main-zoom.jpg?imwidth=1224",
+        4,
+        'Rare Beauty',
+        'Always An Optimist 4-in-1 Prime & Set Mist',
+        24,
+        'Layer this all-in-one mist under or over makeup for a refreshed complexion. Infused with a botanical blend of lotus, gardenia, and white waterlily to help soothe and calm skin, this bi-phase formula also features niacinamide and sodium hyaluronate for the appearance of plumper, smoother skin. ',
+        'Foundation',
+        'https://www.sephora.com/productimages/sku/s2362465-main-zoom.jpg?imwidth=1224',
         [
             {
-                "hex_value": "",
-                "colour_name": "Mini Bronze Palette"
+                'hex_value': '',
+                'colour_name': 'No colour'
+            }
+        ]
+    ),
+    new ProductCard(
+        5,
+        'Natasha Denona',
+        'Hy-Gen Skinglass Energizing & Hydrating Primer Serum',
+        48,
+        'This primer serum has a moisturizing, lightweight texture that delivers a natural-looking, transparent, glass skin effect. It includes a special peptide that provides energizing effects on the skin. The primer serum comes in a universal shade suitable for every skin tone and can be used before or after makeup application.',
+        'Foundation',
+        'https://www.sephora.com/productimages/sku/s2569499-main-zoom.jpg?imwidth=1224',
+        [
+            {
+                'hex_value': '',
+                'colour_name': 'Serum'
             }
         ]
     )
@@ -199,42 +275,42 @@ export async function newProducts() {
 export async function productToShow() {
     [new Product(
         1,
-        "Natasha Denona",
-        "Biba Palette",
+        'Natasha Denona',
+        'Biba Palette',
         129,
-        "https://www.sephora.com/productimages/sku/s2192821-main-zoom.jpg?imwidth=1224",
+        'https://www.sephora.com/productimages/sku/s2192821-main-zoom.jpg?imwidth=1224',
     ),
     new Product(
         2,
-        "Natasha Denona",
-        "Mini Bronze palette",
+        'Natasha Denona',
+        'Mini Bronze palette',
         27,
-        "https://www.sephora.com/productimages/sku/s2592012-main-zoom.jpg?imwidth=1224",
+        'https://www.sephora.com/productimages/sku/s2592012-main-zoom.jpg?imwidth=1224',
     )]
 }
 
 export const newUser = {
-    user_name: "Ann",
-    surname: "Smith",
-    address: "Calle Marcelina 32",
-    postalZip: "28029",
-    city: "Madrid",
-    country: "Spain",
+    user_name: 'Ann',
+    surname: 'Smith',
+    address: 'Calle Marcelina 32',
+    postalZip: '28029',
+    city: 'Madrid',
+    country: 'Spain',
     defaultAddress: false,
     userId: 1
 }
 
 export const addressToDelete = {
-    addressId: "1",
-    userId: "1"
+    addressId: '1',
+    userId: '1'
 }
 
 export const nonValidAddressToDelete = {
-    addressId: "3",
-    userId: "1"
+    addressId: '3',
+    userId: '1'
 }
 
 export const nonValidAddressAndUserToDelete = {
-    addressId: "1",
-    userId: "4"
+    addressId: '1',
+    userId: '4'
 }

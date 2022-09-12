@@ -55,7 +55,7 @@ export class UsersController {
                 if (match) {
                     this.logger.debug('Login successfully')
                     const token = await this.tokenService.createToken(user)
-                    response.status(HttpStatus.OK).json({ id: user.id, name: user.name, token: token })
+                    response.status(HttpStatus.OK).json({ id: user.id, name: user.user_name, token: token })
                 } else {
                     this.logger.error('Password or/and email error')
                     response.status(HttpStatus.UNAUTHORIZED).json({ error: 'Password or/and email error' })
@@ -147,6 +147,7 @@ export class UsersController {
         const { user_name, surname, address, postalZip, city, country, defaultAddress } = updateUserAccountAddresses
         try {
             const newAddress: boolean = await this.usersService.changeUserAccountAddress(addressId, user_name, surname, address, postalZip, city, country, defaultAddress, userId)
+            console.log(newAddress)
             if (newAddress) {
                 this.logger.log('Address updated successfully')
                 response.status(HttpStatus.OK).json(newAddress)

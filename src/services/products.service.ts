@@ -53,7 +53,6 @@ export class ProductsService {
 
     async findNewProducts(): Promise<ProductCard[]> {
         const newProductsTable = this.db.getCollection('newProducts')
-
         const newProducts = newProductsTable.find(true).map(p => {
             return new ProductCard(
                 p.id,
@@ -91,7 +90,6 @@ export class ProductsService {
         const newProductsFiltered = newProducts.filter(p => p.product_type.toLowerCase() === type.toLowerCase())
         const allProducts = [...products, ...newProductsFiltered]
         return allProducts
-
     }
 
     async exists(productId: number): Promise<boolean> {
@@ -104,6 +102,4 @@ export class ProductsService {
             return false
         }
     }
-
-
 }

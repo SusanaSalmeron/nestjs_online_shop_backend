@@ -71,23 +71,19 @@ export class OrdersService {
         const ordersTable = this.db.getCollection('orders')
         const usersTable = this.db.getCollection('users')
         const orders: OrderOverview[] = []
-        try {
-            const user: AccountUserData = usersTable.findOne({ id: userId })
-            if (user) {
-                const foundOrders = ordersTable.find({ user_id: userId })
-                if (foundOrders) {
-                    for (let i = 0; i < foundOrders.length; i++) {
-                        const order = await this.buildOrderOverview(foundOrders[i], user)
-                        orders.push(order)
-                    }
-                } else {
-                    return []
+        const user: AccountUserData = usersTable.findOne({ id: userId })
+        if (user) {
+            const foundOrders = ordersTable.find({ user_id: userId })
+            if (foundOrders) {
+                for (let i = 0; i < foundOrders.length; i++) {
+                    const order = await this.buildOrderOverview(foundOrders[i], user)
+                    orders.push(order)
                 }
             } else {
-                return null
+                return []
             }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
+        } else {
+            return null
         }
         return orders
     }
@@ -96,14 +92,11 @@ export class OrdersService {
         const ordersTable = this.db.getCollection('orders')
         const usersTable = this.db.getCollection('users')
         let order: OrderOverview = null
-        try {
-            const foundOrder = ordersTable.findOne({ id: orderId })
-            const user: AccountUserData = usersTable.findOne({ id: userId })
-            if (foundOrder) {
-                order = await this.buildOrderOverview(foundOrder, user)
-            }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
+
+        const foundOrder = ordersTable.findOne({ id: orderId })
+        const user: AccountUserData = usersTable.findOne({ id: userId })
+        if (foundOrder) {
+            order = await this.buildOrderOverview(foundOrder, user)
         }
         return order
     }
@@ -114,29 +107,22 @@ export class OrdersService {
 
         const orders: OrderOverview[] = []
 
-        try {
-            const foundOrders = ordersTable.find({ user_id: userId })
-            const user: AccountUserData = usersTable.findOne({ id: userId })
-            if (foundOrders) {
-                const filteredOrders = foundOrders.filter(o => {
-                    if (status === "inprocess") {
-                        const newStatus = o.status.replace(/\s+/g, '')
-                        return newStatus.toUpperCase() === status.toUpperCase()
-                    } else {
-                        return o.status.toUpperCase() === status.toUpperCase()
-                    }
-                })
-                for (let i = 0; i < filteredOrders.length; i++) {
-                    const order = await this.buildOrderOverview(filteredOrders[i], user)
-                    orders.push(order)
+        const foundOrders = ordersTable.find({ user_id: userId })
+        const user: AccountUserData = usersTable.findOne({ id: userId })
+        if (foundOrders) {
+            const filteredOrders = foundOrders.filter(o => {
+                if (status === "inprocess") {
+                    const newStatus = o.status.replace(/\s+/g, '')
+                    return newStatus.toUpperCase() === status.toUpperCase()
+                } else {
+                    return o.status.toUpperCase() === status.toUpperCase()
                 }
+            })
+            for (let i = 0; i < filteredOrders.length; i++) {
+                const order = await this.buildOrderOverview(filteredOrders[i], user)
+                orders.push(order)
             }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
         }
         return orders
     }
-
-
-
 }

@@ -38,54 +38,46 @@ export class UsersService {
 
     async findUserById(id: number): Promise<AccountUserData> {
         const usersTable = this.db.getCollection('users')
-        try {
-            const foundUserData: AccountUserData = usersTable.findOne({ id: id })
-            if (foundUserData) {
-                return new AccountUserData(
-                    foundUserData.id,
-                    foundUserData.user_name,
-                    foundUserData.surname,
-                    foundUserData.address,
-                    foundUserData.postalZip,
-                    foundUserData.city,
-                    foundUserData.country,
-                    foundUserData.phone,
-                    foundUserData.email,
-                    foundUserData.date_of_birth,
-                    foundUserData.identification,
-                    foundUserData.password)
-            } else {
-                return null
-            }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
+        const foundUserData: AccountUserData = usersTable.findOne({ id: id })
+        if (foundUserData) {
+            return new AccountUserData(
+                foundUserData.id,
+                foundUserData.user_name,
+                foundUserData.surname,
+                foundUserData.address,
+                foundUserData.postalZip,
+                foundUserData.city,
+                foundUserData.country,
+                foundUserData.phone,
+                foundUserData.email,
+                foundUserData.date_of_birth,
+                foundUserData.identification,
+                foundUserData.password)
+        } else {
+            return null
         }
     }
 
     async findAddressesBy(userId: number): Promise<AccountUserAddresses[]> {
         const addressesTable = this.db.getCollection('addresses')
         let addresses: AccountUserAddresses[]
-        try {
-            const foundAddresses: AccountUserAddresses[] = addressesTable.find({ userId: userId })
-            if (foundAddresses) {
-                addresses = foundAddresses.map(a => {
-                    return new AccountUserAddresses(
-                        a.id,
-                        a.user_name,
-                        a.surname,
-                        a.address,
-                        a.postalZip,
-                        a.city,
-                        a.country,
-                        a.defaultAddress,
-                        a.userId
-                    )
-                })
-            } else {
-                return null
-            }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
+        const foundAddresses: AccountUserAddresses[] = addressesTable.find({ userId: userId })
+        if (foundAddresses) {
+            addresses = foundAddresses.map(a => {
+                return new AccountUserAddresses(
+                    a.id,
+                    a.user_name,
+                    a.surname,
+                    a.address,
+                    a.postalZip,
+                    a.city,
+                    a.country,
+                    a.defaultAddress,
+                    a.userId
+                )
+            })
+        } else {
+            return null
         }
         return addresses
     }
@@ -128,99 +120,78 @@ export class UsersService {
 
     async changeUserAccountPassword(userId: number, password: string, newPassword: string, repeatNew: string): Promise<boolean> {
         const usersTable = this.db.getCollection('users')
-        try {
-            const user: AccountUserData = usersTable.findOne({ id: userId })
-            const match = await bcrypt.compare(password, user.password)
-            if ((user && match) && newPassword === repeatNew) {
-                user.password = await encrypt(newPassword)
-                return usersTable.update(user)
-            } else {
-                return false
-            }
-        } catch (err) {
-            this.logger.error('Internal Server Error, err')
+        const user: AccountUserData = usersTable.findOne({ id: userId })
+        const match = await bcrypt.compare(password, user.password)
+        if ((user && match) && newPassword === repeatNew) {
+            user.password = await encrypt(newPassword)
+            return usersTable.update(user)
+        } else {
+            return false
         }
     }
 
     async changeUserAccountData(userId: number, user_name: string, surname: string, identification: string, date_of_birth: string, email: string, phone: string): Promise<boolean> {
         const usersTable = this.db.getCollection('users')
-        try {
-            const user: AccountUserData = usersTable.findOne({ id: userId })
-            if (user) {
-                user.user_name = user_name;
-                user.surname = surname;
-                user.identification = identification;
-                user.date_of_birth = date_of_birth;
-                user.email = email;
-                user.phone = phone;
-                return usersTable.update(user)
-            } else {
-                return false
-            }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
+        const user: AccountUserData = usersTable.findOne({ id: userId })
+        if (user) {
+            user.user_name = user_name;
+            user.surname = surname;
+            user.identification = identification;
+            user.date_of_birth = date_of_birth;
+            user.email = email;
+            user.phone = phone;
+            return usersTable.update(user)
+        } else {
+            return false
         }
     }
 
     async changeUserAccountAddress(addressId: number, user_name: string, surname: string, address: string, postalZip: string, city: string, country: string, defaultAddress: boolean, userId: number): Promise<boolean> {
         const addressesTable = this.db.getCollection('addresses')
-        try {
-            const addressFound: AccountUserAddresses = addressesTable.findOne({ userId: userId, id: addressId })
-            if (addressFound) {
-                addressFound.id = addressId
-                addressFound.user_name = user_name;
-                addressFound.surname = surname;
-                addressFound.address = address;
-                addressFound.postalZip = postalZip;
-                addressFound.city = city;
-                addressFound.country = country;
-                addressFound.defaultAddress = defaultAddress;
-                addressFound.userId = userId;
-                return addressesTable.update(addressFound)
-            } else {
-                return false
-            }
-        } catch (err) {
-            this.logger.error('Internal Server Error, err')
+        const addressFound: AccountUserAddresses = addressesTable.findOne({ userId: userId, id: addressId })
+        if (addressFound) {
+            addressFound.id = addressId
+            addressFound.user_name = user_name;
+            addressFound.surname = surname;
+            addressFound.address = address;
+            addressFound.postalZip = postalZip;
+            addressFound.city = city;
+            addressFound.country = country;
+            addressFound.defaultAddress = defaultAddress;
+            addressFound.userId = userId;
+            return addressesTable.update(addressFound)
+        } else {
+            return false
         }
     }
 
     async changeUserAccountBillingAddress(id: number, user_name: string, surname: string, address: string, postalZip: string, city: string, country: string, identification: string): Promise<boolean> {
         const usersTable = this.db.getCollection('users')
-        try {
-            const user: UpdateBillingAddress = usersTable.findOne({ id: id })
-            if (user) {
-                user.user_name = user_name;
-                user.surname = surname;
-                user.address = address;
-                user.postalZip = postalZip;
-                user.city = city;
-                user.country = country;
-                user.identification = identification
-                return usersTable.update(user)
-            } else {
-                return false
-            }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
+        const user: UpdateBillingAddress = usersTable.findOne({ id: id })
+        if (user) {
+            user.user_name = user_name;
+            user.surname = surname;
+            user.address = address;
+            user.postalZip = postalZip;
+            user.city = city;
+            user.country = country;
+            user.identification = identification
+            return usersTable.update(user)
+        } else {
+            return false
         }
     }
 
     async getWishlist(userId: number): Promise<ProductCard[]> {
         const wishedProductsTable = this.db.getCollection('wishlist')
         const productList: ProductCard[] = []
-        try {
-            const wishlist: Wishlist[] = wishedProductsTable.find({ userId: userId })
-            if (wishlist) {
-                for (let i = 0; i < wishlist.length; i++) {
-                    const product: ProductCard = await this.productsService.findProductById(wishlist[i].productId)
-                    productList.push(product)
-                }
-            } else {
-                return null
+        const wishlist: Wishlist[] = wishedProductsTable.find({ userId: userId })
+
+        if (wishlist && wishlist.length > 0) {
+            for (let i = 0; i < wishlist.length; i++) {
+                const product: ProductCard = await this.productsService.findProductById(wishlist[i].productId)
+                productList.push(product)
             }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
         }
         return productList
     }
@@ -246,16 +217,12 @@ export class UsersService {
 
     async deleteProductFromUserWishlist(userId: number, productId: number): Promise<boolean> {
         const wishedProductsTable = this.db.getCollection('wishlist')
-        try {
-            const productToBeDeleted: Wishlist = wishedProductsTable.findOne({ productId: productId, userId: userId })
-            if (productToBeDeleted) {
-                wishedProductsTable.remove(productToBeDeleted)
-                return true
-            } else {
-                return false
-            }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
+        const productToBeDeleted: Wishlist = wishedProductsTable.findOne({ productId: productId, userId: userId })
+        if (productToBeDeleted) {
+            wishedProductsTable.remove(productToBeDeleted)
+            return true
+        } else {
+            return false
         }
     }
 
@@ -269,7 +236,4 @@ export class UsersService {
             return false
         }
     }
-
-
-
 }
