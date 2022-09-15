@@ -147,7 +147,6 @@ export class UsersController {
         const { user_name, surname, address, postalZip, city, country, defaultAddress } = updateUserAccountAddresses
         try {
             const newAddress: boolean = await this.usersService.changeUserAccountAddress(addressId, user_name, surname, address, postalZip, city, country, defaultAddress, userId)
-            console.log(newAddress)
             if (newAddress) {
                 this.logger.log('Address updated successfully')
                 response.status(HttpStatus.OK).json(newAddress)
@@ -245,7 +244,7 @@ export class UsersController {
             const products: Search[] = await this.searchService.findAllBrandsAndNames()
             if (products) {
                 this.logger.log('products getting successfully')
-                response.status(HttpStatus.OK).send(products)
+                response.status(HttpStatus.OK).json(products)
             } else {
                 this.logger.error('products not found')
             }
@@ -369,7 +368,7 @@ export class UsersController {
     })
     @ApiNotFoundResponse({ description: 'No Orders' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async userInProcessOrders(@Param('id', ParseIntPipe) userId: number, @Param('status') status: string, @Res() response) {
+    async userOrdersByStatus(@Param('id', ParseIntPipe) userId: number, @Param('status') status: string, @Res() response) {
         try {
             const orders: OrderOverview[] = await this.ordersService.findAllOrdersBy(status, userId)
             if (orders) {

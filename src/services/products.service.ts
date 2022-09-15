@@ -88,7 +88,7 @@ export class ProductsService {
             )
         })
         const newProductsFiltered = newProducts.filter(p => p.product_type.toLowerCase() === type.toLowerCase())
-        const allProducts = [...products, ...newProductsFiltered]
+        const allProducts: Product[] = [...products, ...newProductsFiltered]
         return allProducts
     }
 

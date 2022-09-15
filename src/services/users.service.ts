@@ -180,6 +180,7 @@ export class UsersService {
         } else {
             return false
         }
+
     }
 
     async getWishlist(userId: number): Promise<ProductCard[]> {

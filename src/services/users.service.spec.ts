@@ -8,6 +8,7 @@ import { addressToDelete, nonValidAddressToDelete, nonValidAddressAndUserToDelet
 import { ProductsService } from "./products.service"
 import { UsersService } from "./users.service";
 import * as bcrypt from 'bcrypt';
+import { UpdateBillingAddress } from "../classes/updateBillingAddresses";
 
 
 jest.mock('bcrypt')
@@ -22,6 +23,7 @@ describe('UsersService', () => {
     let wishlistMockDBCollection
 
     beforeEach(async () => {
+        jest.clearAllMocks()
         const productsServiceProvider = {
             provide: ProductsService,
             useFactory: () => ({
@@ -30,6 +32,8 @@ describe('UsersService', () => {
                 findProductsBy: jest.fn(productToShow)
             })
         }
+
+
 
         usersMockDBCollection = {
             findOne: jest.fn().mockImplementation(mockFindOneUser),
@@ -40,7 +44,8 @@ describe('UsersService', () => {
             find: jest.fn().mockImplementation(mockFindAddresses),
             insert: jest.fn(),
             findOne: jest.fn().mockImplementation(mockFindOneAddress),
-            remove: jest.fn()
+            remove: jest.fn(),
+            update: jest.fn()
         }
 
         wishlistMockDBCollection = {
@@ -219,19 +224,67 @@ describe('UsersService', () => {
         const userDataChange = await usersService.changeUserAccountData(1, "Susana", "Salmeron", "1234567T", "04/05/1976", "mmmm@gmail.com", "+34123456789")
         expect(userDataChange).toBeUndefined()
         expect(usersMockDBCollection.findOne).toHaveBeenCalledWith({ id: 1 })
+        expect(usersMockDBCollection.update).toHaveBeenCalledWith(new AccountUserData(
+            1,
+            "Susana",
+            "Salmeron",
+            'P.O. Box 328, 3703 Et Ave',
+            '859181',
+            'Canela',
+            'Philippines',
+            "+34123456789",
+            "mmmm@gmail.com",
+            "04/05/1976",
+            "1234567T", 'Rwm31Irh7Og!'
+        ))
     })
 
-    it('should return undefined when user data has change from a non valid user', async () => {
+    it('should return false when user try to change data from a non valid user', async () => {
         const userDataChange = await usersService.changeUserAccountData(7, "Susana", "Salmeron", "1234567T", "04/05/1976", "mmmm@gmail.com", "+34123456789")
         expect(userDataChange).toBeFalsy()
         expect(usersMockDBCollection.findOne).toHaveBeenCalledWith({ id: 7 })
+        expect(usersMockDBCollection.update).not.toHaveBeenCalled()
     })
 
-    /* 
-        it('should return true when user address has change from a valid user', async () => {
-            const addressChanged = await usersService.changeUserAccountAddress(1, "Susana", "Salmeron", "Marcelina 32", "28029", "Madrid", "Spain", false, 1)
-            console.log(addressChanged)
-        }) */
+    it('should return undefined when user address has change from a valid user', async () => {
+        const addressChanged = await usersService.changeUserAccountAddress(1, "Susana", "Salmeron", "Marcelina 32", "28029", "Madrid", "Spain", false, 1)
+        expect(addressChanged).toBeUndefined()
+        expect(addressesMockDBCollection.findOne).toHaveBeenCalledWith({ userId: 1, id: 1 })
+        expect(addressesMockDBCollection.update).toHaveBeenCalledWith(new AccountUserAddresses(
+            1,
+            'Susana',
+            'Salmeron',
+            'Marcelina 32',
+            '28029',
+            'Madrid',
+            'Spain',
+            false,
+            1
+        ))
+    })
+
+    it('should return false when user try to change an  address a non valid user', async () => {
+        const addressChanged = await usersService.changeUserAccountAddress(1, "Susana", "Salmeron", "Marcelina 32", "28029", "Madrid", "Spain", false, 7)
+        expect(addressChanged).toBeFalsy()
+        expect(addressesMockDBCollection.findOne).toHaveBeenCalledWith({ userId: 7, id: 1 })
+        /* expect(addressesMockDBCollection.update).not.toHaveBeenCalled() */
+    })
+
+    it('should return undefined when user change billing address', async () => {
+        const addressChanged = await usersService.changeUserAccountBillingAddress(1, "Susana", "Salmeron", "Calle Marcelina 32", "28029", "Madrid", "Spain", "1234567T")
+        /* console.log(addressChanged) */
+        expect(addressChanged).toBeUndefined()
+        expect(usersMockDBCollection.findOne).toHaveBeenCalledWith({ id: 1 })
+        /* expect(usersMockDBCollection.update).toHaveBeenCalledWith(new UpdateBillingAddress(
+            "Susana",
+            "Salmeron",
+            "Calle Marcelina 32",
+            "28029",
+            "Madrid",
+            "Spain",
+            "1234567T"
+        )) */
+    })
 
     it('should return wishlist from a valid user', async () => {
         const wishlist = await usersService.getWishlist(1)
