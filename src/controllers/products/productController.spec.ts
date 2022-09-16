@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { ProductsService } from "../../services/products.service";
-import { mockFindNewProducts, mockFindProductById, mockFindProductsBy } from "./mockDataForProductControllerTests";
+import { mockFindNewProducts, mockFindProductById, mockFindProductsBy, newResponse } from "./mockDataForProductControllerTests";
 import { ProductsController } from "./products.controller";
 import { ProductCard } from '../../classes/productCard';
 import { Product } from '../../classes/product'
@@ -10,11 +10,7 @@ describe('ProductsController Unit Tests', () => {
     let productsController: ProductsController
     let spyProductsService: ProductsService
 
-    const response = {
-        send: jest.fn().mockReturnThis(),
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn().mockReturnThis()
-    }
+
     const query = "eyeshadow"
 
     /* const m = (module) => {
@@ -42,10 +38,11 @@ describe('ProductsController Unit Tests', () => {
     })
 
     it('should return all the new products when findNewProducts is called', async () => {
-        await productsController.showNewProducts(response)
+        const mockResponse = newResponse()
+        await productsController.showNewProducts(mockResponse)
         expect(spyProductsService.findNewProducts).toHaveBeenCalled()
-        expect(response.status).toHaveBeenCalledWith(200)
-        expect(response.json).toHaveBeenCalledWith([new ProductCard(
+        expect(mockResponse.status).toHaveBeenCalledWith(200)
+        expect(mockResponse.json).toHaveBeenCalledWith([new ProductCard(
             2,
             'Natasha Denona',
             'Mini Bronze Palette',
@@ -75,14 +72,15 @@ describe('ProductsController Unit Tests', () => {
                 }
             ]
         )])
-        expect(response.send).not.toHaveBeenCalled()
+        expect(mockResponse.send).not.toHaveBeenCalled()
     })
 
     it('should return all products filtered by type', async () => {
-        await productsController.showAllProducts(query, response)
-        expect(spyProductsService.findProductsBy).toHaveBeenCalled()
-        expect(response.status).toHaveBeenCalledWith(200)
-        expect(response.json).toHaveBeenCalledWith([new Product(
+        const mockResponse = newResponse()
+        await productsController.showAllProducts(query, mockResponse)
+        expect(spyProductsService.findProductsBy).toHaveBeenCalledWith('eyeshadow')
+        expect(mockResponse.status).toHaveBeenCalledWith(200)
+        expect(mockResponse.json).toHaveBeenCalledWith([new Product(
             1,
             'Biba Palette',
             'Natasha Denona',
@@ -104,14 +102,15 @@ describe('ProductsController Unit Tests', () => {
             'https://www.sephora.com/productimages/sku/s2592012-main-zoom.jpg?imwidth=1224'
         ),
         ])
-        expect(response.send).not.toHaveBeenCalled()
+        expect(mockResponse.send).not.toHaveBeenCalled()
     })
 
     it('should return a product filtered by id', async () => {
-        await productsController.showProduct(1, response)
-        expect(spyProductsService.findProductById).toHaveBeenCalled()
-        expect(response.status).toHaveBeenCalledWith(200)
-        expect(response.json).toHaveBeenCalledWith(new ProductCard(
+        const mockResponse = newResponse()
+        await productsController.showProduct(1, mockResponse)
+        expect(spyProductsService.findProductById).toHaveBeenCalledWith(1)
+        expect(mockResponse.status).toHaveBeenCalledWith(200)
+        expect(mockResponse.json).toHaveBeenCalledWith(new ProductCard(
             1,
             "Natasha Denona",
             "Biba Palette",
@@ -126,8 +125,6 @@ describe('ProductsController Unit Tests', () => {
                 }
             ])
         )
-        expect(response.send).not.toHaveBeenCalled()
+        expect(mockResponse.send).not.toHaveBeenCalled()
     })
-
-
 })

@@ -12,6 +12,8 @@ import { bodyForAddAddress, bodyForBillingAddress, bodyForChangeAddress, bodyFor
 import { UsersController } from './users.controller'
 import { OrderProductsOverview } from '../../classes/orderProductsOverview'
 import { OrderOverview } from '../../classes/orderOverview'
+import { ProductCard } from '../../classes/productCard';
+import * as bcrypt from 'bcrypt'
 
 
 describe('UsersController Unit Test', () => {
@@ -22,12 +24,6 @@ describe('UsersController Unit Test', () => {
     let spyOrdersService: OrdersService
     let spyProductsService: ProductsService
     let spyWishlistService: WishlistService
-
-    const response = {
-        send: jest.fn().mockReturnThis(),
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn().mockReturnThis()
-    }
 
     beforeEach(async () => {
         const usersServiceProvider = {
@@ -43,15 +39,16 @@ describe('UsersController Unit Test', () => {
                 changeUserAccountBillingAddress: jest.fn(() => true),
                 changeUserAccountPassword: jest.fn(() => true),
                 getWishlist: jest.fn(mockGetWishlist),
-                addProductFromUserWishlist: jest.fn(() => 13),
+                addProductFromUserWishlist: jest.fn(() => true),
                 deleteProductFromUserWishlist: jest.fn(() => true),
+                exists: jest.fn(() => true)
             })
         }
 
         const tokenServiceProvider = {
             provide: TokenService,
             useFactory: () => ({
-                createToken: jest.fn()
+                createToken: jest.fn((): string => "fdsghjklgjfhdgsfjdgfkh")
             })
         }
 
@@ -82,7 +79,7 @@ describe('UsersController Unit Test', () => {
         const wishlistServiceProvider = {
             provide: WishlistService,
             useFactory: () => ({
-                findProductOnWishlist: jest.fn(() => true)
+                findProductOnWishlist: jest.fn(() => false)
             })
         }
 
@@ -97,19 +94,32 @@ describe('UsersController Unit Test', () => {
         spySearchService = module.get<SearchService>(SearchService)
         spyOrdersService = module.get<OrdersService>(OrdersService)
         spyProductsService = module.get<ProductsService>(ProductsService)
-        spyUsersService = module.get<UsersService>(UsersService)
+        spyWishlistService = module.get<WishlistService>(WishlistService)
     })
 
-    /* it('should returns an user when findUserByEmail is called', async () => {
-        await usersController.userLogin(response, {
-            email: 'mamamama@gmail.com',
+    it('should returns an user when findUserByEmail is called', async () => {
+        jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(true))
+        const mockResponse = newResponse()
+        await usersController.userLogin(mockResponse, bodyForUserLogin)
+        expect(spyUsersService.findUserByEmail).toHaveBeenCalledWith('mamamama@gmail.com')
+        expect(spyTokenService.createToken).toHaveBeenCalled()
+        expect(mockResponse.status).toHaveBeenCalledWith(200)
+        expect(mockResponse.json).toHaveBeenCalledWith({ id: 1, name: "Joseph", token: 'fdsghjklgjfhdgsfjdgfkh' })
+    })
+
+    it('should returns unauthorized error when user does not exists', async () => {
+        jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(false))
+        const mockResponse = newResponse()
+        await usersController.userLogin(mockResponse, {
+            email: 'lalalala@gmail.com',
             password: 'Abcdef123!'
         })
-        expect(spyUsersService.findUserByEmail).toHaveBeenCalled()
-        expect(response.status).toHaveBeenCalledWith(200)
-        expect(response.json).toHaveBeenCalledWith()
+        expect(spyUsersService.findUserByEmail).toHaveBeenCalledWith('lalalala@gmail.com')
+        expect(spyTokenService.createToken).not.toHaveBeenCalled()
+        expect(mockResponse.status).toHaveBeenCalledWith(401)
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Password or/and email error' })
     })
- */
+
     it('should returns user data when findUserById is called', async () => {
         const mockResponse = newResponse()
         await usersController.userAccountData(1, mockResponse)
@@ -132,7 +142,7 @@ describe('UsersController Unit Test', () => {
         expect(mockResponse.send).not.toHaveBeenCalled()
     })
 
-    it('should returns true when user change data', async () => {
+    it('should returns true when changeUserAccountData is called', async () => {
         const mockResponse = newResponse()
         await usersController.updateUserAccountData(1, mockResponse, bodyForChangeData)
         expect(spyUsersService.changeUserAccountData).toHaveBeenCalledWith(1, 'Susana', 'Salmeron', '1234567A', '04/05/1976', 'mamamama@gmail.com', '123456789')
@@ -141,7 +151,7 @@ describe('UsersController Unit Test', () => {
         expect(mockResponse.send).not.toHaveBeenCalled()
     })
 
-    it('should returns an array of addresses', async () => {
+    it('should returns an array of addresses when findAddresses is called', async () => {
         const mockResponse = newResponse()
         await usersController.userAccountAdresses(1, mockResponse)
         expect(spyUsersService.findAddressesBy).toHaveBeenCalledWith(1)
@@ -173,7 +183,7 @@ describe('UsersController Unit Test', () => {
         expect(mockResponse.send).not.toHaveBeenCalled()
     })
 
-    it('should returns true when user change account address', async () => {
+    it('should returns true when changeUserAccountAddresses is called', async () => {
         const mockResponse = newResponse()
         await usersController.updateUserAccountAddresses(1, 1, mockResponse, bodyForChangeAddress)
         expect(spyUsersService.changeUserAccountAddress).toHaveBeenCalledWith(1, 'Susana', 'Salmeron', 'Fuencarral 9', '28004', 'Madrid', 'Spain', false, 1)
@@ -182,7 +192,7 @@ describe('UsersController Unit Test', () => {
         expect(mockResponse.send).not.toHaveBeenCalled()
     })
 
-    it('should returns status code 200 when user delete an address', async () => {
+    it('should returns status code 200 when deleteAddress is called', async () => {
         const mockResponse = newResponse()
         await usersController.deleteAddress({ addressId: "1", userId: "1" }, mockResponse)
         expect(spyUsersService.deleteAddress).toHaveBeenCalledWith({ addressId: "1", userId: "1" })
@@ -191,7 +201,7 @@ describe('UsersController Unit Test', () => {
         expect(mockResponse.send).toHaveBeenCalled()
     })
 
-    it('should return new addressId when user add a new address', async () => {
+    it('should return new addressId when addNewShippingAddress is called', async () => {
         const mockResponse = newResponse()
         await usersController.addUserAccountAddress(1, mockResponse, bodyForAddAddress)
         expect(spyUsersService.addNewShippingAddress).toHaveBeenCalledWith(1, { user_name: 'Susana', surname: 'Salmeron', address: 'Fuencarral 9', postalZip: '28029', city: 'Madrid', country: 'Spain', defaultAddress: false })
@@ -200,7 +210,7 @@ describe('UsersController Unit Test', () => {
         expect(mockResponse.send).not.toHaveBeenCalled()
     })
 
-    it('return true when user change billing address', async () => {
+    it('return true when changeUserAccountBillingAddress is called', async () => {
         const mockResponse = newResponse()
         await usersController.updateUserAccountBillingAddress(1, mockResponse, bodyForBillingAddress)
         expect(spyUsersService.changeUserAccountBillingAddress).toHaveBeenCalledWith(1, 'Susana', 'Salmeron', 'Fuencarral 9', '28029', 'Madrid', 'Spain', '1234567A')
@@ -209,7 +219,7 @@ describe('UsersController Unit Test', () => {
         expect(mockResponse.send).not.toHaveBeenCalled()
     })
 
-    it('should returns brands and names from all products', async () => {
+    it('should returns brands and names from all products when findAllBrandsAndNames is called', async () => {
         const mockResponse = newResponse()
         await usersController.userSearch(mockResponse)
         expect(spySearchService.findAllBrandsAndNames).toHaveBeenCalled()
@@ -227,7 +237,7 @@ describe('UsersController Unit Test', () => {
         expect(mockResponse.send).not.toHaveBeenCalled()
     })
 
-    it('should returns true when user change the password', async () => {
+    it('should returns true when changeUserAccountPassword is called', async () => {
         const mockResponse = newResponse()
         await usersController.updateUserAccountPassword(1, mockResponse, { password: 'Abcdef123!', newPassword: 'Zxcvbn098!', repeatNew: 'Zxcvbn098!' })
         expect(spyUsersService.changeUserAccountPassword).toHaveBeenCalledWith(1, 'Abcdef123!', 'Zxcvbn098!', 'Zxcvbn098!')
@@ -236,7 +246,7 @@ describe('UsersController Unit Test', () => {
         expect(mockResponse.send).not.toHaveBeenCalled()
     })
 
-    it('should returns all orders from user', async () => {
+    it('should returns all orders when findOrdersBy is called', async () => {
         const mockResponse = newResponse()
         await usersController.userOrders(1, mockResponse)
         expect(spyOrdersService.findOrdersBy).toHaveBeenCalledWith(1)
@@ -295,7 +305,7 @@ describe('UsersController Unit Test', () => {
         expect(mockResponse.send).not.toHaveBeenCalled()
     })
 
-    it('should returns one order from user', async () => {
+    it('should returns one order when findOrderBy is called', async () => {
         const mockResponse = newResponse()
         await usersController.userOrder(1, 1, mockResponse)
         expect(spyOrdersService.findOrderBy).toHaveBeenCalledWith(1, 1)
@@ -332,7 +342,7 @@ describe('UsersController Unit Test', () => {
         expect(mockResponse.send).not.toHaveBeenCalled()
     })
 
-    it('should returns all orders from user by status', async () => {
+    it('should returns all orders by status when userOrdersByStatus is called', async () => {
         const mockResponse = newResponse()
         await usersController.userOrdersByStatus(1, 'shipped', mockResponse)
         expect(spyOrdersService.findAllOrdersBy).toHaveBeenCalledWith('shipped', 1)
@@ -389,6 +399,71 @@ describe('UsersController Unit Test', () => {
         )
         ])
         expect(mockResponse.send).not.toHaveBeenCalled()
+    })
+
+    it('should return false when checkProductOnWishlist is called', async () => {
+        const mockResponse = newResponse()
+        await usersController.checkProductOnWishlist(1, 1, mockResponse)
+        expect(spyWishlistService.findProductOnWishlist).toHaveBeenCalledWith(1, 1)
+        expect(mockResponse.status).toHaveBeenCalledWith(404)
+        expect(mockResponse.json).not.toHaveBeenCalled()
+        expect(mockResponse.send).toHaveBeenCalledWith(false)
+    })
+
+    it('should return wishlist when getWishtlist is called', async () => {
+        const mockResponse = newResponse()
+        await usersController.findUserWishlist(1, mockResponse)
+        expect(spyUsersService.getWishlist).toHaveBeenCalledWith(1)
+        expect(mockResponse.status).toHaveBeenCalledWith(200)
+        expect(mockResponse.json).toHaveBeenCalledWith([new ProductCard(
+            1,
+            'Natasha Denona',
+            'Biba Palette',
+            129,
+            'Biba features 15 brand-new shades of Natasha Denona’s signature formulas. It includes neutral, warm, and cool tones, from light to dark, in different textures. This eyeshadow palette is very user-friendly, and covers a shade range that varies from mauves, burgundies, and browns to warm greys and black.',
+            'eyeshadow',
+            'https://www.sephora.com/productimages/sku/s2192821-main-zoom.jpg?imwidth=1224',
+            [
+                {
+                    'hex_value': '',
+                    'colour_name': 'Biba palette'
+                }
+            ]
+        ),
+
+        new ProductCard(
+            2,
+            'Natasha Denona',
+            'Pastel Palette',
+            65,
+            'Anything but ordinary, the Pastel Eyeshadow Palette‘s unique color story offers buildable intensity for everything from subtle to statement looks. Go monochrome with the same pastel shade in different tones or use the palette to add a pop of pastel to an otherwise neutral eye—the only limit is your imagination. Whatever you choose all formulas in this palette blend seamlessly for long-lasting, effortless, pro-level looks.',
+            'eyeshadow',
+            'https://www.sephora.com/productimages/sku/s2512556-main-zoom.jpg?imwidth=1224',
+            [
+                {
+                    'hex_value': '',
+                    'colour_name': 'Pastel Palette'
+                }
+            ]
+        )])
+        expect(mockResponse.send).not.toHaveBeenCalled()
+    })
+
+    it('should return newWishlistProductId when addProductFromUserWishlist is called', async () => {
+        const mockResponse = newResponse()
+        await usersController.addProductToWishlist(1, 1, mockResponse)
+        expect(spyUsersService.addProductFromUserWishlist).toHaveBeenCalledWith(1, 1)
+        expect(mockResponse.status).toHaveBeenCalledWith(201)
+        expect(mockResponse.json).toHaveBeenCalledWith(true)
+    })
+
+    it('should return true when deleteProductFromUserWishlist is called', async () => {
+        const mockResponse = newResponse()
+        await usersController.deleteProductFromWishlist(1, 1, mockResponse)
+        expect(spyUsersService.deleteProductFromUserWishlist).toHaveBeenCalledWith(1, 1)
+        expect(mockResponse.status).toHaveBeenCalledWith(200)
+        expect(mockResponse.send).toHaveBeenCalled()
+        expect(mockResponse.json).not.toHaveBeenCalled()
     })
 
 

@@ -76,3 +76,11 @@ export const mockFindProductsBy = () => {
     ),
     ]
 }
+
+export const newResponse = () => {
+    return {
+        send: jest.fn().mockReturnThis(),
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis()
+    }
+}
