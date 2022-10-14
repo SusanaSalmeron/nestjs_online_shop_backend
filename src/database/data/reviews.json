@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "productId": 1061,
+        "userId": 1000,
+        "rating": 5,
+        "comment": "I hardly ever write reviews but I had to for this. I was scared by the price but this is the prettiest palette I have ever bought. I am very fair skinne1 and I just love ever single color. Some are more pigmented than others, but some days I want less pigment so it’s perfect. Highly, highly recommend this!"
+    },
+    {
+        "id": 2,
+        "productId": 1062,
+        "userId": 1000,
+        "rating": 4,
+        "comment": "Really beautiful blush, the colour is immaculate, and it’s not insanely pigmented that you feel that you put too much on. Would recommend! Not a lot of product inside though composed to others like Nars Orgasim Liquid Blush."
+    },
+    {
+        "id": 3,
+        "productId": 1062,
+        "userId": 999,
+        "rating": 5,
+        "comment": "This is my go to blush for everyday dewy makeup looks. I really like the consistency and the color. And this was my first ever liquid blush purchase and I don’t regret buying it."
+    },
+    {
+        "id": 4,
+        "productId": 1066,
+        "userId": 999,
+        "rating": 5,
+        "comment": "It’s a beautiful little palette. It is quite small when you first see it but I think it is worth it in the end. It blends beautifully and the colours are so pretty. I do wish it was larger but it’s a great little palette for daily use as well as for overnight or travelling. You can get a nice light look or go for something more sultry! I do recommend it, just realize it truly is a mini size!"
+    },
+    {
+        "id": 5,
+        "productId": 1066,
+        "userId": 998,
+        "rating": 5,
+        "comment": "Absolutely love it. The colours are so beautiful. They blend so well. This is my everyday palette. I love the pink matte shade. Very easy to work with"
+    },
+    {
+        "id": 6,
+        "productId": 1046,
+        "userId": 997,
+        "rating": 5,
+        "comment": "I absolutely love this blush. It blends like a dream. It doesn’t strip or streak my foundation when trying to buff and blend. It’s super pigmented, so a little goes a long way and it’s buildable. I always start with one dab below my temple and blend it out. I will repurchase this again"
+    },
+    {
+        "id": 7,
+        "productId": 1046,
+        "userId": 996,
+        "rating": 5,
+        "comment": "This product is a LIFE CHANGER. It blends so well and is so smooth. It creates such a natural look and is incredible. Selena Gomez, keep on doing whatever you're doing because GIRL, this is where it's at!"
+    },
+    {
+        "id": 8,
+        "productId": 1046,
+        "userId": 995,
+        "rating": 5,
+        "comment": "This product is a LIFE CHANGER. It blends so well and is so smooth. It creates such a natural look and is incredible. Selena Gomez, keep on doing whatever you're doing because GIRL, this is where it's at!Amazing, do I even need to write a review? We all know this product is great. Lasts all day, easy to blend out, super pigmented and requires trial and error to find the right amount to apply for your taste. The shade Hope is beautiful on my fair skin. Works as blush and eyeshadow. 10/10 packaging."
+    },
+    {
+        "id": 9,
+        "productId": 1065,
+        "userId": 1000,
+        "rating": 5,
+        "comment": "The eyeshadow’s practically blend themselves, they look amazing! Biba makes me happy every morning when I open my makeup drawer and see her in there. I’m not spending my money on cheaper palettes that are imitation’s of what I want, and that I will hoard and never use. I’m saving up and getting that one expensive palette and this is it!"
+    },
+    {
+        "id": 10,
+        "productId": 1065,
+        "userId": 998,
+        "rating": 5,
+        "comment": "This is a cult classic palette! I love this palette for my natural everyday looks. The variety of textures are easy to use and blend better than most on the market.Natasha is one of the best MUA and the majority of her palettes are superior quality. The packaging is sturdy and easy to store, with pinholes for rearranging. You just can't go wrong with the palette. The shimmers are blinding but they're not dull either. It's just a wonderful neutral palette for the everyday look."
+    }
+]

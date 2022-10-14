@@ -25,6 +25,7 @@ import { Search } from "../../classes/search";
 import { Product } from "../../classes/product";
 import { ProductsService } from "../../services/products.service";
 import { WishlistService } from "../../services/wishlist.service";
+import { Reviews } from "src/classes/reviews";
 
 
 
@@ -400,10 +401,10 @@ export class UsersController {
                 const checkedProduct: boolean = await this.wishlistService.findProductOnWishlist(userId, productId)
                 if (!checkedProduct) {
                     this.logger.log('The product is not in the wishlist')
-                    response.status(HttpStatus.NOT_FOUND).send(checkedProduct)
+                    response.status(HttpStatus.NOT_FOUND).send()
                 } else {
                     this.logger.error('The product is in the wishlist')
-                    response.status(HttpStatus.OK).json({ error: 'The product ins in the wishlist' })
+                    response.status(HttpStatus.OK).json({ message: 'The product is in the wishlist' })
                 }
             } catch (err) {
                 this.logger.error('Internal Server Error')
@@ -452,10 +453,10 @@ export class UsersController {
                 const newProductToAddToWishlist: boolean = await this.usersService.addProductFromUserWishlist(userId, productId)
                 if (newProductToAddToWishlist) {
                     this.logger.log('Product added to wishlist successfully')
-                    response.status(HttpStatus.CREATED).json(newProductToAddToWishlist)
+                    response.status(HttpStatus.CREATED).send()
                 } else {
                     this.logger.error('The product already exists in the wishlist')
-                    response.status(HttpStatus.NO_CONTENT).json({ error: 'The product already exists in the wishlist' })
+                    response.status(HttpStatus.NO_CONTENT).json({ message: 'The product already exists in the wishlist' })
                 }
             } catch (err) {
                 this.logger.error('Internal Server Error', err)
@@ -489,10 +490,28 @@ export class UsersController {
             this.logger.error('Internal Server Error', err)
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" })
         }
-
     }
 
-
-
-
+    @Get('/:userId/reviews')
+    @ApiOkResponse({
+        description: 'Getting reviews successfully',
+    })
+    @ApiNotFoundResponse({ description: 'The user does not exist' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async getUserReviews(@Param('userId', ParseIntPipe) userId: number, @Res() response) {
+        try {
+            const userExists = await this.usersService.exists(userId)
+            if (userExists) {
+                const myReviews: Reviews = await this.usersService.findUserReviews(userId)
+                this.logger.log('Reviews found successfully')
+                response.status(HttpStatus.OK).json(myReviews)
+            } else {
+                this.logger.error("The user does not exist")
+                response.status(HttpStatus.NOT_FOUND).send("The user does not exist")
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error')
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).send("Unexpected error ocurred, try later")
+        }
+    }
 }

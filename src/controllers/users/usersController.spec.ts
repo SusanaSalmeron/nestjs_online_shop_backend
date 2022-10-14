@@ -407,7 +407,7 @@ describe('UsersController Unit Test', () => {
         expect(spyWishlistService.findProductOnWishlist).toHaveBeenCalledWith(1, 1)
         expect(mockResponse.status).toHaveBeenCalledWith(404)
         expect(mockResponse.json).not.toHaveBeenCalled()
-        expect(mockResponse.send).toHaveBeenCalledWith(false)
+        expect(mockResponse.send).toHaveBeenCalledWith()
     })
 
     it('should return wishlist when getWishtlist is called', async () => {
@@ -454,7 +454,7 @@ describe('UsersController Unit Test', () => {
         await usersController.addProductToWishlist(1, 1, mockResponse)
         expect(spyUsersService.addProductFromUserWishlist).toHaveBeenCalledWith(1, 1)
         expect(mockResponse.status).toHaveBeenCalledWith(201)
-        expect(mockResponse.json).toHaveBeenCalledWith(true)
+        expect(mockResponse.json).not.toHaveBeenCalled()
     })
 
     it('should return true when deleteProductFromUserWishlist is called', async () => {
@@ -465,6 +465,29 @@ describe('UsersController Unit Test', () => {
         expect(mockResponse.send).toHaveBeenCalled()
         expect(mockResponse.json).not.toHaveBeenCalled()
     })
-
-
+    it('should return a review list when getUserReviews is called', async () => {
+        const mockResponse = newResponse()
+        await usersController.getUserReviews(1, mockResponse)
+        expect(mockResponse.status).toHaveBeenCalledWith(200)
+        expect(mockResponse.json).toHaveBeenCalledWith({
+            "pending": [],
+            "created": []
+        })
+    })
+    it('should return status code 404 when retrieving the reviews if the user does not exist', async () => {
+        jest.spyOn(spyUsersService, "exists").mockResolvedValueOnce(false)
+        const mockResponse = newResponse()
+        await usersController.getUserReviews(1, mockResponse)
+        expect(mockResponse.status).toHaveBeenCalledWith(404)
+        expect(mockResponse.json).not.toHaveBeenCalled()
+        expect(mockResponse.send).toHaveBeenCalledWith("The user does not exist")
+    })
+    it('should fail when an unexpected error happens', async () => {
+        jest.spyOn(spyUsersService, "exists").mockRejectedValueOnce(new Error("Internal Error"))
+        const mockResponse = newResponse()
+        await usersController.getUserReviews(1, mockResponse)
+        expect(mockResponse.status).toHaveBeenCalledWith(500)
+        expect(mockResponse.json).not.toHaveBeenCalled()
+        expect(mockResponse.send).toHaveBeenCalledWith("Unexpected error ocurred, try later")
+    })
 })

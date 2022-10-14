@@ -33,7 +33,7 @@ export const databaseProviders = [
         useFactory: async (): Promise<loki.Db> => {
             try {
                 const client = await new loki('beautyshop.db')
-                const tables = ['addresses', 'newProducts', 'orderPosition', 'orders', 'users', 'wishlist']
+                const tables = ['addresses', 'newProducts', 'orderPosition', 'orders', 'users', 'wishlist', 'reviews']
                 for (let i = 0; i < tables.length; i++) {
                     const rawdata = fs.readFileSync(path.resolve(__dirname, 'data', `${tables[i]}.json`));
                     let data = JSON.parse(rawdata.toString());

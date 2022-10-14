@@ -331,3 +331,45 @@ export const newResponse = () => {
         send: jest.fn().mockReturnThis()
     }
 }
+
+export const mockOrders = [new OrderOverview(
+    1,
+    'Peter',
+    'Hinton',
+    'P.O. Box 328, 3703 Et Ave',
+    '859181',
+    'Canela',
+    'Philippines',
+    '01/09/2022',
+    'shipped',
+    [new OrderProductsOverview(
+        'Mini Love Palette',
+        'Natasha Denona',
+        'Mini Love Palette',
+        25,
+        1,
+        25
+    ),
+    new OrderProductsOverview(
+        'Mini Bronze Palette',
+        'Natasha Denona',
+        'Mini Bronze Palette',
+        25,
+        1,
+        25
+    )
+    ],
+    50
+)]
+
+export const mockOrdersPositions = [
+    {
+        "id": 2,
+        "order_id": 1,
+        "product_id": 15,
+        "product_name": "Lippie Pencil",
+        "colour_name": "BFF Pencil",
+        "units": 1,
+        "total": 5.0
+    }
+]

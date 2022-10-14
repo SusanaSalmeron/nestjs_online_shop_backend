@@ -11,6 +11,12 @@ import { CreateUserAddressDto } from "../dto/createUserAddressDto";
 import { DeleteAddressDto } from "../dto/deleteAddressDto";
 import { Wishlist } from "../classes/wishlist";
 import { ProductCard } from "../classes/productCard";
+import { Reviews } from "../classes/reviews";
+import { Review } from "src/classes/review";
+import { OrderPosition } from "../classes/OrderPosition";
+import { OrdersService } from "./orders.service";
+import { ProductWithoutReview } from "src/classes/productWithoutReview";
+import { OrderOverview } from "src/classes/orderOverview";
 
 
 @Injectable()
@@ -18,7 +24,7 @@ export class UsersService {
     private readonly logger = new Logger(UsersService.name)
     private addressId = 32
     private productWishlistId = 13
-    constructor(@Inject('DATABASE_CONNECTION') private db: loki, private productsService: ProductsService) { }
+    constructor(@Inject('DATABASE_CONNECTION') private db: loki, private productsService: ProductsService, private ordersService: OrdersService) { }
 
 
     async findUserByEmail(email: string): Promise<LoginUser> {
@@ -236,5 +242,37 @@ export class UsersService {
             this.logger.error(`The user ${userId} does not exists`)
             return false
         }
+    }
+
+    async findProductsWithoutReview(userId: number): Promise<ProductWithoutReview[]> {
+        const userOrders: OrderOverview[] = await this.ordersService.findOrdersBy(userId)
+        const reviewsTable = this.db.getCollection('reviews')
+        const productsIdsInReviews: number[] = reviewsTable.find({ userId: userId }).map(review => review.productId)
+
+        const orderPositionTable = this.db.getCollection('orderPosition')
+        const orderIds: number[] = userOrders.map(oid => oid.order_id)
+        const products = orderPositionTable.find({
+            '$and': [
+                { order_id: { '$in': orderIds } },
+                { product_id: { '$nin': productsIdsInReviews } }
+            ]
+        }).map(p => {
+            return {
+                product_id: p.product_id,
+                product_name: p.product_name
+            }
+        })
+        return products
+    }
+
+    async findUserReviews(userId: number): Promise<Reviews> {
+        const reviewsTable = this.db.getCollection('reviews')
+        const foundReviews: Review[] = reviewsTable.find({ userId: userId })
+        const pendingReviews: ProductWithoutReview[] = await this.findProductsWithoutReview(userId)
+        const reviews = new Reviews(
+            pendingReviews,
+            foundReviews
+        )
+        return reviews
     }
 }

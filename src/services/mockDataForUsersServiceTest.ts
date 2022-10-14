@@ -24,10 +24,18 @@ export const mockFindWishlist = (criteria) => {
 }
 
 export const mockFindOneProductOnWishlist = (criteria) => {
-    const productOnWishlist = mockWishlistData.filter(wd => wd.
-        userId === criteria['userId'] && wd.productId === criteria['productId'])
+    const productOnWishlist = mockWishlistData.filter(wd =>
+        wd.userId === criteria['userId'] && wd.productId === criteria['productId'])
     return productOnWishlist.length ? productOnWishlist[0] : null
 }
+
+export const mockFindUserReviews = (criteria) => {
+    const userReviews = mockUserReviews.filter(ur =>
+        ur.userId === criteria['userId'])
+    return userReviews
+}
+
+
 
 
 
@@ -114,6 +122,24 @@ const mockWishlistData = [
         'productId': 5
     }
 ]
+export const mockUserReviews = [
+    {
+        'id': 1,
+        'productId': 10,
+        'userId': 1,
+        'rating': 5,
+        'comments': 'The eyeshadow’s practically blend themselves, they look amazing! Biba makes me happy every morning when I open my makeup drawer and see her in there. I’m not spending my money on cheaper palettes that are imitation’s of what I want, and that I will hoard and never use. I’m saving up and getting that one expensive palette and this is it!'
+    },
+    {
+        'id': 2,
+        'productId': 11,
+        'userId': 1,
+        'rating': 5,
+        'comments': 'This product is a LIFE CHANGER. It blends so well and is so smooth. It creates such a natural look and is incredible. Selena Gomez, keep on doing whatever you are doing because GIRL, this is where it is at!'
+    },
+
+]
+
 
 export const mockFindProdyctsById = async (id) => {
     let products

@@ -8,6 +8,8 @@ export class OrderPosition {
     @ApiProperty()
     readonly product_id: number;
     @ApiProperty()
+    readonly product_name: string;
+    @ApiProperty()
     readonly colour_name: string;
     @ApiProperty()
     readonly units: number;

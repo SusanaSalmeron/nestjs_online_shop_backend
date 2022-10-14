@@ -4,11 +4,11 @@ import { AccountUserData } from "../classes/accountUserData"
 import { LoginUser } from "../classes/loginUser"
 import { ProductCard } from "../classes/productCard";
 import { newProducts, productToShow } from "./mockDataForOrdersServiceTest";
-import { addressToDelete, nonValidAddressToDelete, nonValidAddressAndUserToDelete, mockFindAddresses, mockFindOneAddress, mockFindOneProductOnWishlist, mockFindOneUser, mockFindProdyctsById, mockFindWishlist, newUser } from "./mockDataForUsersServiceTest"
+import { addressToDelete, nonValidAddressToDelete, nonValidAddressAndUserToDelete, mockFindAddresses, mockFindOneAddress, mockFindOneProductOnWishlist, mockFindOneUser, mockFindProdyctsById, mockFindWishlist, newUser, mockUserReviews } from "./mockDataForUsersServiceTest"
 import { ProductsService } from "./products.service"
 import { UsersService } from "./users.service";
-import * as bcrypt from 'bcrypt';
-import { UpdateBillingAddress } from "../classes/updateBillingAddresses";
+import { OrdersService } from "./orders.service";
+import { mockFindOrdersBy, mockOrders, mockOrdersPositions } from "../controllers/users/mockDataForUsersControllerTest";
 
 
 jest.mock('bcrypt')
@@ -17,10 +17,13 @@ jest.mock('bcrypt')
 describe('UsersService', () => {
     let usersService: UsersService
     let spyProductService: ProductsService
+    let spyOrdersService: OrdersService
 
     let usersMockDBCollection
     let addressesMockDBCollection
     let wishlistMockDBCollection
+    let reviewsMockDBCollection
+    let orderPositionMockDBCollection
 
     beforeEach(async () => {
         jest.clearAllMocks()
@@ -33,11 +36,16 @@ describe('UsersService', () => {
             })
         }
 
-
+        const ordersServiceProvider = {
+            provide: OrdersService,
+            useFactory: () => ({
+                findOrdersBy: jest.fn(mockFindOrdersBy)
+            })
+        }
 
         usersMockDBCollection = {
             findOne: jest.fn().mockImplementation(mockFindOneUser),
-            update: jest.fn()
+            update: jest.fn(),
         }
 
         addressesMockDBCollection = {
@@ -55,6 +63,14 @@ describe('UsersService', () => {
             remove: jest.fn()
         }
 
+        reviewsMockDBCollection = {
+            find: jest.fn().mockReturnValue([])
+        }
+
+        orderPositionMockDBCollection = {
+            find: jest.fn().mockReturnValue([])
+        }
+
         const dbProvider = {
             provide: 'DATABASE_CONNECTION',
             useFactory: async () => {
@@ -63,7 +79,9 @@ describe('UsersService', () => {
                         const collections = {
                             "users": usersMockDBCollection,
                             "addresses": addressesMockDBCollection,
-                            "wishlist": wishlistMockDBCollection
+                            "wishlist": wishlistMockDBCollection,
+                            "reviews": reviewsMockDBCollection,
+                            "orderPosition": orderPositionMockDBCollection
                         }
                         return collections[tableName]
                     })
@@ -72,11 +90,12 @@ describe('UsersService', () => {
         }
 
         const module: TestingModule = await Test.createTestingModule({
-            providers: [UsersService, productsServiceProvider, dbProvider]
+            providers: [UsersService, productsServiceProvider, ordersServiceProvider, dbProvider]
         }).compile()
 
         usersService = module.get<UsersService>(UsersService)
         spyProductService = module.get<ProductsService>(ProductsService)
+        spyOrdersService = module.get<OrdersService>(OrdersService)
     })
 
     it('should return an user when user exists', async () => {
@@ -426,5 +445,97 @@ describe('UsersService', () => {
     it('should return false when the user does not exists', async () => {
         const exists = await usersService.exists(6)
         expect(exists).toBeFalsy()
+    })
+
+    it('should return only products without review', async () => {
+        jest.spyOn(spyOrdersService, 'findOrdersBy').mockResolvedValueOnce(mockOrders)
+        jest.spyOn(orderPositionMockDBCollection, 'find').mockReturnValueOnce(mockOrdersPositions)
+        jest.spyOn(reviewsMockDBCollection, 'find').mockReturnValueOnce(mockUserReviews)
+        const findProductsWithoutReview = await usersService.findProductsWithoutReview(1)
+        expect(findProductsWithoutReview).toEqual([{ product_id: 15, product_name: 'Lippie Pencil' }])
+    })
+
+    it('should return only created user reviews', async () => {
+        jest.spyOn(reviewsMockDBCollection, 'find').mockReturnValueOnce(mockUserReviews)
+        const getUserReviews = await usersService.findUserReviews(1)
+        expect(getUserReviews).toEqual({ "created": mockUserReviews, "pending": [] })
+    })
+
+    it('should return only pending user reviews', async () => {
+        jest.spyOn(reviewsMockDBCollection, 'find').mockReturnValueOnce([])
+        jest.spyOn(spyOrdersService, 'findOrdersBy').mockResolvedValueOnce(mockOrders)
+        jest.spyOn(orderPositionMockDBCollection, 'find').mockReturnValueOnce([
+            {
+                "id": 1,
+                "order_id": 1,
+                "product_id": 1065,
+                "colour_name": "Biba Palette",
+                "product_name": "Biba Palette",
+                "units": 1,
+                "total": 125
+            },
+            {
+                "id": 2,
+                "order_id": 1,
+                "product_id": 757,
+                "product_name": "lippie stix",
+                "colour_name": "Cocoa Pop",
+                "units": 1,
+                "total": 18.5
+            }
+        ])
+        const getUserReviews = await usersService.findUserReviews(1)
+        expect(getUserReviews).toEqual({
+            "created": [], "pending": [
+                {
+                    "product_id": 1065,
+                    "product_name": "Biba Palette"
+                },
+                {
+                    "product_id": 757,
+                    "product_name": "lippie stix"
+                }
+            ]
+        })
+    })
+
+    it('should return created reviews and products without review', async () => {
+        jest.spyOn(reviewsMockDBCollection, 'find').mockReturnValueOnce(mockUserReviews)
+        jest.spyOn(spyOrdersService, 'findOrdersBy').mockResolvedValueOnce(mockOrders)
+        jest.spyOn(orderPositionMockDBCollection, 'find').mockReturnValueOnce([
+            {
+                "id": 1,
+                "order_id": 1,
+                "product_id": 1065,
+                "colour_name": "Biba Palette",
+                "product_name": "Biba Palette",
+                "units": 1,
+                "total": 125
+            },
+            {
+                "id": 2,
+                "order_id": 1,
+                "product_id": 757,
+                "product_name": "lippie stix",
+                "colour_name": "Cocoa Pop",
+                "units": 1,
+                "total": 18.5
+            }
+        ])
+        const getUserReviews = await usersService.findUserReviews(1)
+        expect(getUserReviews).toEqual({
+            created: mockUserReviews, pending: [
+                {
+                    "product_id": 1065,
+                    "product_name": "Biba Palette"
+                },
+                {
+                    "product_id": 757,
+                    "product_name": "lippie stix"
+                }
+            ]
+        })
+
+
     })
 }) 
