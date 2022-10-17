@@ -6,7 +6,7 @@
         "price": 20,
         "description": "Create a pinch-perfect flush using this featherweight formula infused with long-lasting pigments that last all day. Available in matte or dewy finishes, this liquid blush blends beautifully to create soft, buildable color with a natural, second-skin finish.",
         "category": "Liquid",
-        "product_type": "Blush",
+        "productType": "Blush",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2362085-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -62,7 +62,7 @@
         "price": 21,
         "description": "his first-of-its-kind water-resistant blush combines pigments with a non-greasy blend of weightless oils and spherical powders for a natural flush you can’t mess up. The ultralightweight, liquid-like cream melts on contact and blends to a smooth, satin finish that won’t cake, crease, or clog pores.",
         "category": "Cream",
-        "product_type": "Blush",
+        "productType": "Blush",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2418663-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -94,7 +94,7 @@
         "price": 23,
         "description": "This innovative liquid-like cream bronzer stick melts into skin for a visible sunkissed warmth that won’t fade. Ultra blendable and buildable, it glides on weightlessly, making it easy to softly sculpt the face. The non-greasy, water-resistant formula won’t cake, crease, or clog pores.",
         "category": "Cream",
-        "product_type": "Bronzer",
+        "productType": "Bronzer",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2518934-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -126,7 +126,7 @@
         "price": 20,
         "description": "Selena wanted to create a classic lipstick that’s truly comfortable. This innovative, flexible formula moves with your lips for cushiony, pigment-rich color that lasts all day while keeping lips soft, nourished, and moisturized",
         "category": "Lipstick",
-        "product_type": "Lipstick",
+        "productType": "Lipstick",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2589471-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -178,7 +178,7 @@
         "price": 22,
         "description": "Super-finely milled and silky to the touch, this powder goes on light and airy to provide sheer, seamless coverage with a subtle but visible radiance and a natural finish. Extend makeup wear, blur the look of pores, and smooth skin’s texture. The custom-designed sifter locks for mess-free storage on the go. ",
         "category": "Powder",
-        "product_type": "Foundation",
+        "productType": "Foundation",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2519080-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -198,7 +198,7 @@
         "price": 20,
         "description": "Finding the perfect mascara comes down to your lash type, which differs from person to person. This weightless, easy-to-build formula and curvy, multi-length brush are made to give every lash type (fine/sparse, full/thick, straight, and curly) more lift, length, curl, and volume.",
         "category": "Mascara",
-        "product_type": "Mascara",
+        "productType": "Mascara",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2474138-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -214,7 +214,7 @@
         "price": 29,
         "description": "The super-fluid, serum-like texture makes it easy to build and blend your coverage just how you like it while evening out skin tone and smoothing the look of pores—no clogging or caking. Plus, the mess-free, doe-foot applicator lets you apply one dot at a time, which is all you need to cover your entire face. ",
         "category": "Foundation",
-        "product_type": "Foundation",
+        "productType": "Foundation",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2361392-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -354,7 +354,7 @@
         "price": 19,
         "description": "This concealer instantly hides blemishes, dark circles, and redness, with buildable coverage and a skin-like finish that won’t cake or settle into fine lines. With a botanical blend, it’s creamy and hydrating, yet long-lasting and sweat-resistant. Plus, it comes in the same 48 shades as Liquid Touch Foundation.",
         "category": "Concealer",
-        "product_type": "Foundation",
+        "productType": "Foundation",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2362028-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -494,7 +494,7 @@
         "price": 24,
         "description": "Layer this all-in-one mist under or over makeup for a refreshed complexion. Infused with a botanical blend of lotus, gardenia, and white waterlily to help soothe and calm skin, this bi-phase formula also features niacinamide and sodium hyaluronate for the appearance of plumper, smoother skin. ",
         "category": "Mist",
-        "product_type": "Foundation",
+        "productType": "Foundation",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2362465-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -510,7 +510,7 @@
         "price": 15,
         "description": "Define and shape lips with one-swipe color and a soft matte finish. With an incredibly smooth, balm-like glide that won’t skip or tug, this waterproof liner not only stays put all day without smudging, but it keeps your lipstick in place, too. Keep the retractable tip sharp with the built-in sharpener.",
         "category": "Lips",
-        "product_type": "Lip_liner",
+        "productType": "Lip_liner",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2589554-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -562,7 +562,7 @@
         "price": 69,
         "description": " This palette includes shades named after the ideal place to apply them, helping you recreate glam makeup looks. It‘s as if you have special insider makeup tips from Natasha Denona herself when you apply these shades.",
         "category": "Eyes",
-        "product_type": "Eyeshadow",
+        "productType": "Eyeshadow",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2378313-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -578,7 +578,7 @@
         "price": 48,
         "description": "This primer serum has a moisturizing, lightweight texture that delivers a natural-looking, transparent, glass skin effect. It includes a special peptide that provides energizing effects on the skin. The primer serum comes in a universal shade suitable for every skin tone and can be used before or after makeup application.",
         "category": "Face",
-        "product_type": "Foundation",
+        "productType": "Foundation",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2569499-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -594,7 +594,7 @@
         "price": 65,
         "description": "Anything but ordinary, the Pastel Eyeshadow Palette‘s unique color story offers buildable intensity for everything from subtle to statement looks. Go monochrome with the same pastel shade in different tones or use the palette to add a pop of pastel to an otherwise neutral eye—the only limit is your imagination. Whatever you choose all formulas in this palette blend seamlessly for long-lasting, effortless, pro-level looks.",
         "category": "Eyes",
-        "product_type": "Eyeshadow",
+        "productType": "Eyeshadow",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2512556-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -610,7 +610,7 @@
         "price": 24,
         "description": "Puff Paint Liquid Blush is made with a lightweight, easy-to-apply, buildable formula. It’s infused with a skin thirst-relief complex, a super-active ingredient that brings fast-acting and long-lasting deep moisturization even after you take your makeup off. The three shades complement all skin tones and textures.",
         "category": "Face",
-        "product_type": "Blush",
+        "productType": "Blush",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2451961-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -634,7 +634,7 @@
         "price": 42,
         "description": "Create playfully bold or effortlessly wearable looks with this palette. The resplendent shades provide maximum color payoff with minimal effort, blending seamlessly to achieve vibrant, ultra-pigmented, and long-lasting results.",
         "category": "Face",
-        "product_type": "Blush",
+        "productType": "Blush",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2435840-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -650,7 +650,7 @@
         "price": 38,
         "description": "Encapsulated hyaluronic acid acts like a micro-sponge, supporting skin’s moisture levels and reducing the appearance of fine lines, texture, and wrinkles. The velvety-smooth powder glides onto skin for effortless blending and maximum comfort.",
         "category": "Face",
-        "product_type": "Bronzer",
+        "productType": "Bronzer",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2223659-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -678,7 +678,7 @@
         "price": 129,
         "description": "Biba features 15 brand-new shades of Natasha Denona’s signature formulas. It includes neutral, warm, and cool tones, from light to dark, in different textures. This eyeshadow palette is very user-friendly, and covers a shade range that varies from mauves, burgundies, and browns to warm greys and black.",
         "category": "eyes",
-        "product_type": "eyeshadow",
+        "productType": "eyeshadow",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2192821-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -694,7 +694,7 @@
         "price": 27,
         "description": "This palette provides maximum color payoff with minimal effort, blending seamlessly to achieve vibrant, ultra-pigmented, long lasting looks. Its compact size is perfect for travelling, allowing you to complete a whole look on the go. ",
         "category": "Eyes",
-        "product_type": "Eyeshadow",
+        "productType": "Eyeshadow",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2435832-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -710,7 +710,7 @@
         "price": 27,
         "description": "Natasha was compelled to create this collection after years of mixing nude lipsticks to achieve her vision: a nude that would flatter everyone. Featuring a lightweight, creamy, comfortable-to-wear formula, this luxurious lipstick delivers that nude look you‘ve been dreaming of while also hydrating and nourishing lips.",
         "category": "Lips",
-        "product_type": "Lipstick",
+        "productType": "Lipstick",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2378289-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {
@@ -806,7 +806,7 @@
         "price": 27,
         "description": "This mini palette is inspired by Natasha Denona’s bestselling Bronze Eyeshadow Palette and brings together five warm-toned neutrals in creamy matte and metallic finishes perfect for summer or fall. These innovative, easy-to-use formulas offer the high performance and versatility Natasha is known for. This travel-size palette easily takes your look from day to night and allows you to complete a whole look on the go. These shades also wear beautifully on all skin tones.",
         "category": "Eyes",
-        "product_type": "Eyeshadow",
+        "productType": "Eyeshadow",
         "api_featured_image": "https://www.sephora.com/productimages/sku/s2592012-main-zoom.jpg?imwidth=1224",
         "product_colors": [
             {

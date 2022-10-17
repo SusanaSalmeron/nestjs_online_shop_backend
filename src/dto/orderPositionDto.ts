@@ -4,11 +4,11 @@ export class OrderPosition {
     @ApiProperty()
     readonly id: number;
     @ApiProperty()
-    readonly order_id: number;
+    readonly orderId: number;
     @ApiProperty()
-    readonly product_id: number;
+    readonly productId: number;
     @ApiProperty()
-    readonly product_name: string;
+    readonly productName: string;
     @ApiProperty()
     readonly colour_name: string;
     @ApiProperty()

@@ -178,7 +178,7 @@ describe('UsersService', () => {
         const newAddressId = await usersService.addNewShippingAddress(1, newUser)
         expect(newAddressId).toEqual(32)
         expect(addressesMockDBCollection.insert).toHaveBeenLastCalledWith({
-            user_name: "Ann",
+            userName: "Ann",
             surname: "Smith",
             address: "Calle Marcelina 32",
             postalZip: "28029",
@@ -206,7 +206,7 @@ describe('UsersService', () => {
         expect(addressesMockDBCollection.remove).toHaveBeenCalledWith({
             id: 1,
             userId: 1,
-            user_name: "Joseph",
+            userName: "Joseph",
             surname: "Hinton",
             address: "P.O. Box 328, 3703 Et Ave",
             city: "Canela",
@@ -452,7 +452,7 @@ describe('UsersService', () => {
         jest.spyOn(orderPositionMockDBCollection, 'find').mockReturnValueOnce(mockOrdersPositions)
         jest.spyOn(reviewsMockDBCollection, 'find').mockReturnValueOnce(mockUserReviews)
         const findProductsWithoutReview = await usersService.findProductsWithoutReview(1)
-        expect(findProductsWithoutReview).toEqual([{ product_id: 15, product_name: 'Lippie Pencil' }])
+        expect(findProductsWithoutReview).toEqual([{ productId: 15, productName: 'Lippie Pencil' }])
     })
 
     it('should return only created user reviews', async () => {
@@ -467,18 +467,18 @@ describe('UsersService', () => {
         jest.spyOn(orderPositionMockDBCollection, 'find').mockReturnValueOnce([
             {
                 "id": 1,
-                "order_id": 1,
-                "product_id": 1065,
+                "orderId": 1,
+                "productId": 1065,
                 "colour_name": "Biba Palette",
-                "product_name": "Biba Palette",
+                "productName": "Biba Palette",
                 "units": 1,
                 "total": 125
             },
             {
                 "id": 2,
-                "order_id": 1,
-                "product_id": 757,
-                "product_name": "lippie stix",
+                "orderId": 1,
+                "productId": 757,
+                "productName": "lippie stix",
                 "colour_name": "Cocoa Pop",
                 "units": 1,
                 "total": 18.5
@@ -488,12 +488,12 @@ describe('UsersService', () => {
         expect(getUserReviews).toEqual({
             "created": [], "pending": [
                 {
-                    "product_id": 1065,
-                    "product_name": "Biba Palette"
+                    "productId": 1065,
+                    "productName": "Biba Palette"
                 },
                 {
-                    "product_id": 757,
-                    "product_name": "lippie stix"
+                    "productId": 757,
+                    "productName": "lippie stix"
                 }
             ]
         })
@@ -505,18 +505,18 @@ describe('UsersService', () => {
         jest.spyOn(orderPositionMockDBCollection, 'find').mockReturnValueOnce([
             {
                 "id": 1,
-                "order_id": 1,
-                "product_id": 1065,
+                "orderId": 1,
+                "productId": 1065,
                 "colour_name": "Biba Palette",
-                "product_name": "Biba Palette",
+                "productName": "Biba Palette",
                 "units": 1,
                 "total": 125
             },
             {
                 "id": 2,
-                "order_id": 1,
-                "product_id": 757,
-                "product_name": "lippie stix",
+                "orderId": 1,
+                "productId": 757,
+                "productName": "lippie stix",
                 "colour_name": "Cocoa Pop",
                 "units": 1,
                 "total": 18.5
@@ -526,12 +526,12 @@ describe('UsersService', () => {
         expect(getUserReviews).toEqual({
             created: mockUserReviews, pending: [
                 {
-                    "product_id": 1065,
-                    "product_name": "Biba Palette"
+                    "productId": 1065,
+                    "productName": "Biba Palette"
                 },
                 {
-                    "product_id": 757,
-                    "product_name": "lippie stix"
+                    "productId": 757,
+                    "productName": "lippie stix"
                 }
             ]
         })

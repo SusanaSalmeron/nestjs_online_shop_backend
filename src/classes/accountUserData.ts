@@ -1,6 +1,6 @@
 export class AccountUserData {
     id: number;
-    user_name: string;
+    userName: string;
     surname: string;
     address: string;
     postalZip: string;
@@ -8,13 +8,13 @@ export class AccountUserData {
     country: string;
     phone: string;
     email: string;
-    date_of_birth: string;
+    dateOfBirth: string;
     identification: string;
     password: string
 
-    constructor(id, user_name, surname, address, postalZip, city, country, phone, email, date_of_birth, identification, password) {
+    constructor(id, userName, surname, address, postalZip, city, country, phone, email, dateOfBirth, identification, password) {
         this.id = id;
-        this.user_name = user_name;
+        this.userName = userName;
         this.surname = surname;
         this.address = address;
         this.postalZip = postalZip;
@@ -22,7 +22,7 @@ export class AccountUserData {
         this.country = country;
         this.phone = phone;
         this.email = email;
-        this.date_of_birth = date_of_birth;
+        this.dateOfBirth = dateOfBirth;
         this.identification = identification;
         this.password = password
     }

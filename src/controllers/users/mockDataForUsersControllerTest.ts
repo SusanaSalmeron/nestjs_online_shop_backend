@@ -285,16 +285,16 @@ export const bodyForUserLogin: CreateUserDto = {
 }
 
 export const bodyForChangeData: UpdateUserAccountDataDto = {
-    user_name: 'Susana',
+    userName: 'Susana',
     surname: 'Salmeron',
     identification: '1234567A',
-    date_of_birth: '04/05/1976',
+    dateOfBirth: '04/05/1976',
     email: 'mamamama@gmail.com',
     phone: '123456789',
 }
 
 export const bodyForChangeAddress: UpdateUserAccountAddressesDto = {
-    user_name: 'Susana',
+    userName: 'Susana',
     surname: 'Salmeron',
     address: 'Fuencarral 9',
     postalZip: '28004',
@@ -305,7 +305,7 @@ export const bodyForChangeAddress: UpdateUserAccountAddressesDto = {
 }
 
 export const bodyForAddAddress: CreateUserAddressDto = {
-    user_name: 'Susana',
+    userName: 'Susana',
     surname: 'Salmeron',
     address: 'Fuencarral 9',
     postalZip: '28029',
@@ -315,7 +315,7 @@ export const bodyForAddAddress: CreateUserAddressDto = {
 }
 
 export const bodyForBillingAddress: UpdateBillingAddressDto = {
-    user_name: 'Susana',
+    userName: 'Susana',
     surname: 'Salmeron',
     address: 'Fuencarral 9',
     postalZip: '28029',
@@ -365,9 +365,9 @@ export const mockOrders = [new OrderOverview(
 export const mockOrdersPositions = [
     {
         "id": 2,
-        "order_id": 1,
-        "product_id": 15,
-        "product_name": "Lippie Pencil",
+        "orderId": 1,
+        "productId": 15,
+        "productName": "Lippie Pencil",
         "colour_name": "BFF Pencil",
         "units": 1,
         "total": 5.0

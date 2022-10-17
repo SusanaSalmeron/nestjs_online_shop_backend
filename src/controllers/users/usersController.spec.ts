@@ -204,7 +204,7 @@ describe('UsersController Unit Test', () => {
     it('should return new addressId when addNewShippingAddress is called', async () => {
         const mockResponse = newResponse()
         await usersController.addUserAccountAddress(1, mockResponse, bodyForAddAddress)
-        expect(spyUsersService.addNewShippingAddress).toHaveBeenCalledWith(1, { user_name: 'Susana', surname: 'Salmeron', address: 'Fuencarral 9', postalZip: '28029', city: 'Madrid', country: 'Spain', defaultAddress: false })
+        expect(spyUsersService.addNewShippingAddress).toHaveBeenCalledWith(1, { userName: 'Susana', surname: 'Salmeron', address: 'Fuencarral 9', postalZip: '28029', city: 'Madrid', country: 'Spain', defaultAddress: false })
         expect(mockResponse.status).toHaveBeenCalledWith(201)
         expect(mockResponse.json).toHaveBeenCalledWith(32)
         expect(mockResponse.send).not.toHaveBeenCalled()

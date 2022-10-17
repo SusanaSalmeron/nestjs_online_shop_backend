@@ -1,13 +1,13 @@
 export class OrderProductsOverview {
-    product_name: string;
+    productName: string;
     product_brand: string;
     product_colour: string
     price: number
     units: number;
     product_total: number;
 
-    constructor(product_name, product_brand, product_colour, price, units, product_total) {
-        this.product_name = product_name;
+    constructor(productName, product_brand, product_colour, price, units, product_total) {
+        this.productName = productName;
         this.product_brand = product_brand;
         this.product_colour = product_colour;
         this.price = price;

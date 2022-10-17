@@ -1,6 +1,6 @@
 
 export class UpdateBillingAddress {
-    user_name: string;
+    userName: string;
     surname: string;
     address: string;
     postalZip: string;
@@ -8,8 +8,8 @@ export class UpdateBillingAddress {
     country: string;
     identification: string;
 
-    constructor(user_name, surname, address, postalZip, city, country, identification) {
-        this.user_name = user_name;
+    constructor(userName, surname, address, postalZip, city, country, identification) {
+        this.userName = userName;
         this.surname = surname;
         this.address = address;
         this.postalZip = postalZip;

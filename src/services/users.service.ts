@@ -13,7 +13,6 @@ import { Wishlist } from "../classes/wishlist";
 import { ProductCard } from "../classes/productCard";
 import { Reviews } from "../classes/reviews";
 import { Review } from "src/classes/review";
-import { OrderPosition } from "../classes/OrderPosition";
 import { OrdersService } from "./orders.service";
 import { ProductWithoutReview } from "src/classes/productWithoutReview";
 import { OrderOverview } from "src/classes/orderOverview";
@@ -33,7 +32,7 @@ export class UsersService {
         if (foundUser) {
             return new LoginUser(
                 foundUser.id,
-                foundUser.user_name,
+                foundUser.userName,
                 foundUser.email,
                 foundUser.password
             )
@@ -48,7 +47,7 @@ export class UsersService {
         if (foundUserData) {
             return new AccountUserData(
                 foundUserData.id,
-                foundUserData.user_name,
+                foundUserData.userName,
                 foundUserData.surname,
                 foundUserData.address,
                 foundUserData.postalZip,
@@ -56,7 +55,7 @@ export class UsersService {
                 foundUserData.country,
                 foundUserData.phone,
                 foundUserData.email,
-                foundUserData.date_of_birth,
+                foundUserData.dateOfBirth,
                 foundUserData.identification,
                 foundUserData.password)
         } else {
@@ -72,7 +71,7 @@ export class UsersService {
             addresses = foundAddresses.map(a => {
                 return new AccountUserAddresses(
                     a.id,
-                    a.user_name,
+                    a.userName,
                     a.surname,
                     a.address,
                     a.postalZip,
@@ -91,12 +90,12 @@ export class UsersService {
     async addNewShippingAddress(userId: number, createUserAddressDto: CreateUserAddressDto): Promise<number> {
         if (await this.exists(userId)) {
             const addressesTable = this.db.getCollection('addresses')
-            const { user_name, surname, address, postalZip, city, country, defaultAddress } = createUserAddressDto
+            const { userName, surname, address, postalZip, city, country, defaultAddress } = createUserAddressDto
             const newId: number = this.addressId++
             addressesTable.insert(
                 {
                     id: newId,
-                    user_name: user_name,
+                    userName: userName,
                     surname: surname,
                     address: address,
                     postalZip: postalZip,
@@ -136,14 +135,14 @@ export class UsersService {
         }
     }
 
-    async changeUserAccountData(userId: number, user_name: string, surname: string, identification: string, date_of_birth: string, email: string, phone: string): Promise<boolean> {
+    async changeUserAccountData(userId: number, userName: string, surname: string, identification: string, dateOfBirth: string, email: string, phone: string): Promise<boolean> {
         const usersTable = this.db.getCollection('users')
         const user: AccountUserData = usersTable.findOne({ id: userId })
         if (user) {
-            user.user_name = user_name;
+            user.userName = userName;
             user.surname = surname;
             user.identification = identification;
-            user.date_of_birth = date_of_birth;
+            user.dateOfBirth = dateOfBirth;
             user.email = email;
             user.phone = phone;
             return usersTable.update(user)
@@ -152,12 +151,12 @@ export class UsersService {
         }
     }
 
-    async changeUserAccountAddress(addressId: number, user_name: string, surname: string, address: string, postalZip: string, city: string, country: string, defaultAddress: boolean, userId: number): Promise<boolean> {
+    async changeUserAccountAddress(addressId: number, userName: string, surname: string, address: string, postalZip: string, city: string, country: string, defaultAddress: boolean, userId: number): Promise<boolean> {
         const addressesTable = this.db.getCollection('addresses')
         const addressFound: AccountUserAddresses = addressesTable.findOne({ userId: userId, id: addressId })
         if (addressFound) {
             addressFound.id = addressId
-            addressFound.user_name = user_name;
+            addressFound.userName = userName;
             addressFound.surname = surname;
             addressFound.address = address;
             addressFound.postalZip = postalZip;
@@ -171,11 +170,11 @@ export class UsersService {
         }
     }
 
-    async changeUserAccountBillingAddress(id: number, user_name: string, surname: string, address: string, postalZip: string, city: string, country: string, identification: string): Promise<boolean> {
+    async changeUserAccountBillingAddress(id: number, userName: string, surname: string, address: string, postalZip: string, city: string, country: string, identification: string): Promise<boolean> {
         const usersTable = this.db.getCollection('users')
         const user: UpdateBillingAddress = usersTable.findOne({ id: id })
         if (user) {
-            user.user_name = user_name;
+            user.userName = userName;
             user.surname = surname;
             user.address = address;
             user.postalZip = postalZip;
@@ -250,16 +249,16 @@ export class UsersService {
         const productsIdsInReviews: number[] = reviewsTable.find({ userId: userId }).map(review => review.productId)
 
         const orderPositionTable = this.db.getCollection('orderPosition')
-        const orderIds: number[] = userOrders.map(oid => oid.order_id)
+        const orderIds: number[] = userOrders.map(oid => oid.orderId)
         const products = orderPositionTable.find({
             '$and': [
-                { order_id: { '$in': orderIds } },
-                { product_id: { '$nin': productsIdsInReviews } }
+                { orderId: { '$in': orderIds } },
+                { productId: { '$nin': productsIdsInReviews } }
             ]
         }).map(p => {
             return {
-                product_id: p.product_id,
-                product_name: p.product_name
+                productId: p.productId,
+                productName: p.productName
             }
         })
         return products
@@ -268,6 +267,7 @@ export class UsersService {
     async findUserReviews(userId: number): Promise<Reviews> {
         const reviewsTable = this.db.getCollection('reviews')
         const foundReviews: Review[] = reviewsTable.find({ userId: userId })
+        console.log(foundReviews)
         const pendingReviews: ProductWithoutReview[] = await this.findProductsWithoutReview(userId)
         const reviews = new Reviews(
             pendingReviews,

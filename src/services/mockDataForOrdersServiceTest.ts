@@ -10,17 +10,17 @@ export const mockFindOneUser = (criteria) => {
 }
 
 export const mockFindOrders = (criteria) => {
-    const orders = mockOrdersData.filter(fo => fo.user_id === criteria["user_id"])
+    const orders = mockOrdersData.filter(fo => fo.userId === criteria["userId"])
     return orders.length ? orders : null
 }
 
 export const mockFindOrdersPosition = (criteria => {
-    return mockOrderPositionData.filter(fop => fop.order_id === criteria["order_id"])
+    return mockOrderPositionData.filter(fop => fop.orderId === criteria["orderId"])
 })
 
 /* export const findOrdersPosition = (criteria) => {
-    const targetOrderId = criteria["order_id"]
-    const foundProductsInOrder = mockData[1].fakeOrderPositionTableData.filter(fop => fop.order_id === targetOrderId)
+    const targetOrderId = criteria["orderId"]
+    const foundProductsInOrder = mockData[1].fakeOrderPositionTableData.filter(fop => fop.orderId === targetOrderId)
     return foundProductsInOrder
 } */
 /* export const mockGetCollection = async (addressCol, ordersCol, positionCol, userCol) => {
@@ -130,7 +130,7 @@ export async function productToShow() {
 const mockAddressesData = [
     {
         "id": 1,
-        "user_name": "Peter",
+        "userName": "Peter",
         "surname": "Smith",
         "address": "Gran Via 39",
         "postalZip": "28013",
@@ -141,7 +141,7 @@ const mockAddressesData = [
     },
     {
         "id": 2,
-        "user_name": "Peter",
+        "userName": "Peter",
         "surname": "Smith",
         "address": "Fuencarral 39",
         "postalZip": "28004",
@@ -152,7 +152,7 @@ const mockAddressesData = [
     },
     {
         "id": 3,
-        "user_name": "Evan",
+        "userName": "Evan",
         "surname": "Pennington",
         "address": "#254-4210 Mi Avenue",
         "postalZip": "86276",
@@ -166,7 +166,7 @@ const mockAddressesData = [
 const mockUserData = [
     {
         "id": 1000,
-        "user_name": "Peter",
+        "userName": "Peter",
         "surname": "Smith",
         "address": "Gran Via 39",
         "postalZip": "28013",
@@ -174,13 +174,13 @@ const mockUserData = [
         "country": "Spain",
         "phone": "+63765875543",
         "email": "eu.tellus@outlook.edu",
-        "date_of_birth": "18/01/1943",
+        "dateOfBirth": "18/01/1943",
         "identification": "05022081I",
         "password": "Rwm31Irh7Og!"
     },
     {
         "id": 971,
-        "user_name": "Evan",
+        "userName": "Evan",
         "surname": "Pennington",
         "address": "#254-4210 Mi Avenue",
         "postalZip": "86276",
@@ -188,7 +188,7 @@ const mockUserData = [
         "country": "Brazil",
         "phone": "+55987446634",
         "email": "ut.molestie.in@icloud.net",
-        "date_of_birth": "02/01/1963",
+        "dateOfBirth": "02/01/1963",
         "identification": "24671636T",
         "password": "WIK74ZWM4CY"
     }
@@ -197,16 +197,16 @@ const mockUserData = [
 const mockOrdersData = [
     {
         "id": 1,
-        "user_id": 1000,
-        "delivery_address_id": 1,
-        "order_date": "17/05/2021",
+        "userId": 1000,
+        "deliveryAddressId": 1,
+        "orderDate": "17/05/2021",
         "status": "Shipped"
     },
     {
         "id": 2,
-        "user_id": 1000,
-        "delivery_address_id": 2,
-        "order_date": "03/06/2022",
+        "userId": 1000,
+        "deliveryAddressId": 2,
+        "orderDate": "03/06/2022",
         "status": "In process"
     }
 ]
@@ -214,16 +214,16 @@ const mockOrdersData = [
 const mockOrderPositionData = [
     {
         "id": 1,
-        "order_id": 1,
-        "product_id": 1,
+        "orderId": 1,
+        "productId": 1,
         "colour_name": "Biba Palette",
         "units": 1,
         "total": 129
     },
     {
         "id": 2,
-        "order_id": 2,
-        "product_id": 2,
+        "orderId": 2,
+        "productId": 2,
         "colour_name": "Mini Bronze Palette",
         "units": 1,
         "total": 27

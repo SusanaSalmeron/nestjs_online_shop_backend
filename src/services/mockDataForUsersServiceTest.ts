@@ -42,7 +42,7 @@ export const mockFindUserReviews = (criteria) => {
 const mockUserData = [
     {
         'id': 1,
-        'user_name': 'Joseph',
+        'userName': 'Joseph',
         'surname': 'Hinton',
         'address': 'P.O. Box 328, 3703 Et Ave',
         'postalZip': '859181',
@@ -50,13 +50,13 @@ const mockUserData = [
         'country': 'Philippines',
         'phone': '+63765875543',
         'email': 'eu.tellus@outlook.edu',
-        'date_of_birth': '18/01/1943',
+        'dateOfBirth': '18/01/1943',
         'identification': '05022081I',
         'password': 'Rwm31Irh7Og!'
     },
     {
         'id': 2,
-        'user_name': 'Evan',
+        'userName': 'Evan',
         'surname': 'Pennington',
         'address': '#254-4210 Mi Avenue',
         'postalZip': '86276',
@@ -64,7 +64,7 @@ const mockUserData = [
         'country': 'Brazil',
         'phone': '+55987446634',
         'email': 'ut.molestie.in@icloud.net',
-        'date_of_birth': '02/01/1963',
+        'dateOfBirth': '02/01/1963',
         'identification': '24671636T',
         'password': 'WIK74ZWM4CY'
     },
@@ -73,7 +73,7 @@ const mockUserData = [
 const mockAddresses = [
     {
         'id': 1,
-        'user_name': 'Joseph',
+        'userName': 'Joseph',
         'surname': 'Hinton',
         'address': 'P.O. Box 328, 3703 Et Ave',
         'postalZip': '859181',
@@ -84,7 +84,7 @@ const mockAddresses = [
     },
     {
         'id': 2,
-        'user_name': 'Joseph',
+        'userName': 'Joseph',
         'surname': 'Hinton',
         'address': 'Ap #939-7227 Biba Avenue',
         'postalZip': '859187',
@@ -316,7 +316,7 @@ export async function productToShow() {
 }
 
 export const newUser = {
-    user_name: 'Ann',
+    userName: 'Ann',
     surname: 'Smith',
     address: 'Calle Marcelina 32',
     postalZip: '28029',

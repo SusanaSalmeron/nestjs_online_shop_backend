@@ -3,13 +3,13 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class OrdersDto {
     @ApiProperty()
-    readonly order_id: number;
+    readonly orderId: number;
     @ApiProperty()
-    readonly user_id: number;
+    readonly userId: number;
     @ApiProperty()
-    readonly delivery_address_id: number;
+    readonly deliveryAddressId: number;
     @ApiProperty()
-    readonly order_date: string;
+    readonly orderDate: string;
     @ApiProperty()
     readonly shipped: boolean;
     @ApiProperty()

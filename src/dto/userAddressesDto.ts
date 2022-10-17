@@ -4,7 +4,7 @@ export class UserAddressDto {
     @ApiProperty()
     readonly id: number;
     @ApiProperty()
-    readonly user_name: string;
+    readonly userName: string;
     @ApiProperty()
     readonly surname: string;
     @ApiProperty()

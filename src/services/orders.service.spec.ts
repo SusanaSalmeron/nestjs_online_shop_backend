@@ -117,14 +117,14 @@ describe('OrdersService', () => {
             )
         ])
         expect(usersMockBCollection.findOne).toHaveBeenCalledWith({ id: 1000 })
-        expect(ordersMockDBCollection.find).toHaveBeenCalledWith({ user_id: 1000 })
+        expect(ordersMockDBCollection.find).toHaveBeenCalledWith({ userId: 1000 })
     })
 
     it('should return an empty array from a valid user without orders', async () => {
         const orders = await ordersService.findOrdersBy(971)
         expect(orders).toHaveLength(0)
         expect(usersMockBCollection.findOne).toHaveBeenCalledWith({ id: 971 })
-        expect(ordersMockDBCollection.find).toHaveBeenCalledWith({ user_id: 971 })
+        expect(ordersMockDBCollection.find).toHaveBeenCalledWith({ userId: 971 })
     })
 })
 

@@ -12,7 +12,7 @@ export class ProductCardDto {
     @ApiProperty()
     readonly description: string;
     @ApiProperty()
-    readonly product_type: string;
+    readonly productType: string;
     @ApiProperty()
     readonly api_featured_image: string;
     @ApiProperty()

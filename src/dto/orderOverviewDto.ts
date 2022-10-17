@@ -3,7 +3,7 @@ import { OrderProductsOverviewDto } from "./orderProductsOverviewDto";
 
 export class OrderOverviewDto {
     @ApiProperty()
-    readonly order_id: number;
+    readonly orderId: number;
     @ApiProperty()
     readonly name: string;
     @ApiProperty()
@@ -17,13 +17,13 @@ export class OrderOverviewDto {
     @ApiProperty()
     readonly country: string;
     @ApiProperty()
-    readonly order_date: string;
+    readonly orderDate: string;
     @ApiProperty()
     readonly status: string;
     @ApiProperty()
     readonly products: OrderProductsOverviewDto[];
     @ApiProperty()
-    readonly total_order: number;
+    readonly totalOrder: number;
 
 
 

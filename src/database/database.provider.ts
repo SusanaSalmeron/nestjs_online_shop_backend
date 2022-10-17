@@ -11,7 +11,7 @@ async function passwordEncrypt(data) {
     const allPromises = data.map(async d => {
         return new AccountUserData(
             d.id,
-            d.user_name,
+            d.userName,
             d.surname,
             d.address,
             d.postalZip,
@@ -19,7 +19,7 @@ async function passwordEncrypt(data) {
             d.country,
             d.phone,
             d.email,
-            d.date_of_birth,
+            d.dateOfBirth,
             d.identification,
             await encrypt(d.password)
         )

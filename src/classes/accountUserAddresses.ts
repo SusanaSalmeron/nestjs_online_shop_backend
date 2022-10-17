@@ -1,6 +1,6 @@
 export class AccountUserAddresses {
     id: number;
-    user_name: string;
+    userName: string;
     surname: string;
     address: string;
     postalZip: string;
@@ -9,9 +9,9 @@ export class AccountUserAddresses {
     defaultAddress: boolean;
     userId: number
 
-    constructor(id, user_name, surname, address, postalZip, city, country, defaultAddress, userId) {
+    constructor(id, userName, surname, address, postalZip, city, country, defaultAddress, userId) {
         this.id = id;
-        this.user_name = user_name;
+        this.userName = userName;
         this.surname = surname
         this.address = address;
         this.postalZip = postalZip;

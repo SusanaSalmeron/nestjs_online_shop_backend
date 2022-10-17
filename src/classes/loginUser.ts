@@ -4,16 +4,16 @@ export class LoginUser {
     @ApiProperty()
     id: number;
     @ApiProperty()
-    user_name: string;
+    userName: string;
     @ApiProperty()
     email: string;
     @ApiProperty()
     password: string
 
 
-    constructor(id, user_name, email, password) {
+    constructor(id, userName, email, password) {
         this.id = id;
-        this.user_name = user_name
+        this.userName = userName
         this.email = email;
         this.password = password
     }

@@ -16,25 +16,25 @@ export class OrdersService {
 
 
     async buildOrderOverview(order: Orders, user: AccountUserData): Promise<OrderOverview> {
-        const name = user.user_name
+        const name = user.userName
         const surname = user.surname
         const addressesTable = this.db.getCollection('addresses')
-        const delivery_address = addressesTable.findOne({ id: order.delivery_address_id })
+        const delivery_address = addressesTable.findOne({ id: order.deliveryAddressId })
         const address = delivery_address.address
         const postalZip = delivery_address.postalZip
         const city = delivery_address.city
         const country = delivery_address.country
-        const date = order.order_date
+        const date = order.orderDate
         const status = order.status
 
         const orderPositionTable = this.db.getCollection('orderPosition')
-        const foundProductsInOrder: OrderPosition[] = orderPositionTable.find({ order_id: order.id })
+        const foundProductsInOrder: OrderPosition[] = orderPositionTable.find({ orderId: order.id })
         const productsArray = []
         const totalProductArray = []
 
 
         for (let i = 0; i < foundProductsInOrder.length; i++) {
-            const productsFromApi = await this.productsService.findProductById(foundProductsInOrder[i].product_id)
+            const productsFromApi = await this.productsService.findProductById(foundProductsInOrder[i].productId)
             const productOverview = new OrderProductsOverview(
                 productsFromApi.name,
                 productsFromApi.brand,
@@ -73,7 +73,7 @@ export class OrdersService {
         const orders: OrderOverview[] = []
         const user: AccountUserData = usersTable.findOne({ id: userId })
         if (user) {
-            const foundOrders = ordersTable.find({ user_id: userId })
+            const foundOrders = ordersTable.find({ userId: userId })
             if (foundOrders) {
                 for (let i = 0; i < foundOrders.length; i++) {
                     const order = await this.buildOrderOverview(foundOrders[i], user)
@@ -107,7 +107,7 @@ export class OrdersService {
 
         const orders: OrderOverview[] = []
 
-        const foundOrders = ordersTable.find({ user_id: userId })
+        const foundOrders = ordersTable.find({ userId: userId })
         const user: AccountUserData = usersTable.findOne({ id: userId })
         if (foundOrders) {
             const filteredOrders = foundOrders.filter(o => {

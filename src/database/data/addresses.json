@@ -1,7 +1,7 @@
 [
     {
         "id": 1,
-        "user_name": "Joseph",
+        "userName": "Joseph",
         "surname": "Hinton",
         "address": "P.O. Box 328, 3703 Et Ave",
         "postalZip": "859181",
@@ -12,7 +12,7 @@
     },
     {
         "id": 2,
-        "user_name": "Joseph",
+        "userName": "Joseph",
         "surname": "Hinton",
         "address": "Ap #939-7227 Biba Avenue",
         "postalZip": "859187",
@@ -23,7 +23,7 @@
     },
     {
         "id": 3,
-        "user_name": "Evan",
+        "userName": "Evan",
         "surname": "Pennington",
         "address": "#254-4210 Mi Avenue",
         "postalZip": "86276",
@@ -34,7 +34,7 @@
     },
     {
         "id": 4,
-        "user_name": "Angelica",
+        "userName": "Angelica",
         "surname": "Daugherty",
         "address": "Ap #183-229 Cras Road",
         "postalZip": "58297-355",
@@ -45,7 +45,7 @@
     },
     {
         "id": 5,
-        "user_name": "Julie",
+        "userName": "Julie",
         "surname": "Pruitt",
         "address": "Ap #323-7975 Nullam Avenue",
         "postalZip": "381777",
@@ -56,7 +56,7 @@
     },
     {
         "id": 6,
-        "user_name": "Todd",
+        "userName": "Todd",
         "surname": "Crawford",
         "address": "Ap #939-7227 Ante Avenue",
         "postalZip": "5203",
@@ -67,7 +67,7 @@
     },
     {
         "id": 7,
-        "user_name": "Phelan",
+        "userName": "Phelan",
         "surname": "Mcdowell",
         "address": "Ap #387-1628 Tempus Av.",
         "postalZip": "4414",
@@ -78,7 +78,7 @@
     },
     {
         "id": 8,
-        "user_name": "Arsenio",
+        "userName": "Arsenio",
         "surname": "Cantrell",
         "address": "5282 Suscipit, Road",
         "postalZip": "12462",
@@ -89,7 +89,7 @@
     },
     {
         "id": 9,
-        "user_name": "Adara",
+        "userName": "Adara",
         "surname": "Levine",
         "address": "583-3118 Justo. Street",
         "postalZip": "91266",
@@ -101,7 +101,7 @@
     },
     {
         "id": 10,
-        "user_name": "Carissa",
+        "userName": "Carissa",
         "surname": "Nguyen",
         "address": "418-3332 Condimentum Road",
         "postalZip": "4280-3442",
@@ -112,7 +112,7 @@
     },
     {
         "id": 11,
-        "user_name": "Kirk",
+        "userName": "Kirk",
         "surname": "Clarke",
         "address": "269-7364 Libero. Ave",
         "postalZip": "14510",
@@ -123,7 +123,7 @@
     },
     {
         "id": 12,
-        "user_name": "Alec",
+        "userName": "Alec",
         "surname": "Lester",
         "address": "Ap #164-8100 Libero Road",
         "postalZip": "27756",
@@ -134,7 +134,7 @@
     },
     {
         "id": 13,
-        "user_name": "Carson",
+        "userName": "Carson",
         "surname": "Conway",
         "address": "Ap #414-8755 Nunc Ave",
         "postalZip": "7773",
@@ -145,7 +145,7 @@
     },
     {
         "id": 14,
-        "user_name": "Zahir",
+        "userName": "Zahir",
         "surname": "Chapman",
         "address": "948-8428 Aenean Ave",
         "postalZip": "5123-7532",
@@ -156,7 +156,7 @@
     },
     {
         "id": 15,
-        "user_name": "Savannah",
+        "userName": "Savannah",
         "surname": "Mosley",
         "address": "186-6423 Nisi Ave",
         "postalZip": "2121",
@@ -167,7 +167,7 @@
     },
     {
         "id": 16,
-        "user_name": "Phyllis",
+        "userName": "Phyllis",
         "surname": "Chang",
         "address": "Ap #335-4277 Lorem Rd.",
         "postalZip": "5145",
@@ -178,7 +178,7 @@
     },
     {
         "id": 17,
-        "user_name": "Neil",
+        "userName": "Neil",
         "surname": "Glover",
         "address": "P.O. Box 105, 3701 Dui. Avenue",
         "postalZip": "18620",
@@ -189,7 +189,7 @@
     },
     {
         "id": 18,
-        "user_name": "Wallace",
+        "userName": "Wallace",
         "surname": "Jacobson",
         "address": "290-1438 Malesuada Avenue",
         "postalZip": "198398",
@@ -200,7 +200,7 @@
     },
     {
         "id": 19,
-        "user_name": "Sydnee",
+        "userName": "Sydnee",
         "surname": "Chambers",
         "address": "P.O. Box 397, 5309 Mauris. St.",
         "postalZip": "49819",
@@ -211,7 +211,7 @@
     },
     {
         "id": 20,
-        "user_name": "MacKenzie",
+        "userName": "MacKenzie",
         "surname": "Powell",
         "address": "Ap #735-9805 Auctor, St.",
         "postalZip": "27756",
@@ -222,7 +222,7 @@
     },
     {
         "id": 21,
-        "user_name": "Jamal",
+        "userName": "Jamal",
         "surname": "Cash",
         "address": "8292 Nullam St.",
         "postalZip": "3265",
@@ -233,7 +233,7 @@
     },
     {
         "id": 22,
-        "user_name": "Iris",
+        "userName": "Iris",
         "surname": "Mcclure",
         "address": "P.O. Box 337, 3519 Non, Rd.",
         "postalZip": "85840",
@@ -244,7 +244,7 @@
     },
     {
         "id": 23,
-        "user_name": "Veronica",
+        "userName": "Veronica",
         "surname": "Bennett",
         "address": "6113 Suspendisse St.",
         "postalZip": "26148",
@@ -255,7 +255,7 @@
     },
     {
         "id": 24,
-        "user_name": "Bert",
+        "userName": "Bert",
         "surname": "Whitney",
         "address": "603-5217 Sagittis Street",
         "postalZip": "05171-54393",
@@ -266,7 +266,7 @@
     },
     {
         "id": 25,
-        "user_name": "Louis",
+        "userName": "Louis",
         "surname": "Weber",
         "address": "161-2966 Interdum St.",
         "postalZip": "04427-23470",
@@ -277,7 +277,7 @@
     },
     {
         "id": 26,
-        "user_name": "Autumn",
+        "userName": "Autumn",
         "surname": "Nolan",
         "address": "267-9531 Eu, Street",
         "postalZip": "97-687",
@@ -288,7 +288,7 @@
     },
     {
         "id": 27,
-        "user_name": "Elvis",
+        "userName": "Elvis",
         "surname": "Roth",
         "address": "3766 Orci Ave",
         "postalZip": "14366",
@@ -299,7 +299,7 @@
     },
     {
         "id": 28,
-        "user_name": "Ahmed",
+        "userName": "Ahmed",
         "surname": "Hendrix",
         "address": "Ap #656-5247 Eu St.",
         "postalZip": "50-264",
@@ -310,7 +310,7 @@
     },
     {
         "id": 29,
-        "user_name": "Tasha",
+        "userName": "Tasha",
         "surname": "Mosley",
         "address": "P.O. Box 136, 4845 Proin Road",
         "postalZip": "4442",
@@ -321,7 +321,7 @@
     },
     {
         "id": 30,
-        "user_name": "Ivor",
+        "userName": "Ivor",
         "surname": "Parrish",
         "address": "Ap #142-3703 Adipiscing Av.",
         "postalZip": "4546",
@@ -332,7 +332,7 @@
     },
     {
         "id": 31,
-        "user_name": "Hunter",
+        "userName": "Hunter",
         "surname": "Perez",
         "address": "Ap #692-6748 Aliquet Av.",
         "postalZip": "17815",

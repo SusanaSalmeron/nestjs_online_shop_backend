@@ -43,7 +43,7 @@ export class ProductsService {
                 apiProductsDataFiltered[0].name,
                 apiProductsDataFiltered[0].price,
                 apiProductsDataFiltered[0].description,
-                apiProductsDataFiltered[0].product_type,
+                apiProductsDataFiltered[0].productType,
                 apiProductsDataFiltered[0].api_featured_image,
                 apiProductsDataFiltered[0].product_colors
             )
@@ -60,7 +60,7 @@ export class ProductsService {
                 p.name,
                 p.price,
                 p.description,
-                p.product_type,
+                p.productType,
                 p.api_featured_image,
                 p.product_colors
             )
@@ -75,7 +75,7 @@ export class ProductsService {
         } catch (err) {
             this.logger.warn('Api not available', err)
             const responseFromCopy = await this.loadAndGetShadowCopy()
-            response = responseFromCopy.filter(p => p.product_type.toLowerCase() === type.toLowerCase())
+            response = responseFromCopy.filter(p => p.productType.toLowerCase() === type.toLowerCase())
         }
         const newProducts = await this.findNewProducts()
         const products = response.map(p => {
@@ -87,7 +87,7 @@ export class ProductsService {
                 p.api_featured_image
             )
         })
-        const newProductsFiltered = newProducts.filter(p => p.product_type.toLowerCase() === type.toLowerCase())
+        const newProductsFiltered = newProducts.filter(p => p.productType.toLowerCase() === type.toLowerCase())
         const allProducts: Product[] = [...products, ...newProductsFiltered]
         return allProducts
     }

@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class OrderProductsOverviewDto {
     @ApiProperty()
-    readonly product_name: string;
+    readonly productName: string;
     @ApiProperty()
     readonly product_brand: string;
     @ApiProperty()

@@ -1,16 +1,16 @@
 export class Orders {
     id: number;
-    user_id: number;
-    delivery_address_id: number;
-    order_date: string;
+    userId: number;
+    deliveryAddressId: number;
+    orderDate: string;
     status: string;
 
 
-    constructor(id, user_id, delivery_address_id, order_date, status) {
+    constructor(id, userId, deliveryAddressId, orderDate, status) {
         this.id = id;
-        this.user_id = user_id;
-        this.delivery_address_id = delivery_address_id;
-        this.order_date = order_date;
+        this.userId = userId;
+        this.deliveryAddressId = deliveryAddressId;
+        this.orderDate = orderDate;
         this.status = status;
     }
 }

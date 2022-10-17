@@ -1,30 +1,30 @@
 import { OrderProductsOverview } from "./orderProductsOverview";
 
 export class OrderOverview {
-    order_id: number;
+    orderId: number;
     name: string;
     surname: string;
     address: string;
     postalZip: string;
     city: string;
     country: string;
-    order_date: string;
+    orderDate: string;
     status: string;
     products: OrderProductsOverview[];
-    total_order: number;
+    totalOrder: number;
 
-    constructor(order_id, name, surname, address, postalZip, city, country, order_date, status, products, total_order) {
-        this.order_id = order_id;
+    constructor(orderId, name, surname, address, postalZip, city, country, orderDate, status, products, totalOrder) {
+        this.orderId = orderId;
         this.name = name;
         this.surname = surname;
         this.address = address;
         this.postalZip = postalZip;
         this.city = city;
         this.country = country;
-        this.order_date = order_date;
+        this.orderDate = orderDate;
         this.status = status;
         this.products = products;
-        this.total_order = total_order;
+        this.totalOrder = totalOrder;
     }
 
 

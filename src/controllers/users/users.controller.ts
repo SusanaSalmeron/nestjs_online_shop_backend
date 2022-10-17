@@ -1,5 +1,5 @@
 import { Body, Controller, HttpStatus, Logger, Post, Get, Res, Query, Param, Put, Delete, ParseIntPipe, Head } from "@nestjs/common";
-import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse, ApiCreatedResponse, ApiQuery, ApiNoContentResponse } from "@nestjs/swagger";
+import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse, ApiCreatedResponse, ApiQuery, ApiNoContentResponse, ApiBadRequestResponse } from "@nestjs/swagger";
 import { UsersService } from "../../services/users.service";
 import { TokenService } from "../../services/token.service";
 import { SearchService } from "../../services/search.service";
@@ -56,7 +56,7 @@ export class UsersController {
                 if (match) {
                     this.logger.debug('Login successfully')
                     const token = await this.tokenService.createToken(user)
-                    response.status(HttpStatus.OK).json({ id: user.id, name: user.user_name, token: token })
+                    response.status(HttpStatus.OK).json({ id: user.id, name: user.userName, token: token })
                 } else {
                     this.logger.error('Password or/and email error')
                     response.status(HttpStatus.UNAUTHORIZED).json({ error: 'Password or/and email error' })
@@ -98,9 +98,9 @@ export class UsersController {
     @ApiNotFoundResponse({ description: 'User data has not been updated' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async updateUserAccountData(@Param('id', ParseIntPipe) id: number, @Res() response, @Body() updateUserAccountData: UpdateUserAccountDataDto) {
-        const { user_name, surname, identification, date_of_birth, email, phone } = updateUserAccountData
+        const { userName, surname, identification, dateOfBirth, email, phone } = updateUserAccountData
         try {
-            const newData: boolean = await this.usersService.changeUserAccountData(id, user_name, surname, identification, date_of_birth, email, phone)
+            const newData: boolean = await this.usersService.changeUserAccountData(id, userName, surname, identification, dateOfBirth, email, phone)
             if (newData) {
                 this.logger.log('User data successfully updated ')
                 response.status(HttpStatus.OK).json(newData)
@@ -145,9 +145,10 @@ export class UsersController {
     @ApiNotFoundResponse({ description: 'User not found' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async updateUserAccountAddresses(@Param('userid', ParseIntPipe) userId: number, @Param('addressid', ParseIntPipe) addressId: number, @Res() response, @Body() updateUserAccountAddresses: UpdateUserAccountAddressesDto) {
-        const { user_name, surname, address, postalZip, city, country, defaultAddress } = updateUserAccountAddresses
+        const { userName, surname, address, postalZip, city, country, defaultAddress } = updateUserAccountAddresses
+        console.log(userId)
         try {
-            const newAddress: boolean = await this.usersService.changeUserAccountAddress(addressId, user_name, surname, address, postalZip, city, country, defaultAddress, userId)
+            const newAddress: boolean = await this.usersService.changeUserAccountAddress(addressId, userName, surname, address, postalZip, city, country, defaultAddress, userId)
             if (newAddress) {
                 this.logger.log('Address updated successfully')
                 response.status(HttpStatus.OK).json(newAddress)
@@ -216,10 +217,10 @@ export class UsersController {
     @ApiNotFoundResponse({ description: 'New billing address not found' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async updateUserAccountBillingAddress(@Param('id', ParseIntPipe) userId: number, @Res() response, @Body() updateBillingAddressDto: UpdateBillingAddressDto) {
-        const { user_name, surname, address, postalZip, city, country
+        const { userName, surname, address, postalZip, city, country
             , identification } = updateBillingAddressDto
         try {
-            const newAddress: boolean = await this.usersService.changeUserAccountBillingAddress(userId, user_name, surname, address, postalZip, city, country, identification)
+            const newAddress: boolean = await this.usersService.changeUserAccountBillingAddress(userId, userName, surname, address, postalZip, city, country, identification)
             if (newAddress) {
                 this.logger.log('Billing Address updated')
                 response.status(HttpStatus.OK).json(newAddress)
@@ -387,10 +388,10 @@ export class UsersController {
 
     @Head(':id/wishlist/:productid')
     @ApiOkResponse({
-        description: 'The product is not in the wishlist',
+        description: 'The product is in the wishlist',
     })
-    @ApiNoContentResponse({ description: 'The product is in the wishlist' })
-    @ApiNotFoundResponse({ description: 'The user or product does not exists' })
+    @ApiBadRequestResponse({ description: 'User and product not found' })
+    @ApiNotFoundResponse({ description: 'The product is not in the wishlist' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async checkProductOnWishlist(@Param('id', ParseIntPipe) userId: number, @Param('productid', ParseIntPipe) productId: number, @Res() response) {
         const user = await this.usersService.exists(userId)
@@ -400,17 +401,21 @@ export class UsersController {
             try {
                 const checkedProduct: boolean = await this.wishlistService.findProductOnWishlist(userId, productId)
                 if (!checkedProduct) {
+                    console.log(1)
                     this.logger.log('The product is not in the wishlist')
                     response.status(HttpStatus.NOT_FOUND).send()
                 } else {
+                    console.log(2)
                     this.logger.error('The product is in the wishlist')
                     response.status(HttpStatus.OK).json({ message: 'The product is in the wishlist' })
                 }
             } catch (err) {
+                console.log(3)
                 this.logger.error('Internal Server Error')
                 response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
             }
         } else {
+            console.log(4)
             this.logger.error(`User ${userId} and product ${productId} not found`)
             response.status(HttpStatus.BAD_REQUEST).json({ error: `User ${userId} and product ${productId} not found` })
         }

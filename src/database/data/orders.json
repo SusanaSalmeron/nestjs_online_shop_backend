@@ -1,44 +1,44 @@
 [
     {
         "id": 1,
-        "user_id": 1000,
-        "delivery_address_id": 1,
-        "order_date": "17/05/2021",
+        "userId": 1000,
+        "deliveryAddressId": 1,
+        "orderDate": "17/05/2021",
         "status": "Shipped"
     },
     {
         "id": 2,
-        "user_id": 1000,
-        "delivery_address_id": 2,
-        "order_date": "03/06/2022",
+        "userId": 1000,
+        "deliveryAddressId": 2,
+        "orderDate": "03/06/2022",
         "status": "In process"
     },
     {
         "id": 3,
-        "user_id": 971,
-        "delivery_address_id": 31,
-        "order_date": "06/06/2021",
+        "userId": 971,
+        "deliveryAddressId": 31,
+        "orderDate": "06/06/2021",
         "status": "Shipped"
     },
     {
         "id": 4,
-        "user_id": 998,
-        "delivery_address_id": 4,
-        "order_date": "22/07/2022",
+        "userId": 998,
+        "deliveryAddressId": 4,
+        "orderDate": "22/07/2022",
         "status": "In process"
     },
     {
         "id": 5,
-        "user_id": 990,
-        "delivery_address_id": 12,
-        "order_date": "17/12/2020",
+        "userId": 990,
+        "deliveryAddressId": 12,
+        "orderDate": "17/12/2020",
         "status": "Shipped"
     },
     {
         "id": 6,
-        "user_id": 980,
-        "delivery_address_id": 22,
-        "order_date": "01/09/2021",
+        "userId": 980,
+        "deliveryAddressId": 22,
+        "orderDate": "01/09/2021",
         "status": "Shipped"
     }
 ]

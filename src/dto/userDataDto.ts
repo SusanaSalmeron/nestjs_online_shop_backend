@@ -4,7 +4,7 @@ export class UserDataDto {
     @ApiProperty()
     readonly id: number;
     @ApiProperty()
-    readonly user_name: string;
+    readonly userName: string;
     @ApiProperty()
     readonly surname: string;
     @ApiProperty()
@@ -20,7 +20,7 @@ export class UserDataDto {
     @ApiProperty()
     readonly email: string;
     @ApiProperty()
-    readonly date_of_birth: string;
+    readonly dateOfBirth: string;
     @ApiProperty()
     readonly identification: string;
     @ApiProperty()
