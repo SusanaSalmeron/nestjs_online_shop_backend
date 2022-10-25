@@ -15,10 +15,11 @@ import { ProductsController } from './controllers/products/products.controller';
 import { OrdersModule } from './modules/orders.module';
 import { OrdersService } from './services/orders.service';
 import { WishlistService } from './services/wishlist.service';
+import { ReviewsService } from './services/reviewService';
 
 @Module({
   imports: [ConfigModule.forRoot(), DatabaseModule, UsersModule, HttpModule, OrdersModule],
   controllers: [AppController, UsersController, ProductsController],
-  providers: [AppService, UsersService, TokenService, SearchService, ProductsService, ShadowCopyService, OrdersService, WishlistService],
+  providers: [AppService, UsersService, TokenService, SearchService, ProductsService, ShadowCopyService, OrdersService, WishlistService, ReviewsService],
 })
 export class AppModule { }

@@ -12,10 +12,11 @@ import { DeleteAddressDto } from "../dto/deleteAddressDto";
 import { Wishlist } from "../classes/wishlist";
 import { ProductCard } from "../classes/productCard";
 import { Reviews } from "../classes/reviews";
-import { Review } from "src/classes/review";
+import { Review } from "../classes/review";
 import { OrdersService } from "./orders.service";
-import { ProductWithoutReview } from "src/classes/productWithoutReview";
-import { OrderOverview } from "src/classes/orderOverview";
+import { ProductWithoutReview } from "../classes/productWithoutReview";
+import { OrderOverview } from "../classes/orderOverview";
+import { CreateNewReviewDto } from "src/dto/createNewReviewDto";
 
 
 @Injectable()
@@ -23,8 +24,12 @@ export class UsersService {
     private readonly logger = new Logger(UsersService.name)
     private addressId = 32
     private productWishlistId = 13
+    private reviewId = 11
     constructor(@Inject('DATABASE_CONNECTION') private db: loki, private productsService: ProductsService, private ordersService: OrdersService) { }
 
+    getNextReviewId(): number {
+        return this.reviewId
+    }
 
     async findUserByEmail(email: string): Promise<LoginUser> {
         const usersTable = this.db.getCollection('users')
@@ -267,7 +272,6 @@ export class UsersService {
     async findUserReviews(userId: number): Promise<Reviews> {
         const reviewsTable = this.db.getCollection('reviews')
         const foundReviews: Review[] = reviewsTable.find({ userId: userId })
-        console.log(foundReviews)
         const pendingReviews: ProductWithoutReview[] = await this.findProductsWithoutReview(userId)
         const reviews = new Reviews(
             pendingReviews,
@@ -275,4 +279,23 @@ export class UsersService {
         )
         return reviews
     }
+
+    async addNewReview(userId: number, createNewReviewDto: CreateNewReviewDto): Promise<number> {
+        const reviewsTable = this.db.getCollection('reviews')
+        const newReviewId: number = this.reviewId++
+        const { productId, productName, rating, comment } = createNewReviewDto
+
+        reviewsTable.insert(
+            {
+                id: newReviewId,
+                productId: parseInt(productId),
+                productName: productName,
+                userId: userId,
+                rating: rating,
+                comment: comment
+            }
+        )
+        return newReviewId
+    }
+
 }

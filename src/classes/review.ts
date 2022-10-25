@@ -3,14 +3,14 @@ export class Review {
     productId: number;
     productName: string;
     rating: number;
-    comments: string;
+    comment: string;
 
-    constructor(id, productId, productName, rating, comments) {
+    constructor(id, productId, productName, rating, comment) {
         this.id = id;
         this.productId = productId;
         this.productName = productName;
         this.rating = rating;
-        this.comments = comments;
+        this.comment = comment;
     }
 
 

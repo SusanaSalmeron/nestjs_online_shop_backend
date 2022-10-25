@@ -35,10 +35,6 @@ export const mockFindUserReviews = (criteria) => {
     return userReviews
 }
 
-
-
-
-
 const mockUserData = [
     {
         'id': 1,
@@ -128,14 +124,14 @@ export const mockUserReviews = [
         'productId': 10,
         'userId': 1,
         'rating': 5,
-        'comments': 'The eyeshadow’s practically blend themselves, they look amazing! Biba makes me happy every morning when I open my makeup drawer and see her in there. I’m not spending my money on cheaper palettes that are imitation’s of what I want, and that I will hoard and never use. I’m saving up and getting that one expensive palette and this is it!'
+        'comment': 'The eyeshadow’s practically blend themselves, they look amazing! Biba makes me happy every morning when I open my makeup drawer and see her in there. I’m not spending my money on cheaper palettes that are imitation’s of what I want, and that I will hoard and never use. I’m saving up and getting that one expensive palette and this is it!'
     },
     {
         'id': 2,
         'productId': 11,
         'userId': 1,
         'rating': 5,
-        'comments': 'This product is a LIFE CHANGER. It blends so well and is so smooth. It creates such a natural look and is incredible. Selena Gomez, keep on doing whatever you are doing because GIRL, this is where it is at!'
+        'comment': 'This product is a LIFE CHANGER. It blends so well and is so smooth. It creates such a natural look and is incredible. Selena Gomez, keep on doing whatever you are doing because GIRL, this is where it is at!'
     },
 
 ]
@@ -339,4 +335,9 @@ export const nonValidAddressToDelete = {
 export const nonValidAddressAndUserToDelete = {
     addressId: '1',
     userId: '4'
+}
+
+export const mockReviews = {
+    pending: [],
+    created: []
 }

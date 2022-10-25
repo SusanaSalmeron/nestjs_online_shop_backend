@@ -279,6 +279,10 @@ export const mockGetWishlist = () => {
     )]
 }
 
+
+
+
+
 export const bodyForUserLogin: CreateUserDto = {
     email: 'mamamama@gmail.com',
     password: 'Abcdef123!'
@@ -373,3 +377,6 @@ export const mockOrdersPositions = [
         "total": 5.0
     }
 ]
+
+
+

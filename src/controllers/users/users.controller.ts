@@ -1,38 +1,40 @@
-import { Body, Controller, HttpStatus, Logger, Post, Get, Res, Query, Param, Put, Delete, ParseIntPipe, Head } from "@nestjs/common";
-import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse, ApiCreatedResponse, ApiQuery, ApiNoContentResponse, ApiBadRequestResponse } from "@nestjs/swagger";
-import { UsersService } from "../../services/users.service";
-import { TokenService } from "../../services/token.service";
-import { SearchService } from "../../services/search.service";
-import { CreateUserDto } from "../../dto/createUserDto";
-import { OptionsMenuDto } from "../../dto/optionsMenuDto";
-import { ProductDto } from "../../dto/productDto";
-import { UserDataDto } from "../../dto/userDataDto";
+import { Body, Controller, HttpStatus, Logger, Post, Get, Res, Query, Param, Put, Delete, ParseIntPipe, Head } from '@nestjs/common';
+import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse, ApiCreatedResponse, ApiQuery, ApiNoContentResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { UsersService } from '../../services/users.service';
+import { TokenService } from '../../services/token.service';
+import { SearchService } from '../../services/search.service';
+import { CreateUserDto } from '../../dto/createUserDto';
+import { OptionsMenuDto } from '../../dto/optionsMenuDto';
+import { ProductDto } from '../../dto/productDto';
+import { UserDataDto } from '../../dto/userDataDto';
 import * as bcrypt from 'bcrypt';
-import { AccountUserData } from "src/classes/accountUserData";
-import { AccountUserAddresses } from "../../classes/accountUserAddresses";
-import { UpdateUserAccountPasswordDto } from "../../dto/updateUserAccountPasswordDto";
-import { UserAddressDto } from "../../dto/userAddressesDto";
-import { UpdateUserAccountDataDto } from "../../dto/updateUserAccountDataDto";
-import { UpdateUserAccountAddressesDto } from "../../dto/updateUserAccountAddressesDto";
+import { AccountUserData } from 'src/classes/accountUserData';
+import { AccountUserAddresses } from '../../classes/accountUserAddresses';
+import { UpdateUserAccountPasswordDto } from '../../dto/updateUserAccountPasswordDto';
+import { UserAddressDto } from '../../dto/userAddressesDto';
+import { UpdateUserAccountDataDto } from '../../dto/updateUserAccountDataDto';
+import { UpdateUserAccountAddressesDto } from '../../dto/updateUserAccountAddressesDto';
 import { UpdateBillingAddressDto } from '../../dto/updateBillingAddressDto'
-import { OrderOverviewDto } from "../../dto/orderOverviewDto"
-import { OrderOverview } from "../../classes/orderOverview";
-import { OrdersService } from "../../services/orders.service";
-import { CreateUserAddressDto } from "../../dto/createUserAddressDto";
-import { DeleteAddressDto } from "../../dto/deleteAddressDto";
-import { ProductCard } from "../../classes/productCard";
-import { Search } from "../../classes/search";
-import { Product } from "../../classes/product";
-import { ProductsService } from "../../services/products.service";
-import { WishlistService } from "../../services/wishlist.service";
-import { Reviews } from "src/classes/reviews";
+import { OrderOverviewDto } from '../../dto/orderOverviewDto'
+import { OrderOverview } from '../../classes/orderOverview';
+import { OrdersService } from '../../services/orders.service';
+import { CreateUserAddressDto } from '../../dto/createUserAddressDto';
+import { DeleteAddressDto } from '../../dto/deleteAddressDto';
+import { ProductCard } from '../../classes/productCard';
+import { Search } from '../../classes/search';
+import { Product } from '../../classes/product';
+import { ProductsService } from '../../services/products.service';
+import { WishlistService } from '../../services/wishlist.service';
+import { Reviews } from '../../classes/reviews';
+import { CreateNewReviewDto } from '../../dto/createNewReviewDto';
+import { ReviewsService } from '../../services/reviewService';
 
 
 
 @Controller('users')
 export class UsersController {
     private readonly logger = new Logger(UsersController.name)
-    constructor(private usersService: UsersService, private tokenService: TokenService, private searchService: SearchService, private ordersService: OrdersService, private productsService: ProductsService, private wishlistService: WishlistService) { }
+    constructor(private usersService: UsersService, private tokenService: TokenService, private searchService: SearchService, private ordersService: OrdersService, private productsService: ProductsService, private wishlistService: WishlistService, private reviewsService: ReviewsService) { }
 
     @Post('/login')
     @ApiBody({
@@ -50,7 +52,7 @@ export class UsersController {
             const user = await this.usersService.findUserByEmail(email)
             if (!user) {
                 this.logger.error('User not found')
-                response.status(HttpStatus.NOT_FOUND).json({ error: "User not found" })
+                response.status(HttpStatus.NOT_FOUND).json({ error: 'User not found' })
             } else {
                 const match = await bcrypt.compare(password, user.password)
                 if (match) {
@@ -146,7 +148,6 @@ export class UsersController {
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async updateUserAccountAddresses(@Param('userid', ParseIntPipe) userId: number, @Param('addressid', ParseIntPipe) addressId: number, @Res() response, @Body() updateUserAccountAddresses: UpdateUserAccountAddressesDto) {
         const { userName, surname, address, postalZip, city, country, defaultAddress } = updateUserAccountAddresses
-        console.log(userId)
         try {
             const newAddress: boolean = await this.usersService.changeUserAccountAddress(addressId, userName, surname, address, postalZip, city, country, defaultAddress, userId)
             if (newAddress) {
@@ -158,14 +159,14 @@ export class UsersController {
             }
         } catch (err) {
             this.logger.error('Internal Server Error', err)
-            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" })
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
         }
     }
 
     @Delete('/:userId/addresses/:addressId')
-    @ApiOkResponse({ description: "Address deleted successfully" })
-    @ApiNotFoundResponse({ description: "User or address not found" })
-    @ApiInternalServerErrorResponse({ description: "Internal Server Error" })
+    @ApiOkResponse({ description: 'Address deleted successfully' })
+    @ApiNotFoundResponse({ description: 'User or address not found' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async deleteAddress(@Param() deleteAddressDto: DeleteAddressDto, @Res() response) {
         const { addressId, userId } = deleteAddressDto
         try {
@@ -183,16 +184,15 @@ export class UsersController {
         }
     }
 
-
     @Post('/:id/addresses/new')
     @ApiBody({
         description: 'New Address',
         required: true,
         type: CreateUserAddressDto
     })
-    @ApiCreatedResponse({ description: "Address Created" })
-    @ApiNotFoundResponse({ description: "User not found" })
-    @ApiInternalServerErrorResponse({ description: "Internal Server Error" })
+    @ApiCreatedResponse({ description: 'Address Created' })
+    @ApiNotFoundResponse({ description: 'User not found' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async addUserAccountAddress(@Param('id', ParseIntPipe) userId: number, @Res() response, @Body() createUserAddressDto: CreateUserAddressDto) {
         try {
             const newAddress: number = await this.usersService.addNewShippingAddress(userId, createUserAddressDto)
@@ -201,11 +201,11 @@ export class UsersController {
                 response.status(HttpStatus.CREATED).json(newAddress)
             } else {
                 this.logger.error('new address can not be created')
-                response.status(HttpStatus.NOT_FOUND).json({ error: "the user id does not exists" })
+                response.status(HttpStatus.NOT_FOUND).json({ error: 'the user id does not exists' })
             }
         } catch (err) {
             this.logger.error('Internal Server Error')
-            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" })
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
         }
     }
 
@@ -230,7 +230,7 @@ export class UsersController {
             }
         } catch (err) {
             this.logger.error('Internal Server Error')
-            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" })
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
         }
     }
 
@@ -266,7 +266,7 @@ export class UsersController {
         type: ProductDto
     })
     @ApiNotFoundResponse({
-        description: "No products found"
+        description: 'No products found'
     })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async userSearchList(@Query('keyword') keyword: string, @Res() response) {
@@ -342,10 +342,10 @@ export class UsersController {
         type: OrderOverviewDto
     })
     @ApiNotFoundResponse({
-        description: "No order found"
+        description: 'No order found'
     })
     @ApiInternalServerErrorResponse({
-        description: "Internal Server Error"
+        description: 'Internal Server Error'
     })
     async userOrder(@Param('id', ParseIntPipe) userId: number, @Param('orderid', ParseIntPipe) orderId: number, @Res() response) {
         try {
@@ -393,29 +393,25 @@ export class UsersController {
     @ApiBadRequestResponse({ description: 'User and product not found' })
     @ApiNotFoundResponse({ description: 'The product is not in the wishlist' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async checkProductOnWishlist(@Param('id', ParseIntPipe) userId: number, @Param('productid', ParseIntPipe) productId: number, @Res() response) {
+    async checkProductOnWishlist(@Param('id', ParseIntPipe) userId: number, @Param('productid', ParseIntPipe) productId: string, @Res() response) {
         const user = await this.usersService.exists(userId)
         const product = await this.productsService.exists(productId)
         if (user && product) {
             this.logger.log(`User ${userId} and product ${productId} found`)
             try {
-                const checkedProduct: boolean = await this.wishlistService.findProductOnWishlist(userId, productId)
+                const checkedProduct: boolean = await this.wishlistService.findProductOnWishlist(userId, parseInt(productId))
                 if (!checkedProduct) {
-                    console.log(1)
                     this.logger.log('The product is not in the wishlist')
                     response.status(HttpStatus.NOT_FOUND).send()
                 } else {
-                    console.log(2)
                     this.logger.error('The product is in the wishlist')
                     response.status(HttpStatus.OK).json({ message: 'The product is in the wishlist' })
                 }
             } catch (err) {
-                console.log(3)
                 this.logger.error('Internal Server Error')
                 response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
             }
         } else {
-            console.log(4)
             this.logger.error(`User ${userId} and product ${productId} not found`)
             response.status(HttpStatus.BAD_REQUEST).json({ error: `User ${userId} and product ${productId} not found` })
         }
@@ -450,12 +446,12 @@ export class UsersController {
     })
     @ApiNoContentResponse({ description: 'The product already exists in the wishlist' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async addProductToWishlist(@Param('userid', ParseIntPipe) userId: number, @Param('productid', ParseIntPipe) productId: number, @Res() response) {
+    async addProductToWishlist(@Param('userid', ParseIntPipe) userId: number, @Param('productid', ParseIntPipe) productId: string, @Res() response) {
         const user: boolean = await this.usersService.exists(userId)
         const product: boolean = await this.productsService.exists(productId)
         if (user && product) {
             try {
-                const newProductToAddToWishlist: boolean = await this.usersService.addProductFromUserWishlist(userId, productId)
+                const newProductToAddToWishlist: boolean = await this.usersService.addProductFromUserWishlist(userId, parseInt(productId))
                 if (newProductToAddToWishlist) {
                     this.logger.log('Product added to wishlist successfully')
                     response.status(HttpStatus.CREATED).send()
@@ -473,7 +469,6 @@ export class UsersController {
         }
 
     }
-
 
     @Delete('/:id/wishlist/:productid')
     @ApiOkResponse({
@@ -493,7 +488,7 @@ export class UsersController {
             }
         } catch (err) {
             this.logger.error('Internal Server Error', err)
-            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" })
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
         }
     }
 
@@ -511,12 +506,51 @@ export class UsersController {
                 this.logger.log('Reviews found successfully')
                 response.status(HttpStatus.OK).json(myReviews)
             } else {
-                this.logger.error("The user does not exist")
-                response.status(HttpStatus.NOT_FOUND).send("The user does not exist")
+                this.logger.error('The user does not exist')
+                response.status(HttpStatus.NOT_FOUND).send('The user does not exist')
             }
         } catch (err) {
-            this.logger.error('Internal Server Error')
-            response.status(HttpStatus.INTERNAL_SERVER_ERROR).send("Unexpected error ocurred, try later")
+            this.logger.error('Internal Server Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Unexpected error ocurred, try later')
         }
     }
+
+    @Post('/:userId/review')
+    @ApiBody({
+        description: 'New Review',
+        required: true,
+        type: CreateNewReviewDto
+    })
+    @ApiCreatedResponse({
+        description: 'Review created successfully',
+    })
+    @ApiBadRequestResponse({
+        description: 'The review for this product has been created previously'
+    })
+    @ApiNotFoundResponse({ description: 'The user or product does not exist' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async createUserReview(@Param('userId', ParseIntPipe) userId: number, @Res() response, @Body() createNewReviewDto: CreateNewReviewDto) {
+        const { productId } = createNewReviewDto
+        try {
+            const userExists = await this.usersService.exists(userId)
+            const productExists = await this.productsService.exists(productId)
+            const reviewExists = await this.reviewsService.existsReviewFromUser(productId, userId)
+            if (userExists && productExists && !reviewExists) {
+                this.logger.log('Review created successfully')
+                await this.usersService.addNewReview(userId, createNewReviewDto)
+                response.status(HttpStatus.CREATED).send()
+            } else if (userExists && productExists) {
+                this.logger.error('The review for this product has been created previously')
+                response.status(HttpStatus.BAD_REQUEST).send(`The review for the product with id ${productId} already exists`)
+            } else {
+                this.logger.error('The user or product does not exist')
+                response.status(HttpStatus.NOT_FOUND).send('The user or product does not exist')
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Unexpected error ocurred, try later')
+        }
+    }
+
+
 }

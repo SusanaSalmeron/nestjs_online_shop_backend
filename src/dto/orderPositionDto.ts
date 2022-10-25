@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class OrderPosition {
-    @ApiProperty()
     readonly id: number;
     @ApiProperty()
     readonly orderId: number;

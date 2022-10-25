@@ -46,6 +46,7 @@ describe('UsersService', () => {
         usersMockDBCollection = {
             findOne: jest.fn().mockImplementation(mockFindOneUser),
             update: jest.fn(),
+            getNextReviewId: jest.fn()
         }
 
         addressesMockDBCollection = {
@@ -64,7 +65,8 @@ describe('UsersService', () => {
         }
 
         reviewsMockDBCollection = {
-            find: jest.fn().mockReturnValue([])
+            find: jest.fn().mockReturnValue([]),
+            insert: jest.fn()
         }
 
         orderPositionMockDBCollection = {
@@ -535,7 +537,19 @@ describe('UsersService', () => {
                 }
             ]
         })
+    })
 
-
+    it('should return a new id when insert new review', async () => {
+        const addNewReview = await usersService.addNewReview(1, { productId: "1", productName: "", rating: 4, comment: "" })
+        expect(addNewReview).toEqual(11)
+        expect(reviewsMockDBCollection.insert).toHaveBeenCalledWith({
+            id: 11,
+            productId: 1,
+            productName: "",
+            userId: 1,
+            rating: 4,
+            comment: ""
+        })
+        /* expect(usersMockDBCollection.getNextReviewId).toHaveBeenCalledWith(12) */
     })
 }) 

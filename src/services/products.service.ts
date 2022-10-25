@@ -92,8 +92,8 @@ export class ProductsService {
         return allProducts
     }
 
-    async exists(productId: number): Promise<boolean> {
-        const productFound: ProductCard = await this.findProductById(productId)
+    async exists(productId: string): Promise<boolean> {
+        const productFound: ProductCard = await this.findProductById(parseInt(productId))
         if (productFound) {
             this.logger.log(`The product ${productId} exists`)
             return true

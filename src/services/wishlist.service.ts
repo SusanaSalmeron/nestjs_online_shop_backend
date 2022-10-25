@@ -10,7 +10,6 @@ export class WishlistService {
     async findProductOnWishlist(userId: number, productId: number): Promise<boolean> {
         const wishedProductsTable = this.db.getCollection('wishlist')
         const product = wishedProductsTable.findOne({ userId: userId, productId: productId })
-        console.log(product)
         return product
     }
 }

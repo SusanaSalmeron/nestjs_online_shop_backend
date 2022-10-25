@@ -119,12 +119,12 @@ describe('ProductsService', () => {
  */    })
 
     it('should return true when product id exists', async () => {
-        const exists = await productsService.exists(1)
+        const exists = await productsService.exists("1")
         expect(exists).toBeTruthy()
     })
 
     it('should return false when product id does not exists', async () => {
-        const exists = await productsService.exists(8)
+        const exists = await productsService.exists("8")
         expect(exists).toBeFalsy()
     })
 
