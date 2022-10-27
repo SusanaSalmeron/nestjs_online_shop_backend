@@ -341,3 +341,11 @@ export const mockReviews = {
     pending: [],
     created: []
 }
+
+export const mockReview = {
+    id: 1,
+    productId: 5,
+    productName: "Biba palette",
+    rating: 5,
+    comment: "tfukygilhoñp´ìopiñyuligykfugiloñp´òuylgluhoñp´`ç"
+}

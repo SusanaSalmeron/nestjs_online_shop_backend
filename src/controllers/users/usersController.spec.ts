@@ -15,7 +15,7 @@ import { OrderOverview } from '../../classes/orderOverview'
 import { ProductCard } from '../../classes/productCard';
 import * as bcrypt from 'bcrypt'
 import { ReviewsService } from '../../services/reviewService'
-import { mockReviews } from '../../services/mockDataForUsersServiceTest'
+import { mockReview, mockReviews } from '../../services/mockDataForUsersServiceTest'
 
 
 describe('UsersController Unit Test', () => {
@@ -46,7 +46,9 @@ describe('UsersController Unit Test', () => {
                 deleteProductFromUserWishlist: jest.fn(() => true),
                 exists: jest.fn(() => true),
                 addNewReview: jest.fn(() => 11),
-                findUserReviews: jest.fn(() => (mockReviews))
+                findUserReviews: jest.fn(() => mockReviews),
+                findReviewBy: jest.fn(() => mockReview),
+                updateUserReview: jest.fn(() => true)
             })
         }
 
@@ -415,7 +417,7 @@ describe('UsersController Unit Test', () => {
 
     it('should return false when checkProductOnWishlist is called', async () => {
         const mockResponse = newResponse()
-        await usersController.checkProductOnWishlist(1, 1, mockResponse)
+        await usersController.checkProductOnWishlist(1, "1", mockResponse)
         expect(spyWishlistService.findProductOnWishlist).toHaveBeenCalledWith(1, 1)
         expect(mockResponse.status).toHaveBeenCalledWith(404)
         expect(mockResponse.json).not.toHaveBeenCalled()
@@ -463,7 +465,7 @@ describe('UsersController Unit Test', () => {
 
     it('should return newWishlistProductId when addProductFromUserWishlist is called', async () => {
         const mockResponse = newResponse()
-        await usersController.addProductToWishlist(1, 1, mockResponse)
+        await usersController.addProductToWishlist(1, "1", mockResponse)
         expect(spyUsersService.addProductFromUserWishlist).toHaveBeenCalledWith(1, 1)
         expect(mockResponse.status).toHaveBeenCalledWith(201)
         expect(mockResponse.json).not.toHaveBeenCalled()
@@ -505,10 +507,10 @@ describe('UsersController Unit Test', () => {
 
     it('should return status code 201 when user and product exists and the review does not exists from this user', async () => {
         const mockResponse = newResponse()
-        await usersController.createUserReview(1, mockResponse, { productId: 1, productName: '', rating: 5, comment: '' })
+        await usersController.createUserReview(1, mockResponse, { productId: "1", productName: '', rating: 5, comment: '' })
         expect(spyUsersService.exists).toHaveBeenCalledWith(1)
-        expect(spyProductsService.exists).toHaveBeenCalledWith(1)
-        expect(spyReviewsService.existsReviewFromUser).toHaveBeenCalledWith(1, 1)
+        expect(spyProductsService.exists).toHaveBeenCalledWith("1")
+        expect(spyReviewsService.existsReviewFromUser).toHaveBeenCalledWith("1", 1)
         expect(mockResponse.status).toHaveBeenCalledWith(201)
         expect(mockResponse.send).toHaveBeenCalled()
     })
@@ -516,9 +518,9 @@ describe('UsersController Unit Test', () => {
     it('should return status code 400 when user and product exists and the review exists from this user', async () => {
         const mockResponse = newResponse()
         jest.spyOn(spyReviewsService, 'existsReviewFromUser').mockResolvedValueOnce(true)
-        await usersController.createUserReview(1, mockResponse, { productId: 1, productName: '', rating: 5, comment: '' })
+        await usersController.createUserReview(1, mockResponse, { productId: "1", productName: '', rating: 5, comment: '' })
         expect(spyUsersService.exists).toHaveBeenCalledWith(1)
-        expect(spyProductsService.exists).toHaveBeenCalledWith(1)
+        expect(spyProductsService.exists).toHaveBeenCalledWith("1")
         expect(mockResponse.status).toHaveBeenCalledWith(400)
         expect(mockResponse.send).toHaveBeenCalledWith('The review for the product with id 1 already exists')
     })
@@ -526,17 +528,82 @@ describe('UsersController Unit Test', () => {
     it('should return status code 404 when user or product does not exist ', async () => {
         const mockResponse = newResponse()
         jest.spyOn(spyProductsService, 'exists').mockResolvedValueOnce(false)
-        await usersController.createUserReview(1, mockResponse, { productId: 1, productName: '', rating: 5, comment: '' })
+        await usersController.createUserReview(1, mockResponse, { productId: "1", productName: '', rating: 5, comment: '' })
         expect(spyUsersService.exists).toHaveBeenCalledWith(1)
-        expect(spyProductsService.exists).toHaveBeenCalledWith(1)
+        expect(spyProductsService.exists).toHaveBeenCalledWith("1")
         expect(mockResponse.status).toHaveBeenCalledWith(404)
         expect(mockResponse.send).toHaveBeenCalledWith('The user or product does not exist')
     })
 
-    it('should fail when an unexpected error happens ', async () => {
+    it('should fail when an unexpected error happens', async () => {
         jest.spyOn(spyProductsService, 'exists').mockRejectedValueOnce(new Error('Internal Error'))
         const mockResponse = newResponse()
-        await usersController.createUserReview(1, mockResponse, { productId: 1, productName: '', rating: 5, comment: '' })
+        await usersController.createUserReview(1, mockResponse, { productId: "1", productName: '', rating: 5, comment: '' })
+        expect(mockResponse.status).toHaveBeenCalledWith(500)
+        expect(mockResponse.send).toHaveBeenCalledWith('Unexpected error ocurred, try later')
+    })
+
+    it('should return a user review when user and review exists', async () => {
+        const mockResponse = newResponse()
+        await usersController.getReview(1, 5, mockResponse)
+        expect(spyUsersService.exists).toHaveBeenCalledWith(1)
+        expect(mockResponse.status).toHaveBeenCalledWith(200)
+        expect(mockResponse.json).toHaveBeenCalledWith({
+            id: 1,
+            productId: 5,
+            productName: "Biba palette",
+            rating: 5,
+            comment: "tfukygilhoñp´ìopiñyuligykfugiloñp´òuylgluhoñp´`ç"
+        })
+    })
+
+    it('should return status code 404 when user does not exist', async () => {
+        const mockResponse = newResponse()
+        jest.spyOn(spyUsersService, 'exists').mockResolvedValueOnce(false)
+        await usersController.getReview(1, 5, mockResponse)
+        expect(spyUsersService.exists).toHaveBeenCalledWith(1)
+        expect(mockResponse.status).toHaveBeenCalledWith(404)
+        expect(mockResponse.json).not.toHaveBeenCalled()
+        expect(mockResponse.send).toHaveBeenCalledWith('User not found')
+    })
+
+    it('should return status code 500 when unexpected error happens', async () => {
+        const mockResponse = newResponse()
+        jest.spyOn(spyUsersService, 'exists').mockRejectedValueOnce(new Error('Internal Error'))
+        await usersController.getReview(1, 5, mockResponse)
+        expect(spyUsersService.exists).toHaveBeenCalledWith(1)
+        expect(mockResponse.status).toHaveBeenCalledWith(500)
+        expect(mockResponse.json).not.toHaveBeenCalled()
+        expect(mockResponse.send).toHaveBeenCalledWith('Unexpected error ocurred, try later')
+    })
+
+    it('should return status code 201 when review is updated', async () => {
+        const mockResponse = newResponse()
+        jest.spyOn(spyReviewsService, 'existsReviewFromUser').mockResolvedValueOnce(true)
+        await usersController.updateReview(1, 1, mockResponse, { productId: 10, rating: 1, comment: "" })
+        expect(spyUsersService.exists).toHaveBeenCalledWith(1)
+        expect(spyReviewsService.existsReviewFromUser).toHaveBeenCalledWith("10", 1)
+        expect(spyUsersService.updateUserReview).toHaveBeenCalledWith(1, 1, { productId: 10, rating: 1, comment: "" })
+        expect(mockResponse.status).toHaveBeenCalledWith(201)
+        expect(mockResponse.send).toHaveBeenCalled()
+    })
+
+    it('should return status code 403 when user does not exist', async () => {
+        const mockResponse = newResponse()
+        jest.spyOn(spyUsersService, 'exists').mockResolvedValueOnce(false)
+        await usersController.updateReview(1, 1, mockResponse, { productId: 10, rating: 1, comment: "" })
+        expect(spyUsersService.exists).toHaveBeenCalledWith(1)
+        expect(spyUsersService.updateUserReview).not.toHaveBeenCalled()
+        expect(mockResponse.status).toHaveBeenCalledWith(404)
+        expect(mockResponse.send).toHaveBeenCalledWith('User or review not found')
+    })
+
+    it('should return status code 500 when unexpected error happens', async () => {
+        const mockResponse = newResponse()
+        jest.spyOn(spyUsersService, 'exists').mockRejectedValueOnce('Internal Server Error')
+        await usersController.updateReview(1, 1, mockResponse, { productId: 10, rating: 1, comment: "" })
+        expect(spyUsersService.exists).toHaveBeenCalledWith(1)
+        expect(spyUsersService.updateUserReview).not.toHaveBeenCalled()
         expect(mockResponse.status).toHaveBeenCalledWith(500)
         expect(mockResponse.send).toHaveBeenCalledWith('Unexpected error ocurred, try later')
     })

@@ -17,6 +17,7 @@ import { OrdersService } from "./orders.service";
 import { ProductWithoutReview } from "../classes/productWithoutReview";
 import { OrderOverview } from "../classes/orderOverview";
 import { CreateNewReviewDto } from "src/dto/createNewReviewDto";
+import { UpdateReviewDto } from "../dto/updateReviewDto";
 
 
 @Injectable()
@@ -240,7 +241,7 @@ export class UsersService {
     async exists(userId: number): Promise<boolean> {
         const userFound: AccountUserData = await this.findUserById(userId)
         if (userFound) {
-            this.logger.log(`The user ${userId} exists`)
+            this.logger.debug(`The user ${userId} exists`)
             return true
         } else {
             this.logger.error(`The user ${userId} does not exists`)
@@ -280,6 +281,22 @@ export class UsersService {
         return reviews
     }
 
+    async findReviewBy(userId: number, reviewId: number): Promise<Review> {
+        const reviewsTable = this.db.getCollection('reviews')
+        const foundReview: Review = reviewsTable.findOne({ userId: userId, id: reviewId })
+        if (foundReview) {
+            return new Review(
+                foundReview.id,
+                foundReview.productId,
+                foundReview.productName,
+                foundReview.rating,
+                foundReview.comment
+            )
+        } else {
+            return null
+        }
+    }
+
     async addNewReview(userId: number, createNewReviewDto: CreateNewReviewDto): Promise<number> {
         const reviewsTable = this.db.getCollection('reviews')
         const newReviewId: number = this.reviewId++
@@ -296,6 +313,20 @@ export class UsersService {
             }
         )
         return newReviewId
+    }
+
+    async updateUserReview(userId, reviewId, updateReviewDto: UpdateReviewDto): Promise<boolean> {
+        const reviewsTable = this.db.getCollection('reviews')
+        const { productId, rating, comment } = updateReviewDto
+        const foundReview: Review = reviewsTable.findOne({ userId: userId, id: reviewId })
+        if (foundReview) {
+            foundReview.productId = productId,
+                foundReview.rating = rating,
+                foundReview.comment = comment
+            return reviewsTable.update(foundReview)
+        } else {
+            return false
+        }
     }
 
 }

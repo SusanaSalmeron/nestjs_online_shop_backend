@@ -9,6 +9,7 @@ import { ProductsService } from "./products.service"
 import { UsersService } from "./users.service";
 import { OrdersService } from "./orders.service";
 import { mockFindOrdersBy, mockOrders, mockOrdersPositions } from "../controllers/users/mockDataForUsersControllerTest";
+import { Review } from "../classes/review";
 
 
 jest.mock('bcrypt')
@@ -66,7 +67,8 @@ describe('UsersService', () => {
 
         reviewsMockDBCollection = {
             find: jest.fn().mockReturnValue([]),
-            insert: jest.fn()
+            insert: jest.fn(),
+            findOne: jest.fn().mockReturnValue({})
         }
 
         orderPositionMockDBCollection = {
@@ -552,4 +554,36 @@ describe('UsersService', () => {
         })
         /* expect(usersMockDBCollection.getNextReviewId).toHaveBeenCalledWith(12) */
     })
-}) 
+
+    it('should return a review when review exists', async () => {
+        jest.spyOn(reviewsMockDBCollection, 'findOne').mockReturnValueOnce(new Review(
+            1,
+            5,
+            "Biba palette",
+            5,
+            "tfukygilhoñp´ìopiñyuligykfugiloñp´òuylgluhoñp´`ç"
+        ))
+        const findReviewBy = await usersService.findReviewBy(1, 1)
+        expect(findReviewBy).toEqual(new Review(
+            1,
+            5,
+            "Biba palette",
+            5,
+            "tfukygilhoñp´ìopiñyuligykfugiloñp´òuylgluhoñp´`ç"
+        ))
+    })
+
+    it('should return null when review not exists', async () => {
+        jest.spyOn(reviewsMockDBCollection, 'findOne').mockReturnValueOnce(null)
+        const findReviewBy = await usersService.findReviewBy(1, 100)
+        expect(findReviewBy).toEqual(null)
+    })
+
+    it('should return null when user not exists', async () => {
+        jest.spyOn(reviewsMockDBCollection, 'findOne').mockReturnValueOnce(null)
+        const findReviewBy = await usersService.findReviewBy(10, 1)
+        expect(findReviewBy).toEqual(null)
+    })
+
+})
+

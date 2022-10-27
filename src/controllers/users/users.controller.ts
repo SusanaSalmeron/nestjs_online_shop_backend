@@ -28,7 +28,7 @@ import { WishlistService } from '../../services/wishlist.service';
 import { Reviews } from '../../classes/reviews';
 import { CreateNewReviewDto } from '../../dto/createNewReviewDto';
 import { ReviewsService } from '../../services/reviewService';
-
+import { UpdateReviewDto } from '../../dto/updateReviewDto';
 
 
 @Controller('users')
@@ -514,6 +514,58 @@ export class UsersController {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Unexpected error ocurred, try later')
         }
     }
+
+    @Get('/:userId/reviews/:reviewId')
+    @ApiOkResponse({
+        description: 'Getting review successfully',
+    })
+    @ApiNotFoundResponse({ description: 'The user does not exist' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async getReview(@Param('userId', ParseIntPipe) userId: number, @Param('reviewId', ParseIntPipe) reviewId: number, @Res() response) {
+        try {
+            const userExists = await this.usersService.exists(userId)
+            if (userExists) {
+                const myReview = await this.usersService.findReviewBy(userId, reviewId)
+                response.status(HttpStatus.OK).json(myReview)
+            } else {
+                response.status(HttpStatus.NOT_FOUND).send('User not found')
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Unexpected error ocurred, try later')
+        }
+    }
+
+    @Put('/:userId/reviews/:reviewId')
+    @ApiCreatedResponse({
+        description: 'Review updated successfully',
+    })
+    @ApiNotFoundResponse({ description: 'The user or review does not exist' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    @ApiBody({
+        description: 'Update Review',
+        required: true,
+        type: UpdateReviewDto
+    })
+    async updateReview(@Param('userId', ParseIntPipe) userId: number, @Param('reviewId', ParseIntPipe) reviewId: number, @Res() response, @Body() updateReviewDto: UpdateReviewDto) {
+        const { productId } = updateReviewDto
+        try {
+            const userExists = await this.usersService.exists(userId)
+            const reviewExists = await this.reviewsService.existsReviewFromUser(productId.toString(), userId)
+            if (userExists && reviewExists) {
+                await this.usersService.updateUserReview(userId, reviewId, updateReviewDto)
+                this.logger.log('Review updated successfully')
+                response.status(HttpStatus.CREATED).send()
+            } else {
+                this.logger.error('User not found')
+                response.status(HttpStatus.NOT_FOUND).send('User or review not found')
+            }
+        } catch (err) {
+            this.logger.error('Internal server error', err)
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Unexpected error ocurred, try later')
+        }
+    }
+
 
     @Post('/:userId/review')
     @ApiBody({
