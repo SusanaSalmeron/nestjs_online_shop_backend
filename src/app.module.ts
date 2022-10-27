@@ -15,7 +15,7 @@ import { ProductsController } from './controllers/products/products.controller';
 import { OrdersModule } from './modules/orders.module';
 import { OrdersService } from './services/orders.service';
 import { WishlistService } from './services/wishlist.service';
-import { ReviewsService } from './services/reviewService';
+import { ReviewsService } from './services/review.service';
 
 @Module({
   imports: [ConfigModule.forRoot(), DatabaseModule, UsersModule, HttpModule, OrdersModule],

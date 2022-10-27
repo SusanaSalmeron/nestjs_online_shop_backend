@@ -205,7 +205,17 @@ export class UsersService {
                 productList.push(product)
             }
         }
-        return productList
+        return productList.map(pl =>
+            new ProductCard(
+                pl.id,
+                pl.brand,
+                pl.name,
+                pl.price,
+                pl.description,
+                pl.productType,
+                pl.api_featured_image,
+                pl.product_colors
+            ))
     }
 
     async addProductFromUserWishlist(userId: number, productId: number): Promise<boolean> {
@@ -276,7 +286,14 @@ export class UsersService {
         const pendingReviews: ProductWithoutReview[] = await this.findProductsWithoutReview(userId)
         const reviews = new Reviews(
             pendingReviews,
-            foundReviews
+            foundReviews.map(fr => {
+                return new Review(fr.id,
+                    fr.productId,
+                    fr.productName,
+                    fr.rating,
+                    fr.comment
+                )
+            })
         )
         return reviews
     }

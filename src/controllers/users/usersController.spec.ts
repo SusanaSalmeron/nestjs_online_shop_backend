@@ -14,7 +14,7 @@ import { OrderProductsOverview } from '../../classes/orderProductsOverview'
 import { OrderOverview } from '../../classes/orderOverview'
 import { ProductCard } from '../../classes/productCard';
 import * as bcrypt from 'bcrypt'
-import { ReviewsService } from '../../services/reviewService'
+import { ReviewsService } from '../../services/review.service'
 import { mockReview, mockReviews } from '../../services/mockDataForUsersServiceTest'
 
 

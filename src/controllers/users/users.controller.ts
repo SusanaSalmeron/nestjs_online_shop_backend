@@ -27,7 +27,7 @@ import { ProductsService } from '../../services/products.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { Reviews } from '../../classes/reviews';
 import { CreateNewReviewDto } from '../../dto/createNewReviewDto';
-import { ReviewsService } from '../../services/reviewService';
+import { ReviewsService } from '../../services/review.service';
 import { UpdateReviewDto } from '../../dto/updateReviewDto';
 
 

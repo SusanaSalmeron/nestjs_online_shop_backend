@@ -85,7 +85,21 @@ export class OrdersService {
         } else {
             return null
         }
-        return orders
+        return orders.map(o => {
+            return new OrderOverview(
+                o.orderId,
+                o.name,
+                o.surname,
+                o.address,
+                o.postalZip,
+                o.city,
+                o.country,
+                o.orderDate,
+                o.status,
+                o.products,
+                o.totalOrder
+            )
+        })
     }
 
     async findOrderBy(userId: number, orderId: number): Promise<OrderOverview> {
