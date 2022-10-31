@@ -50,6 +50,7 @@ export class UsersController {
         const { email, password } = createUserDto
         try {
             const user = await this.usersService.findUserByEmail(email)
+            console.log(1)
             if (!user) {
                 this.logger.error('User not found')
                 response.status(HttpStatus.NOT_FOUND).json({ error: 'User not found' })
