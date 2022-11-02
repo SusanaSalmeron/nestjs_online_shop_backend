@@ -16,10 +16,11 @@ import { OrdersModule } from './modules/orders.module';
 import { OrdersService } from './services/orders.service';
 import { WishlistService } from './services/wishlist.service';
 import { ReviewsService } from './services/review.service';
+import { ValidationService } from './services/validation.service';
 
 @Module({
   imports: [ConfigModule.forRoot(), DatabaseModule, UsersModule, HttpModule, OrdersModule],
   controllers: [AppController, UsersController, ProductsController],
-  providers: [AppService, UsersService, TokenService, SearchService, ProductsService, ShadowCopyService, OrdersService, WishlistService, ReviewsService],
+  providers: [AppService, UsersService, TokenService, SearchService, ProductsService, ShadowCopyService, OrdersService, WishlistService, ReviewsService, ValidationService],
 })
 export class AppModule { }

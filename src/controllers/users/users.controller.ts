@@ -3,7 +3,7 @@ import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, A
 import { UsersService } from '../../services/users.service';
 import { TokenService } from '../../services/token.service';
 import { SearchService } from '../../services/search.service';
-import { CreateUserDto } from '../../dto/createUserDto';
+import { UserLoginDto } from '../../dto/userLoginDto';
 import { OptionsMenuDto } from '../../dto/optionsMenuDto';
 import { ProductDto } from '../../dto/productDto';
 import { UserDataDto } from '../../dto/userDataDto';
@@ -29,28 +29,29 @@ import { Reviews } from '../../classes/reviews';
 import { CreateNewReviewDto } from '../../dto/createNewReviewDto';
 import { ReviewsService } from '../../services/review.service';
 import { UpdateReviewDto } from '../../dto/updateReviewDto';
+import { UserSignupDto } from '../../dto/userSignupDto';
+import { ValidationService } from '../../services/validation.service';
 
 
 @Controller('users')
 export class UsersController {
     private readonly logger = new Logger(UsersController.name)
-    constructor(private usersService: UsersService, private tokenService: TokenService, private searchService: SearchService, private ordersService: OrdersService, private productsService: ProductsService, private wishlistService: WishlistService, private reviewsService: ReviewsService) { }
+    constructor(private usersService: UsersService, private tokenService: TokenService, private searchService: SearchService, private ordersService: OrdersService, private productsService: ProductsService, private wishlistService: WishlistService, private reviewsService: ReviewsService, private validationService: ValidationService) { }
 
     @Post('/login')
     @ApiBody({
         description: 'User',
         required: true,
-        type: CreateUserDto
+        type: UserLoginDto
     })
     @ApiOkResponse({ description: 'User Login successfully' })
     @ApiNotFoundResponse({ description: 'User does not exists' })
     @ApiUnauthorizedResponse({ description: 'Unauthorized user' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async userLogin(@Res() response, @Body() createUserDto: CreateUserDto) {
-        const { email, password } = createUserDto
+    async userLogin(@Res() response, @Body() userLoginDto: UserLoginDto) {
+        const { email, password } = userLoginDto
         try {
             const user = await this.usersService.findUserByEmail(email)
-            console.log(1)
             if (!user) {
                 this.logger.error('User not found')
                 response.status(HttpStatus.NOT_FOUND).json({ error: 'User not found' })
@@ -70,6 +71,36 @@ export class UsersController {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).json('Internal Server Error ')
         }
     }
+
+
+    @Post('/signup')
+    @ApiBody({
+        description: 'User signup',
+        required: true,
+        type: UserSignupDto
+    })
+    @ApiCreatedResponse({ description: 'User registered successfully' })
+    @ApiBadRequestResponse({ description: 'Email has invalid format / The user is registered ' },
+    )
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async userSignup(@Res() response, @Body() userSignupDto: UserSignupDto) {
+        const { email, password, repeatPassword } = userSignupDto
+        try {
+            const isEmailValidated = await this.validationService.validateEmail(email)
+            const emailExists = await this.usersService.emailExistsOnDB(email)
+            if (!isEmailValidated) {
+                response.status(HttpStatus.BAD_REQUEST).json({ error: "The email has invalid format" })
+            } else if (!emailExists && (password === repeatPassword)) {
+                const newUserId: number = await this.usersService.addNewUser(userSignupDto)
+                response.status(HttpStatus.CREATED).json(newUserId)
+            } else {
+                response.status(HttpStatus.BAD_REQUEST).json({ error: "The user is registered" })
+            }
+        } catch (err) {
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
+        }
+    }
+
     @Get('/:id/data')
     @ApiOkResponse({
         description: 'Getting user data successfully',

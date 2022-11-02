@@ -5,7 +5,7 @@ import { LoginUser } from '../../classes/loginUser';
 import { AccountUserAddresses } from '../../classes/accountUserAddresses';
 import { AccountUserData } from '../../classes/accountUserData';
 import { ProductCard } from '../../classes/productCard';
-import { CreateUserDto } from '../../dto/createUserDto';
+import { UserLoginDto } from '../../dto/userLoginDto';
 import { UpdateUserAccountDataDto } from '../../dto/updateUserAccountDataDto';
 import { UpdateUserAccountAddressesDto } from '../../dto/updateUserAccountAddressesDto';
 import { CreateUserAddressDto } from '../../dto/createUserAddressDto';
@@ -283,7 +283,7 @@ export const mockGetWishlist = () => {
 
 
 
-export const bodyForUserLogin: CreateUserDto = {
+export const bodyForUserLogin: UserLoginDto = {
     email: 'mamamama@gmail.com',
     password: 'Abcdef123!'
 }

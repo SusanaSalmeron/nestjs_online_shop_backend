@@ -18,6 +18,7 @@ import { ProductWithoutReview } from "../classes/productWithoutReview";
 import { OrderOverview } from "../classes/orderOverview";
 import { CreateNewReviewDto } from "src/dto/createNewReviewDto";
 import { UpdateReviewDto } from "../dto/updateReviewDto";
+import { UserSignupDto } from "src/dto/userSignupDto";
 
 
 @Injectable()
@@ -26,6 +27,7 @@ export class UsersService {
     private addressId = 32
     private productWishlistId = 13
     private reviewId = 11
+    private userId = 1001
     constructor(@Inject('DATABASE_CONNECTION') private db: loki, private productsService: ProductsService, private ordersService: OrdersService) { }
 
     getNextReviewId(): number {
@@ -287,7 +289,8 @@ export class UsersService {
         const reviews = new Reviews(
             pendingReviews,
             foundReviews.map(fr => {
-                return new Review(fr.id,
+                return new Review(
+                    fr.id,
                     fr.productId,
                     fr.productName,
                     fr.rating,
@@ -332,8 +335,8 @@ export class UsersService {
         return newReviewId
     }
 
-    async updateUserReview(userId, reviewId, updateReviewDto: UpdateReviewDto): Promise<boolean> {
-        const reviewsTable = this.db.getCollection('reviews')
+    async updateUserReview(userId: number, reviewId: number, updateReviewDto: UpdateReviewDto): Promise<boolean> {
+        const reviewsTable: loki = this.db.getCollection('reviews')
         const { productId, rating, comment } = updateReviewDto
         const foundReview: Review = reviewsTable.findOne({ userId: userId, id: reviewId })
         if (foundReview) {
@@ -344,6 +347,29 @@ export class UsersService {
         } else {
             return false
         }
+    }
+
+    async emailExistsOnDB(email: string): Promise<boolean> {
+        const usersTable: loki = this.db.getCollection('users')
+        const emailFound: boolean = usersTable.findOne({ email: email })
+        if (emailFound) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    async addNewUser(userSignupDto: UserSignupDto): Promise<number> {
+        const usersTable: loki = this.db.getCollection('users')
+        const { email, password } = userSignupDto
+        const newUserId: number = this.userId++
+        const passwordEncrypted = await encrypt(password)
+        usersTable.insert({
+            id: newUserId,
+            email: email,
+            password: passwordEncrypted
+        })
+        return newUserId
     }
 
 }

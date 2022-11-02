@@ -4,12 +4,13 @@ import { AccountUserData } from "../classes/accountUserData"
 import { LoginUser } from "../classes/loginUser"
 import { ProductCard } from "../classes/productCard";
 import { newProducts, productToShow } from "./mockDataForOrdersServiceTest";
-import { addressToDelete, nonValidAddressToDelete, nonValidAddressAndUserToDelete, mockFindAddresses, mockFindOneAddress, mockFindOneProductOnWishlist, mockFindOneUser, mockFindProdyctsById, mockFindWishlist, newUser, mockUserReviews } from "./mockDataForUsersServiceTest"
+import { addressToDelete, nonValidAddressToDelete, nonValidAddressAndUserToDelete, mockFindAddresses, mockFindOneAddress, mockFindOneProductOnWishlist, mockFindOneUser, mockFindProdyctsById, mockFindWishlist, newUser, mockUserReviews, mockUserReviews2 } from "./mockDataForUsersServiceTest"
 import { ProductsService } from "./products.service"
 import { UsersService } from "./users.service";
 import { OrdersService } from "./orders.service";
 import { mockFindOrdersBy, mockOrders, mockOrdersPositions } from "../controllers/users/mockDataForUsersControllerTest";
 import { Review } from "../classes/review";
+import { encrypt } from "./security.service";
 
 
 jest.mock('bcrypt')
@@ -25,6 +26,7 @@ describe('UsersService', () => {
     let wishlistMockDBCollection
     let reviewsMockDBCollection
     let orderPositionMockDBCollection
+
 
     beforeEach(async () => {
         jest.clearAllMocks()
@@ -47,7 +49,8 @@ describe('UsersService', () => {
         usersMockDBCollection = {
             findOne: jest.fn().mockImplementation(mockFindOneUser),
             update: jest.fn(),
-            getNextReviewId: jest.fn()
+            getNextReviewId: jest.fn(),
+            insert: jest.fn()
         }
 
         addressesMockDBCollection = {
@@ -68,7 +71,8 @@ describe('UsersService', () => {
         reviewsMockDBCollection = {
             find: jest.fn().mockReturnValue([]),
             insert: jest.fn(),
-            findOne: jest.fn().mockReturnValue({})
+            findOne: jest.fn().mockReturnValue({}),
+            update: jest.fn()
         }
 
         orderPositionMockDBCollection = {
@@ -460,9 +464,9 @@ describe('UsersService', () => {
     })
 
     it('should return only created user reviews', async () => {
-        jest.spyOn(reviewsMockDBCollection, 'find').mockReturnValueOnce(mockUserReviews)
+        jest.spyOn(reviewsMockDBCollection, 'find').mockReturnValueOnce(mockUserReviews2)
         const getUserReviews = await usersService.findUserReviews(1)
-        expect(getUserReviews).toEqual({ "created": mockUserReviews, "pending": [] })
+        expect(getUserReviews).toEqual({ "created": mockUserReviews2, "pending": [] })
     })
 
     it('should return only pending user reviews', async () => {
@@ -504,7 +508,7 @@ describe('UsersService', () => {
     })
 
     it('should return created reviews and products without review', async () => {
-        jest.spyOn(reviewsMockDBCollection, 'find').mockReturnValueOnce(mockUserReviews)
+        jest.spyOn(reviewsMockDBCollection, 'find').mockReturnValueOnce(mockUserReviews2)
         jest.spyOn(spyOrdersService, 'findOrdersBy').mockResolvedValueOnce(mockOrders)
         jest.spyOn(orderPositionMockDBCollection, 'find').mockReturnValueOnce([
             {
@@ -528,7 +532,7 @@ describe('UsersService', () => {
         ])
         const getUserReviews = await usersService.findUserReviews(1)
         expect(getUserReviews).toEqual({
-            created: mockUserReviews, pending: [
+            created: mockUserReviews2, pending: [
                 {
                     "productId": 1065,
                     "productName": "Biba Palette"
@@ -583,6 +587,53 @@ describe('UsersService', () => {
         jest.spyOn(reviewsMockDBCollection, 'findOne').mockReturnValueOnce(null)
         const findReviewBy = await usersService.findReviewBy(10, 1)
         expect(findReviewBy).toEqual(null)
+    })
+
+    it('should update a review when exists previously ', async () => {
+        jest.spyOn(reviewsMockDBCollection, 'findOne').mockReturnValueOnce(new Review(
+            1,
+            5,
+            "Biba Palette",
+            5,
+            "tfukygilhoñp´ìopiñyuligykfugiloñp´òuylgluhoñp´`ç"
+        ))
+        await usersService.updateUserReview(1, 1, {
+            productId: 5, rating: 5, comment: "DFGHJKJHGFdfghfgjhg"
+        })
+        expect(reviewsMockDBCollection.update).toHaveBeenCalledWith({
+            id: 1,
+            productId: 5,
+            productName: 'Biba Palette',
+            rating: 5,
+            comment: "DFGHJKJHGFdfghfgjhg"
+        })
+    })
+
+    it('should not update a review when review not exists previously ', async () => {
+        jest.spyOn(reviewsMockDBCollection, 'findOne').mockReturnValueOnce(null)
+        await usersService.updateUserReview(1, 1, {
+            productId: 5, rating: 5, comment: "DFGHJKJHGFdfghfgjhg"
+        })
+        expect(reviewsMockDBCollection.update).not.toHaveBeenCalledWith()
+    })
+
+    it('should return false when email does not exist on database', async () => {
+        const exists = await usersService.emailExistsOnDB('exdream76@gmail.com')
+        expect(exists).toEqual(false)
+    })
+
+    it('should return false when email does not exist on database', async () => {
+        jest.spyOn(usersMockDBCollection, 'findOne').mockReturnValueOnce('exdream76@gmail.com')
+        const exists = await usersService.emailExistsOnDB('exdream76@gmail.com')
+        expect(exists).toEqual(true)
+    })
+
+    it('add new user to database', async () => {
+        const newUser = await usersService.addNewUser({ email: "exdream76@gmail.com", password: "Abcde123!", repeatPassword: "Abcde123!" })
+        const password = "Abcde123!"
+        const newPassword = await encrypt(password)
+        expect(usersMockDBCollection.insert).toHaveBeenCalledWith({ id: 1001, email: "exdream76@gmail.com", password: newPassword })
+        expect(newUser).toEqual(1001)
     })
 
 })

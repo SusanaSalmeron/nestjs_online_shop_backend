@@ -75,7 +75,9 @@ export class ProductsService {
         } catch (err) {
             this.logger.warn('Api not available', err)
             const responseFromCopy = await this.loadAndGetShadowCopy()
-            response = responseFromCopy.filter(p => p.productType.toLowerCase() === type.toLowerCase())
+            response = responseFromCopy.filter(p =>
+                p.product_type && p.product_type.toLowerCase() === type.toLowerCase())
+            console.log(response)
         }
         const newProducts = await this.findNewProducts()
         const products = response.map(p => {
@@ -87,7 +89,7 @@ export class ProductsService {
                 p.api_featured_image
             )
         })
-        const newProductsFiltered = newProducts.filter(p => p.productType.toLowerCase() === type.toLowerCase())
+        const newProductsFiltered = newProducts.filter(p => p.productType && p.productType.toLowerCase() === type.toLowerCase())
         const allProducts: Product[] = [...products, ...newProductsFiltered]
         return allProducts
     }

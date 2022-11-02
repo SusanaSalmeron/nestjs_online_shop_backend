@@ -1,5 +1,6 @@
 import { ProductCard } from '../classes/productCard'
 import { Product } from '../classes/product'
+import { Review } from '../classes/review'
 
 export const mockFindOneUser = (criteria) => {
     if (criteria.email) {
@@ -341,6 +342,26 @@ export const mockReviews = {
     pending: [],
     created: []
 }
+
+export const mockUserReviews2 = [new Review(
+
+    1,
+    10,
+    'Biba Palette',
+    5,
+    'The eyeshadow’s practically blend themselves, they look amazing! Biba makes me happy every morning when I open my makeup drawer and see her in there. I’m not spending my money on cheaper palettes that are imitation’s of what I want, and that I will hoard and never use. I’m saving up and getting that one expensive palette and this is it!'
+),
+new Review(
+    2,
+    11,
+    'Soft Pinch Blush',
+    5,
+    'This product is a LIFE CHANGER. It blends so well and is so smooth. It creates such a natural look and is incredible. Selena Gomez, keep on doing whatever you are doing because GIRL, this is where it is at!'
+)
+
+]
+
+
 
 export const mockReview = {
     id: 1,

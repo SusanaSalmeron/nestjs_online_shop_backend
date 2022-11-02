@@ -16,6 +16,7 @@ import { ProductCard } from '../../classes/productCard';
 import * as bcrypt from 'bcrypt'
 import { ReviewsService } from '../../services/review.service'
 import { mockReview, mockReviews } from '../../services/mockDataForUsersServiceTest'
+import { ValidationService } from '../../services/validation.service'
 
 
 describe('UsersController Unit Test', () => {
@@ -27,6 +28,7 @@ describe('UsersController Unit Test', () => {
     let spyProductsService: ProductsService
     let spyWishlistService: WishlistService
     let spyReviewsService: ReviewsService
+    let spyValidationService: ValidationService
 
     beforeEach(async () => {
         const usersServiceProvider = {
@@ -48,7 +50,9 @@ describe('UsersController Unit Test', () => {
                 addNewReview: jest.fn(() => 11),
                 findUserReviews: jest.fn(() => mockReviews),
                 findReviewBy: jest.fn(() => mockReview),
-                updateUserReview: jest.fn(() => true)
+                updateUserReview: jest.fn(() => true),
+                addNewUser: jest.fn(() => 100),
+                emailExistsOnDB: jest.fn(() => false)
             })
         }
 
@@ -97,9 +101,16 @@ describe('UsersController Unit Test', () => {
             })
         }
 
+        const validationServiceProvider = {
+            provide: ValidationService,
+            useFactory: () => ({
+                validateEmail: jest.fn(() => true)
+            })
+        }
+
         const module: TestingModule = await Test.createTestingModule({
             controllers: [UsersController],
-            providers: [UsersService, TokenService, SearchService, OrdersService, ProductsService, WishlistService, ReviewsService, usersServiceProvider, tokenServiceProvider, searchServiceProvider, ordersServiceProvider, productsServiceProvider, wishlistServiceProvider, reviewsServiceProvider]
+            providers: [UsersService, TokenService, SearchService, OrdersService, ProductsService, WishlistService, ReviewsService, ValidationService, usersServiceProvider, tokenServiceProvider, searchServiceProvider, ordersServiceProvider, productsServiceProvider, wishlistServiceProvider, reviewsServiceProvider, validationServiceProvider]
         }).compile()
 
         usersController = module.get<UsersController>(UsersController)
@@ -110,6 +121,7 @@ describe('UsersController Unit Test', () => {
         spyProductsService = module.get<ProductsService>(ProductsService)
         spyWishlistService = module.get<WishlistService>(WishlistService)
         spyReviewsService = module.get<ReviewsService>(ReviewsService)
+        spyValidationService = module.get<ValidationService>(ValidationService)
     })
     it('should returns an user when findUserByEmail is called', async () => {
         jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(true))
@@ -606,5 +618,61 @@ describe('UsersController Unit Test', () => {
         expect(spyUsersService.updateUserReview).not.toHaveBeenCalled()
         expect(mockResponse.status).toHaveBeenCalledWith(500)
         expect(mockResponse.send).toHaveBeenCalledWith('Unexpected error ocurred, try later')
+    })
+
+    it('should return status code 201 when email is not on database and the user has been created', async () => {
+        const data = {
+            email: "exdream76@gmail.com",
+            password: "1234ABcde!",
+            repeatPassword: "1234ABcde!"
+        }
+        const mockResponse = newResponse()
+        await usersController.userSignup(mockResponse, data)
+        expect(spyUsersService.emailExistsOnDB).toHaveBeenCalledWith('exdream76@gmail.com')
+        expect(mockResponse.status).toHaveBeenCalledWith(201)
+        expect(mockResponse.json).toHaveBeenCalledWith(100)
+
+    })
+
+    it('should return status code 400 when email has invalid format', async () => {
+        const data = {
+            email: "exdream76@gmailcom",
+            password: "1234ABcde!",
+            repeatPassword: "1234ABcde!"
+        }
+        const mockResponse = newResponse()
+        jest.spyOn(spyValidationService, 'validateEmail').mockResolvedValueOnce(false)
+        await usersController.userSignup(mockResponse, data)
+        expect(spyValidationService.validateEmail).toHaveBeenCalledWith('exdream76@gmailcom')
+        expect(mockResponse.status).toHaveBeenCalledWith(400)
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'The email has invalid format' })
+    })
+
+    it('should return status code 401 when email is on database and the user has not been created', async () => {
+        const data = {
+            email: "exdream76@gmail.com",
+            password: "1234ABcde!",
+            repeatPassword: "1234ABcde!"
+        }
+        const mockResponse = newResponse()
+        jest.spyOn(spyUsersService, 'emailExistsOnDB').mockResolvedValueOnce(true)
+        await usersController.userSignup(mockResponse, data)
+        expect(spyUsersService.emailExistsOnDB).toHaveBeenCalledWith('exdream76@gmail.com')
+        expect(mockResponse.status).toHaveBeenCalledWith(400)
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'The user is registered' })
+    })
+
+    it('should return status code 500 when unexpected error happens', async () => {
+        const data = {
+            email: "exdream76@gmail.com",
+            password: "1234ABcde!",
+            repeatPassword: "1234ABcde!"
+        }
+        const mockResponse = newResponse()
+        jest.spyOn(spyUsersService, 'emailExistsOnDB').mockRejectedValueOnce(new Error('Internal Server Error'))
+        await usersController.userSignup(mockResponse, data)
+        expect(spyUsersService.emailExistsOnDB).toHaveBeenCalledWith('exdream76@gmail.com')
+        expect(mockResponse.status).toHaveBeenCalledWith(500)
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Internal Server Error' })
     })
 })

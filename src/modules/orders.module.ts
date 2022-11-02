@@ -11,10 +11,11 @@ import { DatabaseModule } from "../database/database.module";
 import { HttpModule } from "@nestjs/axios";
 import { WishlistService } from "../services/wishlist.service";
 import { ReviewsService } from "../services/review.service";
+import { ValidationService } from "../services/validation.service";
 
 
 @Module({
-    providers: [OrdersService, UsersService, TokenService, SearchService, ConfigService, ShadowCopyService, ProductsService, WishlistService, ReviewsService],
+    providers: [OrdersService, UsersService, TokenService, SearchService, ConfigService, ShadowCopyService, ProductsService, WishlistService, ReviewsService, ValidationService],
     controllers: [UsersController],
     imports: [DatabaseModule, HttpModule]
 })

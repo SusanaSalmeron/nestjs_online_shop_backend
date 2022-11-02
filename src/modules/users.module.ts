@@ -11,9 +11,10 @@ import { UsersService } from '../services/users.service';
 import { OrdersService } from '../services/orders.service';
 import { WishlistService } from '../services/wishlist.service';
 import { ReviewsService } from '../services/review.service';
+import { ValidationService } from '../services/validation.service';
 
 @Module({
-    providers: [UsersService, TokenService, ConfigService, SearchService, ShadowCopyService, ProductsService, OrdersService, WishlistService, ReviewsService
+    providers: [UsersService, TokenService, ConfigService, SearchService, ShadowCopyService, ProductsService, OrdersService, WishlistService, ReviewsService, ValidationService
     ],
     controllers: [UsersController],
     imports: [DatabaseModule, HttpModule]
