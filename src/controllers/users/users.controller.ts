@@ -1,5 +1,5 @@
 import { Body, Controller, HttpStatus, Logger, Post, Get, Res, Query, Param, Put, Delete, ParseIntPipe, Head } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse, ApiCreatedResponse, ApiQuery, ApiNoContentResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiNotFoundResponse, ApiUnauthorizedResponse, ApiInternalServerErrorResponse, ApiCreatedResponse, ApiQuery, ApiNoContentResponse, ApiBadRequestResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from '../../services/users.service';
 import { TokenService } from '../../services/token.service';
 import { SearchService } from '../../services/search.service';
@@ -102,6 +102,7 @@ export class UsersController {
     }
 
     @Get('/:id/data')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'Getting user data successfully',
         type: UserDataDto
@@ -125,6 +126,7 @@ export class UsersController {
     }
 
     @Put('/:id/data')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'User data successfully updated',
         type: UpdateUserAccountDataDto
@@ -149,6 +151,7 @@ export class UsersController {
     }
 
     @Get('/:id/addresses/')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'Getting addresses successfully',
         type: UserAddressDto
@@ -172,6 +175,7 @@ export class UsersController {
     }
 
     @Put('/:userid/addresses/:addressid')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'Address updated successfully',
         type: UpdateUserAccountAddressesDto
@@ -196,6 +200,7 @@ export class UsersController {
     }
 
     @Delete('/:userId/addresses/:addressId')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({ description: 'Address deleted successfully' })
     @ApiNotFoundResponse({ description: 'User or address not found' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
@@ -217,6 +222,7 @@ export class UsersController {
     }
 
     @Post('/:id/addresses/new')
+    @ApiBearerAuth('JWT-auth')
     @ApiBody({
         description: 'New Address',
         required: true,
@@ -242,6 +248,7 @@ export class UsersController {
     }
 
     @Put(':id/billing')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'Billing Address Updated',
         type: UpdateBillingAddressDto
@@ -318,6 +325,7 @@ export class UsersController {
     }
 
     @Put('/:id/password')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'Password updated successfully',
         type: UpdateUserAccountPasswordDto
@@ -345,6 +353,7 @@ export class UsersController {
     }
 
     @Get('/:id/orders')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'Getting orders successfully',
         type: OrderOverviewDto
@@ -369,6 +378,7 @@ export class UsersController {
 
 
     @Get('/:id/orders/:orderid')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'Order found successfully',
         type: OrderOverviewDto
@@ -396,6 +406,7 @@ export class UsersController {
     }
 
     @Get('/:id/orders/status/:status')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'Getting orders successfully',
         type: OrderOverviewDto
@@ -419,6 +430,7 @@ export class UsersController {
     }
 
     @Head(':id/wishlist/:productid')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'The product is in the wishlist',
     })
@@ -451,6 +463,7 @@ export class UsersController {
 
 
     @Get('/:id/wishlist')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'Getting wishlist successfully',
     })
@@ -473,6 +486,7 @@ export class UsersController {
     }
 
     @Put(':userid/wishlist/:productid')
+    @ApiBearerAuth('JWT-auth')
     @ApiCreatedResponse({
         description: 'Product from wishlist added successfully',
     })
@@ -503,6 +517,7 @@ export class UsersController {
     }
 
     @Delete('/:id/wishlist/:productid')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'Product from wishlist remove successfully',
     })
@@ -525,6 +540,7 @@ export class UsersController {
     }
 
     @Get('/:userId/reviews')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'Getting reviews successfully',
     })
@@ -548,6 +564,7 @@ export class UsersController {
     }
 
     @Get('/:userId/reviews/:reviewId')
+    @ApiBearerAuth('JWT-auth')
     @ApiOkResponse({
         description: 'Getting review successfully',
     })
@@ -569,6 +586,7 @@ export class UsersController {
     }
 
     @Put('/:userId/reviews/:reviewId')
+    @ApiBearerAuth('JWT-auth')
     @ApiCreatedResponse({
         description: 'Review updated successfully',
     })
@@ -600,6 +618,7 @@ export class UsersController {
 
 
     @Post('/:userId/review')
+    @ApiBearerAuth('JWT-auth')
     @ApiBody({
         description: 'New Review',
         required: true,

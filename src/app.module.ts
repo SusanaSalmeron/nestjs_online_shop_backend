@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './modules/users.module';
 import { ConfigModule } from '@nestjs/config';
@@ -17,10 +17,28 @@ import { OrdersService } from './services/orders.service';
 import { WishlistService } from './services/wishlist.service';
 import { ReviewsService } from './services/review.service';
 import { ValidationService } from './services/validation.service';
+import { AuthenticateTokenMiddleware } from './middlewares/authenticateToken.middleware';
 
 @Module({
   imports: [ConfigModule.forRoot(), DatabaseModule, UsersModule, HttpModule, OrdersModule],
   controllers: [AppController, UsersController, ProductsController],
   providers: [AppService, UsersService, TokenService, SearchService, ProductsService, ShadowCopyService, OrdersService, WishlistService, ReviewsService, ValidationService],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthenticateTokenMiddleware)
+      .exclude(
+        { path: 'v1/products/new', method: RequestMethod.GET },
+        { path: 'v1/products/type', method: RequestMethod.GET },
+        { path: 'v1/products/:id', method: RequestMethod.GET },
+        { path: 'v1/users/search', method: RequestMethod.GET },
+        { path: 'v1/users/search/:keyword', method: RequestMethod.GET },
+        { path: 'v1/users/login', method: RequestMethod.POST },
+        { path: 'v1/users/signup', method: RequestMethod.POST },
+        { path: 'v1/users/search', method: RequestMethod.GET }
+      )
+      .forRoutes('/')
+
+  }
+}
