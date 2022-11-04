@@ -15,7 +15,7 @@ import { ProductsController } from './controllers/products/products.controller';
 import { OrdersModule } from './modules/orders.module';
 import { OrdersService } from './services/orders.service';
 import { WishlistService } from './services/wishlist.service';
-import { ReviewsService } from './services/review.service';
+import { ReviewsService } from './services/reviews.service';
 import { ValidationService } from './services/validation.service';
 import { AuthenticateTokenMiddleware } from './middlewares/authenticateToken.middleware';
 
@@ -36,7 +36,8 @@ export class AppModule implements NestModule {
         { path: 'v1/users/search/:keyword', method: RequestMethod.GET },
         { path: 'v1/users/login', method: RequestMethod.POST },
         { path: 'v1/users/signup', method: RequestMethod.POST },
-        { path: 'v1/users/search', method: RequestMethod.GET }
+        { path: 'v1/users/search', method: RequestMethod.GET },
+        { path: 'v1/products/:id/reviews', method: RequestMethod.GET }
       )
       .forRoutes('/')
 

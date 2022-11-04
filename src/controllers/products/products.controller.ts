@@ -3,12 +3,13 @@ import { ProductsService } from "../../services/products.service";
 import { ApiOkResponse, ApiNotFoundResponse, ApiInternalServerErrorResponse } from "@nestjs/swagger";
 import { ProductDto } from "../../dto/productDto";
 import { ProductCardDto } from "../../dto/productCardDto";
+import { ReviewsService } from "../../services/reviews.service";
 
 
 @Controller('products')
 export class ProductsController {
     private readonly logger = new Logger(ProductsController.name)
-    constructor(private productService: ProductsService) { }
+    constructor(private productService: ProductsService, private reviewsService: ReviewsService) { }
 
     @Get('new')
     @ApiOkResponse({
@@ -77,4 +78,25 @@ export class ProductsController {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error')
         }
     }
+
+    @Get('/:id/reviews')
+    @ApiOkResponse({
+        description: 'Getting reviews from product successfully',
+    })
+    @ApiNotFoundResponse({ description: 'The product does not exist' })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async getAllReviewsFromProduct(@Param('id', ParseIntPipe) id: number, @Res() response) {
+        try {
+            const productExists = await this.productService.exists(id.toString())
+            const reviews = await this.reviewsService.getReviewsFromProduct(id)
+            if (productExists && reviews) {
+                response.status(HttpStatus.OK).json(reviews)
+            } else {
+                response.status(HttpStatus.NOT_FOUND).send({ error: 'The product do not have reviews' })
+            }
+        } catch {
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ error: 'Unexpected error happens, try again' })
+        }
+    }
+
 }

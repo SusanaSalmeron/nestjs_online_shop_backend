@@ -10,7 +10,7 @@ import { ProductsService } from "../services/products.service";
 import { DatabaseModule } from "../database/database.module";
 import { HttpModule } from "@nestjs/axios";
 import { WishlistService } from "../services/wishlist.service";
-import { ReviewsService } from "../services/review.service";
+import { ReviewsService } from "../services/reviews.service";
 import { ValidationService } from "../services/validation.service";
 
 

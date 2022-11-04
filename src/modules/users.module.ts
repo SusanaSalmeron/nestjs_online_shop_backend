@@ -10,7 +10,7 @@ import { TokenService } from '../services/token.service';
 import { UsersService } from '../services/users.service';
 import { OrdersService } from '../services/orders.service';
 import { WishlistService } from '../services/wishlist.service';
-import { ReviewsService } from '../services/review.service';
+import { ReviewsService } from '../services/reviews.service';
 import { ValidationService } from '../services/validation.service';
 
 @Module({
