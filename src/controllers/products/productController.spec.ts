@@ -4,11 +4,13 @@ import { mockFindNewProducts, mockFindProductById, mockFindProductsBy, newRespon
 import { ProductsController } from "./products.controller";
 import { ProductCard } from '../../classes/productCard';
 import { Product } from '../../classes/product'
+import { ReviewsService } from "../../services/reviews.service";
 
 
 describe('ProductsController Unit Tests', () => {
     let productsController: ProductsController
     let spyProductsService: ProductsService
+    let spyReviewsService: ReviewsService
 
 
     const query = "eyeshadow"
@@ -28,13 +30,21 @@ describe('ProductsController Unit Tests', () => {
             })
         }
 
+        const reviewsServiceProvider = {
+            provide: ReviewsService,
+            useFactory: () => ({
+                existsReviewFromUser: jest.fn(() => false)
+            })
+        }
+
         const module: TestingModule = await Test.createTestingModule({
             controllers: [ProductsController],
-            providers: [ProductsService, productsServiceProvider]
+            providers: [ProductsService, ReviewsService, productsServiceProvider, reviewsServiceProvider]
         }).compile()
 
         productsController = module.get<ProductsController>(ProductsController)
         spyProductsService = module.get<ProductsService>(ProductsService)
+        spyReviewsService = module.get<ReviewsService>(ReviewsService)
     })
 
     it('should return all the new products when findNewProducts is called', async () => {
