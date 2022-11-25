@@ -113,6 +113,11 @@ export class UsersService {
                     userId: userId,
                 }
             )
+            const defAddress = addressesTable.findOne({ id: newId })
+            if (defAddress) {
+                const deleteDefAddress = addressesTable.findOne({ defaultAddress: true })
+                deleteDefAddress.defaultAddress = false
+            }
             return newId
         } else {
             return null

@@ -129,7 +129,7 @@
         "postalZip": "27756",
         "city": "Geylang",
         "country": "Spain",
-        "phone": "557-9896",
+        "defaultAddress": true,
         "userId": 990
     },
     {
