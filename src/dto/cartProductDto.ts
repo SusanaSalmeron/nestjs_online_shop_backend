@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 
-export class ProductDto {
+export class CartProductDto {
     @ApiProperty()
     readonly id: number;
     @ApiProperty()
@@ -9,7 +9,9 @@ export class ProductDto {
     @ApiProperty()
     readonly name: string;
     @ApiProperty()
-    readonly price: string;
+    readonly color: string;
     @ApiProperty()
-    readonly api_featured_image: string;
+    readonly price: number;
+    @ApiProperty()
+    readonly image: string;
 }

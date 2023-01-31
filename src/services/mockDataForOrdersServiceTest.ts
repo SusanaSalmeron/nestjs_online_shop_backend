@@ -14,6 +14,11 @@ export const mockFindOrders = (criteria) => {
     return orders.length ? orders : null
 }
 
+export const mockFindOneOrder = (criteria) => {
+    const order = mockOrdersData.filter(fo => fo.id === criteria("orderId"))
+    return order
+}
+
 export const mockFindOrdersPosition = (criteria => {
     return mockOrderPositionData.filter(fop => fop.orderId === criteria["orderId"])
 })

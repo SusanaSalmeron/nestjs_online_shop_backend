@@ -63,7 +63,7 @@ export class ProductsController {
     })
     @ApiNotFoundResponse({ description: 'product not found' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
-    async showProduct(@Param('id', ParseIntPipe) id: number, @Res() response) {
+    async showProduct(@Param('id') id: string, @Res() response) {
         try {
             const product = await this.productService.findProductById(id)
             if (product) {
@@ -90,13 +90,15 @@ export class ProductsController {
             const productExists = await this.productService.exists(id.toString())
             const reviews = await this.reviewsService.getReviewsFromProduct(id)
             if (productExists && reviews) {
+                this.logger.log(`Showing product ${id} reviews`)
                 response.status(HttpStatus.OK).json(reviews)
             } else {
+                this.logger.warn('Product does not exist or does not have reviews')
                 response.status(HttpStatus.NOT_FOUND).send({ error: 'The product do not have reviews' })
             }
         } catch {
+            this.logger.log('Unexpected error happens, try again')
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ error: 'Unexpected error happens, try again' })
         }
     }
-
 }

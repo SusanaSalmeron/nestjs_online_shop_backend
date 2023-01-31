@@ -51,7 +51,7 @@ describe('ProductsService', () => {
     })
 
     it('should show a product when product id is valid', async () => {
-        const product = await productsService.findProductById(2)
+        const product = await productsService.findProductById("2")
         expect(product).not.toBeNull()
         expect(product).toEqual(new ProductCard(
             2,
@@ -70,7 +70,7 @@ describe('ProductsService', () => {
     })
 
     it('should not show a product when id does not exists', async () => {
-        const product = await productsService.findProductById(5)
+        const product = await productsService.findProductById("5")
         expect(product).toBeNull()
         expect(spyShadowCopyService.getShadowCopy).not.toBeCalled()
     })

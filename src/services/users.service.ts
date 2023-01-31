@@ -38,6 +38,7 @@ export class UsersService {
         const usersTable = this.db.getCollection('users')
         const foundUser: LoginUser = usersTable.findOne({ email: email })
         if (foundUser) {
+            this.logger.log(`User found successfully`)
             return new LoginUser(
                 foundUser.id,
                 foundUser.userName,
@@ -45,6 +46,7 @@ export class UsersService {
                 foundUser.password
             )
         } else {
+            this.logger.warn('User not found')
             return null
         }
     }
@@ -53,6 +55,7 @@ export class UsersService {
         const usersTable = this.db.getCollection('users')
         const foundUserData: AccountUserData = usersTable.findOne({ id: id })
         if (foundUserData) {
+            this.logger.log(`User ${id} found successfully`)
             return new AccountUserData(
                 foundUserData.id,
                 foundUserData.userName,
@@ -67,6 +70,7 @@ export class UsersService {
                 foundUserData.identification,
                 foundUserData.password)
         } else {
+            this.logger.warn(`User ${id} does not exist`)
             return null
         }
     }
@@ -76,6 +80,7 @@ export class UsersService {
         let addresses: AccountUserAddresses[]
         const foundAddresses: AccountUserAddresses[] = addressesTable.find({ userId: userId })
         if (foundAddresses) {
+            this.logger.log(`Addresses from user ${userId} found successfully`)
             addresses = foundAddresses.map(a => {
                 return new AccountUserAddresses(
                     a.id,
@@ -90,6 +95,7 @@ export class UsersService {
                 )
             })
         } else {
+            this.logger.warn(`Addresses from user ${userId} does not exist`)
             return null
         }
         return addresses
@@ -113,13 +119,16 @@ export class UsersService {
                     userId: userId,
                 }
             )
-            const defAddress = addressesTable.findOne({ id: newId })
-            if (defAddress) {
-                const deleteDefAddress = addressesTable.findOne({ defaultAddress: true })
-                deleteDefAddress.defaultAddress = false
+            if (defaultAddress) {
+                addressesTable.findAndUpdate({ defaultAddress: true, userId: userId, id: { '$ne': newId } }, (address) => {
+                    address.defaultAddress = false
+                    return address
+                })
             }
+            this.logger.log('New address added successfully')
             return newId
         } else {
+            this.logger.warn(`The user ${userId} does not exists`)
             return null
         }
     }
@@ -130,8 +139,10 @@ export class UsersService {
         const address: AccountUserAddresses = addressesTable.findOne({ id: parseInt(addressId) })
         if (address && address.userId === parseInt(userId)) {
             addressesTable.remove(address)
+            this.logger.log('Address has been removed successfully')
             return true
         } else {
+            this.logger.warn('The address or user does not exist')
             return false
         }
     }
@@ -142,8 +153,10 @@ export class UsersService {
         const match = await bcrypt.compare(password, user.password)
         if ((user && match) && newPassword === repeatNew) {
             user.password = await encrypt(newPassword)
+            this.logger.log('password updated successfully')
             return usersTable.update(user)
         } else {
+            this.logger.warn('user does not exists or password does not match')
             return false
         }
     }
@@ -158,8 +171,10 @@ export class UsersService {
             user.dateOfBirth = dateOfBirth;
             user.email = email;
             user.phone = phone;
+            this.logger.log('user data updated successfully')
             return usersTable.update(user)
         } else {
+            this.logger.warn(`user ${userId} does not exists and data not updated`)
             return false
         }
     }
@@ -177,8 +192,10 @@ export class UsersService {
             addressFound.country = country;
             addressFound.defaultAddress = defaultAddress;
             addressFound.userId = userId;
+            this.logger.log(`Address from user ${userId} updated successfully`)
             return addressesTable.update(addressFound)
         } else {
+            this.logger.warn('Address not updated')
             return false
         }
     }
@@ -194,24 +211,26 @@ export class UsersService {
             user.city = city;
             user.country = country;
             user.identification = identification
+            this.logger.log(`Billing Address from user ${id} has been updated`)
             return usersTable.update(user)
         } else {
+            this.logger.warn(`User ${id} not found`)
             return false
         }
-
     }
 
     async getWishlist(userId: number): Promise<ProductCard[]> {
         const wishedProductsTable = this.db.getCollection('wishlist')
         const productList: ProductCard[] = []
         const wishlist: Wishlist[] = wishedProductsTable.find({ userId: userId })
-
         if (wishlist && wishlist.length > 0) {
             for (let i = 0; i < wishlist.length; i++) {
-                const product: ProductCard = await this.productsService.findProductById(wishlist[i].productId)
+                const product: ProductCard = await this.productsService.findProductById(wishlist[i].productId.toString())
+                this.logger.log(`Product ${wishlist[i].productId} found`)
                 productList.push(product)
             }
         }
+        this.logger.log('returning wishlist')
         return productList.map(pl =>
             new ProductCard(
                 pl.id,
@@ -248,9 +267,11 @@ export class UsersService {
         const wishedProductsTable = this.db.getCollection('wishlist')
         const productToBeDeleted: Wishlist = wishedProductsTable.findOne({ productId: productId, userId: userId })
         if (productToBeDeleted) {
+            this.logger.log('product has been removed')
             wishedProductsTable.remove(productToBeDeleted)
             return true
         } else {
+            this.logger.warn('productId or userId does not exist')
             return false
         }
     }
@@ -270,7 +291,6 @@ export class UsersService {
         const userOrders: OrderOverview[] = await this.ordersService.findOrdersBy(userId)
         const reviewsTable = this.db.getCollection('reviews')
         const productsIdsInReviews: number[] = reviewsTable.find({ userId: userId }).map(review => review.productId)
-
         const orderPositionTable = this.db.getCollection('orderPosition')
         const orderIds: number[] = userOrders.map(oid => oid.orderId)
         const products = orderPositionTable.find({
@@ -284,6 +304,7 @@ export class UsersService {
                 productName: p.productName
             }
         })
+        this.logger.log('returning products without review')
         return products
     }
 
@@ -303,6 +324,7 @@ export class UsersService {
                 )
             })
         )
+        this.logger.log('Returning all reviews from user')
         return reviews
     }
 
@@ -310,6 +332,7 @@ export class UsersService {
         const reviewsTable = this.db.getCollection('reviews')
         const foundReview: Review = reviewsTable.findOne({ userId: userId, id: reviewId })
         if (foundReview) {
+            this.logger.log(`returning review ${foundReview.id} from user ${userId}`)
             return new Review(
                 foundReview.id,
                 foundReview.productId,
@@ -318,6 +341,7 @@ export class UsersService {
                 foundReview.comment
             )
         } else {
+            this.logger.error('UserId or reviewId not found')
             return null
         }
     }
@@ -326,7 +350,6 @@ export class UsersService {
         const reviewsTable = this.db.getCollection('reviews')
         const newReviewId: number = this.reviewId++
         const { productId, productName, rating, comment } = createNewReviewDto
-
         reviewsTable.insert(
             {
                 id: newReviewId,
@@ -337,6 +360,7 @@ export class UsersService {
                 comment: comment
             }
         )
+        this.logger.log(`Returning review ${newReviewId}`)
         return newReviewId
     }
 
@@ -345,11 +369,13 @@ export class UsersService {
         const { productId, rating, comment } = updateReviewDto
         const foundReview: Review = reviewsTable.findOne({ userId: userId, id: reviewId })
         if (foundReview) {
+            this.logger.log(`Updating review ${foundReview.id} from user ${userId}`)
             foundReview.productId = productId,
                 foundReview.rating = rating,
                 foundReview.comment = comment
             return reviewsTable.update(foundReview)
         } else {
+            this.logger.error('UserId or reviewId not found')
             return false
         }
     }
@@ -358,8 +384,10 @@ export class UsersService {
         const usersTable: loki = this.db.getCollection('users')
         const emailFound: boolean = usersTable.findOne({ email: email })
         if (emailFound) {
+            this.logger.log('Email found')
             return true
         } else {
+            this.logger.error('Email not found')
             return false
         }
     }
@@ -374,6 +402,7 @@ export class UsersService {
             email: email,
             password: passwordEncrypted
         })
+        this.logger.log('New user created successfully')
         return newUserId
     }
 

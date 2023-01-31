@@ -11,8 +11,7 @@ import { UpdateUserAccountAddressesDto } from '../../dto/updateUserAccountAddres
 import { CreateUserAddressDto } from '../../dto/createUserAddressDto';
 import { UpdateBillingAddressDto } from '../../dto/updateBillingAddressDto';
 import { Search } from '../../classes/search';
-
-
+import { CreateNewOrderDto } from '../../dto/createNewOrderDto';
 
 export const mockFindAllBrandsAndNames = () => {
     return [new Search(
@@ -377,6 +376,71 @@ export const mockOrdersPositions = [
         "total": 5.0
     }
 ]
+
+export const newOrderBody: CreateNewOrderDto = {
+    name: "Susana",
+    surname: "Salmeron",
+    deliveryAddress: "Fuencarral 39",
+    postalZip: "29004",
+    city: "Madrid",
+    country: "Spain",
+    orderDate: "30/01/2023",
+    status: "In process",
+    products: [
+        {
+            id: 1,
+            orderId: 1,
+            productId: 1062,
+            productName: "Biba Palette",
+            colour_name: "Biba Palette",
+            units: 1,
+            total: 129
+        },
+        {
+            id: 2,
+            orderId: 1,
+            productId: 1063,
+            productName: "Pastel Palette",
+            colour_name: "Pastel Palette",
+            units: 1,
+            total: 65
+        },
+    ]
+}
+
+
+
+export const newOrderBody2 = {
+    name: "Susana",
+    surname: "Salmeron",
+    deliveryAddress: "Fuencarral 39",
+    postalZip: "29004",
+    city: "Madrid",
+    country: "Spain",
+    orderDate: "30/01/2023",
+    status: "In process",
+    products: [
+        {
+            id: 1,
+            orderId: 1,
+            productId: 1062,
+            productName: "Biba Palette",
+            colour_name: "Biba Palette",
+            units: 1,
+            price: 129
+        },
+        {
+            id: 2,
+            orderId: 1,
+            productId: 1063,
+            productName: "Pastel Palette",
+            colour_name: "Pastel Palette",
+            units: 1,
+            price: 65
+        },
+    ]
+}
+
 
 
 

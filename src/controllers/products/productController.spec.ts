@@ -1,10 +1,11 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { ProductsService } from "../../services/products.service";
-import { mockFindNewProducts, mockFindProductById, mockFindProductsBy, newResponse } from "./mockDataForProductControllerTests";
+import { mockedExists, mockFindNewProducts, mockFindProductById, mockFindProductsBy, mockGetReviewsFromProducts, newResponse } from "./mockDataForProductControllerTests";
 import { ProductsController } from "./products.controller";
 import { ProductCard } from '../../classes/productCard';
 import { Product } from '../../classes/product'
 import { ReviewsService } from "../../services/reviews.service";
+import { Review } from "../../classes/review";
 
 
 describe('ProductsController Unit Tests', () => {
@@ -15,9 +16,6 @@ describe('ProductsController Unit Tests', () => {
 
     const query = "eyeshadow"
 
-    /* const m = (module) => {
-        return module
-    } */
 
     beforeEach(async () => {
         const productsServiceProvider = {
@@ -26,14 +24,15 @@ describe('ProductsController Unit Tests', () => {
                 findProductById: jest.fn(mockFindProductById),
                 findNewProducts: jest.fn(mockFindNewProducts),
                 findProductsBy: jest.fn(mockFindProductsBy),
-                exists: jest.fn(() => true)
+                exists: jest.fn(mockedExists),
             })
         }
 
         const reviewsServiceProvider = {
             provide: ReviewsService,
             useFactory: () => ({
-                existsReviewFromUser: jest.fn(() => false)
+                /* existsReviewFromUser: jest.fn(() => true), */
+                getReviewsFromProduct: jest.fn(mockGetReviewsFromProducts)
             })
         }
 
@@ -117,8 +116,8 @@ describe('ProductsController Unit Tests', () => {
 
     it('should return a product filtered by id', async () => {
         const mockResponse = newResponse()
-        await productsController.showProduct(1, mockResponse)
-        expect(spyProductsService.findProductById).toHaveBeenCalledWith(1)
+        await productsController.showProduct("1", mockResponse)
+        expect(spyProductsService.findProductById).toHaveBeenCalledWith("1")
         expect(mockResponse.status).toHaveBeenCalledWith(200)
         expect(mockResponse.json).toHaveBeenCalledWith(new ProductCard(
             1,
@@ -136,5 +135,39 @@ describe('ProductsController Unit Tests', () => {
             ])
         )
         expect(mockResponse.send).not.toHaveBeenCalled()
+    })
+
+    it('should return all reviews from a product', async () => {
+        const mockResponse = newResponse()
+        await productsController.getAllReviewsFromProduct(1062, mockResponse)
+        expect(spyProductsService.exists).toHaveBeenCalledWith("1062")
+        expect(spyReviewsService.getReviewsFromProduct).toHaveBeenCalledWith(1062)
+        expect(mockResponse.json).toHaveBeenCalledWith([new Review(
+            2,
+            1062,
+            "Puff Paint Liquid Blush",
+            4,
+            "Really beautiful blush, the colour is immaculate, and it’s not insanely pigmented that you feel that you put too much on. Would recommend! Not a lot of product inside though composed to others like Nars Orgasim Liquid Blush."
+        ),
+        new Review(
+            3,
+            1062,
+            "Puff Paint Liquid Blush",
+            5,
+            "This is my go to blush for everyday dewy makeup looks. I really like the consistency and the color. And this was my first ever liquid blush purchase and I don’t regret buying it."
+        )])
+        expect(mockResponse.send).not.toHaveBeenCalled()
+        expect(mockResponse.status).toHaveBeenCalledWith(200)
+    })
+
+    it('should not return reviews from when product does not exist', async () => {
+        const mockResponse = newResponse()
+        await productsController.getAllReviewsFromProduct(1060, mockResponse)
+        expect(spyProductsService.exists).toHaveBeenCalledWith("1060")
+        expect(spyProductsService.exists).toReturnWith(false)
+        expect(spyReviewsService.getReviewsFromProduct).toHaveBeenCalledWith(1060)
+        expect(mockResponse.json).not.toHaveBeenCalled()
+        expect(mockResponse.send).toHaveBeenCalledWith({ error: 'The product do not have reviews' })
+        expect(mockResponse.status).toHaveBeenCalledWith(404)
     })
 })

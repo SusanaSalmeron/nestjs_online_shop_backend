@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class ProductCardDto {
     @ApiProperty()
-    readonly id: string;
+    readonly id: number;
     @ApiProperty()
     readonly brand: string;
     @ApiProperty()

@@ -8,14 +8,14 @@ import { SearchService } from '../../services/search.service'
 import { TokenService } from '../../services/token.service'
 import { UsersService } from '../../services/users.service'
 import { WishlistService } from '../../services/wishlist.service'
-import { bodyForAddAddress, bodyForBillingAddress, bodyForChangeAddress, bodyForChangeData, bodyForUserLogin, mockFindAddressesBy, mockFindAllBrandsAndNames, mockFindAllOrdersBy, mockFindOrderBy, mockFindOrdersBy, mockFindUserByEmail, mockFindUserById, mockGetWishlist, mockSearchList, newResponse } from './mockDataForUsersControllerTest'
+import { bodyForAddAddress, bodyForBillingAddress, bodyForChangeAddress, bodyForChangeData, bodyForUserLogin, mockFindAddressesBy, mockFindAllBrandsAndNames, mockFindAllOrdersBy, mockFindOrderBy, mockFindOrdersBy, mockFindUserByEmail, mockFindUserById, mockGetWishlist, mockSearchList, newOrderBody, newResponse } from './mockDataForUsersControllerTest'
 import { UsersController } from './users.controller'
 import { OrderProductsOverview } from '../../classes/orderProductsOverview'
 import { OrderOverview } from '../../classes/orderOverview'
 import { ProductCard } from '../../classes/productCard';
 import * as bcrypt from 'bcrypt'
 import { ReviewsService } from '../../services/reviews.service'
-import { mockReview, mockReviews } from '../../services/mockDataForUsersServiceTest'
+import { mockReview, mockReviews, mockUserExists } from '../../services/mockDataForUsersServiceTest'
 import { ValidationService } from '../../services/validation.service'
 
 
@@ -46,7 +46,7 @@ describe('UsersController Unit Test', () => {
                 getWishlist: jest.fn(mockGetWishlist),
                 addProductFromUserWishlist: jest.fn(() => true),
                 deleteProductFromUserWishlist: jest.fn(() => true),
-                exists: jest.fn(() => true),
+                exists: jest.fn(mockUserExists),
                 addNewReview: jest.fn(() => 11),
                 findUserReviews: jest.fn(() => mockReviews),
                 findReviewBy: jest.fn(() => mockReview),
@@ -76,7 +76,8 @@ describe('UsersController Unit Test', () => {
             useFactory: () => ({
                 findOrdersBy: jest.fn(mockFindOrdersBy),
                 findOrderBy: jest.fn(mockFindOrderBy),
-                findAllOrdersBy: jest.fn(mockFindAllOrdersBy)
+                findAllOrdersBy: jest.fn(mockFindAllOrdersBy),
+                addNewOrder: jest.fn(() => 2)
             })
         }
 
@@ -329,6 +330,35 @@ describe('UsersController Unit Test', () => {
         )
         ])
         expect(mockResponse.send).not.toHaveBeenCalled()
+    })
+
+    it('should return status code 201 when user exists', async () => {
+        const mockResponse = newResponse()
+        await usersController.addNewOrder(1, mockResponse, newOrderBody)
+        expect(spyUsersService.exists).toHaveBeenCalledWith(1)
+        expect(spyUsersService.exists).toReturnWith(true)
+        expect(mockResponse.json).toHaveBeenCalledWith(2)
+        expect(mockResponse.send).not.toHaveBeenCalled()
+        expect(mockResponse.status).toHaveBeenCalledWith(201)
+    })
+
+    it('should return status code 404 when user does not exist', async () => {
+        const mockResponse = newResponse()
+        await usersController.addNewOrder(2, mockResponse, newOrderBody)
+        expect(spyUsersService.exists).toHaveBeenCalledWith(2)
+        expect(spyUsersService.exists).toReturnWith(false)
+        expect(mockResponse.json).not.toHaveBeenCalled()
+        expect(mockResponse.send).toHaveBeenCalledWith({ error: 'user does not not exist' })
+        expect(mockResponse.status).toHaveBeenCalledWith(404)
+    })
+
+    it('should fail when an unexpected error happens', async () => {
+        jest.spyOn(spyUsersService, 'exists').mockRejectedValueOnce(new Error('Internal Error'))
+        const mockResponse = newResponse()
+        await usersController.addNewOrder(1, mockResponse, newOrderBody)
+        expect(mockResponse.status).toHaveBeenCalledWith(500)
+        expect(mockResponse.json).not.toHaveBeenCalled()
+        expect(mockResponse.send).toHaveBeenCalledWith({ error: 'Internal Server Error' })
     })
 
     it('should returns one order when findOrderBy is called', async () => {

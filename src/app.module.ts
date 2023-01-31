@@ -18,10 +18,11 @@ import { WishlistService } from './services/wishlist.service';
 import { ReviewsService } from './services/reviews.service';
 import { ValidationService } from './services/validation.service';
 import { AuthenticateTokenMiddleware } from './middlewares/authenticateToken.middleware';
+import { CartController } from './controllers/carts/cart.controller';
 
 @Module({
   imports: [ConfigModule.forRoot(), DatabaseModule, UsersModule, HttpModule, OrdersModule],
-  controllers: [AppController, UsersController, ProductsController],
+  controllers: [AppController, UsersController, ProductsController, CartController],
   providers: [AppService, UsersService, TokenService, SearchService, ProductsService, ShadowCopyService, OrdersService, WishlistService, ReviewsService, ValidationService],
 })
 export class AppModule implements NestModule {
@@ -40,6 +41,5 @@ export class AppModule implements NestModule {
         { path: 'v1/products/:id/reviews', method: RequestMethod.GET }
       )
       .forRoutes('/')
-
   }
 }

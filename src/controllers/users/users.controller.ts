@@ -31,6 +31,7 @@ import { ReviewsService } from '../../services/reviews.service';
 import { UpdateReviewDto } from '../../dto/updateReviewDto';
 import { UserSignupDto } from '../../dto/userSignupDto';
 import { ValidationService } from '../../services/validation.service';
+import { CreateNewOrderDto } from '../../dto/createNewOrderDto';
 
 
 @Controller('users')
@@ -239,7 +240,7 @@ export class UsersController {
                 response.status(HttpStatus.CREATED).json(newAddress)
             } else {
                 this.logger.error('new address can not be created')
-                response.status(HttpStatus.NOT_FOUND).json({ error: 'the user id does not exists' })
+                response.status(HttpStatus.NOT_FOUND).json({ error: 'the user id does not exist' })
             }
         } catch (err) {
             this.logger.error('Internal Server Error')
@@ -376,6 +377,36 @@ export class UsersController {
         }
     }
 
+    @Post(':id/orders')
+    @ApiBearerAuth('JWT-auth')
+    @ApiBody({
+        description: 'New Order',
+        required: true,
+        type: CreateNewOrderDto
+    })
+    @ApiCreatedResponse({
+        description: 'Order created successfully',
+    })
+    @ApiNotFoundResponse({
+        description: 'The user does not exist'
+    })
+    @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+    async addNewOrder(@Param('id', ParseIntPipe) userId: number, @Res() response, @Body() createNewOrder: CreateNewOrderDto) {
+        try {
+            const userExists: boolean = await this.usersService.exists(userId)
+            if (userExists) {
+                const newOrder = await this.ordersService.addNewOrder(userId, createNewOrder)
+                this.logger.log('Order created successfully')
+                response.status(HttpStatus.CREATED).json(newOrder)
+            } else {
+                this.logger.error('User does not exists')
+                response.status(HttpStatus.NOT_FOUND).send({ error: 'user does not not exist' })
+            }
+        } catch (err) {
+            this.logger.error('Internal Server Error')
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ error: 'Internal Server Error' })
+        }
+    }
 
     @Get('/:id/orders/:orderid')
     @ApiBearerAuth('JWT-auth')
@@ -448,7 +479,7 @@ export class UsersController {
                     this.logger.log('The product is not in the wishlist')
                     response.status(HttpStatus.NOT_FOUND).send()
                 } else {
-                    this.logger.error('The product is in the wishlist')
+                    this.logger.log('The product is in the wishlist')
                     response.status(HttpStatus.OK).json({ message: 'The product is in the wishlist' })
                 }
             } catch (err) {
@@ -616,7 +647,6 @@ export class UsersController {
         }
     }
 
-
     @Post('/:userId/review')
     @ApiBearerAuth('JWT-auth')
     @ApiBody({
@@ -654,6 +684,4 @@ export class UsersController {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Unexpected error ocurred, try later')
         }
     }
-
-
 }

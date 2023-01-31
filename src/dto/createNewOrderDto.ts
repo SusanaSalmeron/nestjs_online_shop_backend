@@ -1,27 +1,23 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { OrderProductsOverviewDto } from "./orderProductsOverviewDto";
+import { CreateOrderPositionDto } from "./createOrderProductsDto";
 
-export class OrderOverviewDto {
-    @ApiProperty()
-    readonly orderId: number;
+export class CreateNewOrderDto {
     @ApiProperty()
     readonly name: string;
     @ApiProperty()
     readonly surname: string;
     @ApiProperty()
-    readonly address: string;
+    readonly deliveryAddress: string;
     @ApiProperty()
     readonly postalZip: string;
     @ApiProperty()
     readonly city: string;
     @ApiProperty()
-    readonly country: string;
+    readonly country: string
     @ApiProperty()
     readonly orderDate: string;
     @ApiProperty()
     readonly status: string;
     @ApiProperty()
-    readonly products: OrderProductsOverviewDto[];
-    @ApiProperty()
-    readonly totalOrder: number;
+    readonly products: CreateOrderPositionDto[];
 }

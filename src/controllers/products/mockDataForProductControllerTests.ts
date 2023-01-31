@@ -1,3 +1,4 @@
+import { Review } from "../../classes/review"
 import { Product } from "../../classes/product"
 import { ProductCard } from "../../classes/productCard"
 
@@ -75,6 +76,31 @@ export const mockFindProductsBy = () => {
         'https://www.sephora.com/productimages/sku/s2592012-main-zoom.jpg?imwidth=1224'
     ),
     ]
+}
+
+export const mockGetReviewsFromProducts = () => {
+    return [new Review(
+        2,
+        1062,
+        "Puff Paint Liquid Blush",
+        4,
+        "Really beautiful blush, the colour is immaculate, and it’s not insanely pigmented that you feel that you put too much on. Would recommend! Not a lot of product inside though composed to others like Nars Orgasim Liquid Blush."
+    ),
+    new Review(
+        3,
+        1062,
+        "Puff Paint Liquid Blush",
+        5,
+        "This is my go to blush for everyday dewy makeup looks. I really like the consistency and the color. And this was my first ever liquid blush purchase and I don’t regret buying it."
+    )]
+}
+
+export const mockedExists = (productId) => {
+    if (productId === "1062") {
+        return true
+    } else {
+        return false
+    }
 }
 
 export const newResponse = () => {

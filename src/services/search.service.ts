@@ -57,8 +57,8 @@ export class SearchService {
 
     private filterByKeyword = (element, keyword) => {
         return element.brand !== null && (element.name.toLowerCase().includes(keyword.toLowerCase()) || element.brand.toLowerCase().includes(keyword.toLowerCase()))
-
     }
+
     private toProduct = (element) => {
         return new Product(
             element.id.toString(),
@@ -78,10 +78,8 @@ export class SearchService {
             this.logger.warn('', err)
             response = await this.loadAndGetShadowCopy()
         }
-
         const newProductsTable = this.db.getCollection('newProducts')
         const newProducts = newProductsTable.find(true).filter(p => this.filterByKeyword(p, keyword)).map(this.toProduct)
-
         const list = response.filter(el => this.filterByKeyword(el, keyword))
             .map(this.toProduct)
         const allProductsList = [...newProducts, ...list]

@@ -343,6 +343,14 @@ export const mockReviews = {
     created: []
 }
 
+export const mockUserExists = (userId) => {
+    if (userId === 1) {
+        return true
+    } else {
+        return false
+    }
+}
+
 export const mockUserReviews2 = [new Review(
 
     1,

@@ -11,6 +11,7 @@ export class ReviewsService {
     async existsReviewFromUser(productId: string, userId: number): Promise<boolean> {
         const reviewsTable = this.db.getCollection('reviews')
         const foundReviews: Review[] = reviewsTable.find({ userId: userId })
+        this.logger.log(`Reviews from user ${userId}found successfully`)
         const productHasReview = foundReviews.filter(r =>
             r.productId === parseInt(productId))
         if (productHasReview.length === 0) {
@@ -28,6 +29,7 @@ export class ReviewsService {
         let reviews: Review[]
         const foundReviews = reviewsTable.find({ productId: id })
         if (foundReviews) {
+            this.logger.log(`Reviews from product ${id} found successfully`)
             reviews = foundReviews.map(r => {
                 return new ReviewToShow(
                     r.id,
@@ -40,12 +42,12 @@ export class ReviewsService {
                 )
             })
         } else {
+            this.logger.warn(`Product ${id} has not rewiews`)
             return null
         }
+        this.logger.log(`Showing reviews from product ${id}`)
         return reviews
     }
-
-
 }
 
 
