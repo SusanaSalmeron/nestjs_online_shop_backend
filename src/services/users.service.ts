@@ -154,7 +154,8 @@ export class UsersService {
         if ((user && match) && newPassword === repeatNew) {
             user.password = await encrypt(newPassword)
             this.logger.log('password updated successfully')
-            return usersTable.update(user)
+            usersTable.update(user)
+            return true
         } else {
             this.logger.warn('user does not exists or password does not match')
             return false
@@ -172,7 +173,8 @@ export class UsersService {
             user.email = email;
             user.phone = phone;
             this.logger.log('user data updated successfully')
-            return usersTable.update(user)
+            usersTable.update(user)
+            return true
         } else {
             this.logger.warn(`user ${userId} does not exists and data not updated`)
             return false
@@ -193,7 +195,8 @@ export class UsersService {
             addressFound.defaultAddress = defaultAddress;
             addressFound.userId = userId;
             this.logger.log(`Address from user ${userId} updated successfully`)
-            return addressesTable.update(addressFound)
+            addressesTable.update(addressFound)
+            return true
         } else {
             this.logger.warn('Address not updated')
             return false
@@ -212,7 +215,8 @@ export class UsersService {
             user.country = country;
             user.identification = identification
             this.logger.log(`Billing Address from user ${id} has been updated`)
-            return usersTable.update(user)
+            usersTable.update(user)
+            return true
         } else {
             this.logger.warn(`User ${id} not found`)
             return false
@@ -373,7 +377,8 @@ export class UsersService {
             foundReview.productId = productId,
                 foundReview.rating = rating,
                 foundReview.comment = comment
-            return reviewsTable.update(foundReview)
+            reviewsTable.update(foundReview)
+            return true
         } else {
             this.logger.error('UserId or reviewId not found')
             return false

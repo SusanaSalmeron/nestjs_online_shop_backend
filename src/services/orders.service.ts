@@ -48,7 +48,6 @@ export class OrdersService {
             this.logger.log(`Product with id ${foundProductsInOrder[i].productId} pushed in array`)
             totalProductArray.push(foundProductsInOrder[i].total)
         }
-
         const orderTotal = totalProductArray.reduce(this.sum)
 
         return new OrderOverview(
@@ -77,13 +76,13 @@ export class OrdersService {
         const user: AccountUserData = usersTable.findOne({ id: userId })
         if (user) {
             this.logger.log(`User ${userId} founded`)
-            const foundOrders = ordersTable.find({ userId: userId })
+            const foundOrders: Orders[] = ordersTable.find({ userId: userId })
             if (foundOrders) {
                 for (let i = 0; i < foundOrders.length; i++) {
                     this.logger.log(`Order ${foundOrders[i]} from ${userId} founded`)
                     const order = await this.buildOrderOverview(foundOrders[i])
                     orders.push(order)
-                    this.logger.log(`Order ${foundOrders[i].orderId} has been pushed to array}`)
+                    this.logger.log(`Order ${foundOrders[i].id} has been pushed to array}`)
                 }
             } else {
                 this.logger.log(`The user ${userId} has not order to show`)
@@ -126,7 +125,6 @@ export class OrdersService {
         const ordersTable = this.db.getCollection('orders')
         const orders: OrderOverview[] = []
         const foundOrders = ordersTable.find({ userId: userId })
-        console.log(foundOrders)
         if (foundOrders) {
             this.logger.log(`Orders from user ${userId} founded successfully`)
             const filteredOrders = foundOrders.filter(order => {
@@ -142,6 +140,8 @@ export class OrdersService {
                 const order = await this.buildOrderOverview(filteredOrders[i])
                 orders.push(order)
             }
+        } else {
+            return null
         }
         return orders
     }
@@ -151,7 +151,6 @@ export class OrdersService {
         const orderPositionTable = this.db.getCollection('orderPosition')
         const { name, surname, deliveryAddress, postalZip, city, country, orderDate, status, products } = createNewOrder
         const newOrderId = this.orderId++
-        const newOrderPositionId = this.orderPositionId++
         const order = ordersTable.insert(
             {
                 id: newOrderId,
@@ -166,9 +165,10 @@ export class OrdersService {
                 status: status
             }
         )
-        this.logger.log(`order ${order.id} inserted`)
+        this.logger.log(`order ${newOrderId} inserted`)
         if (order) {
             products.forEach((product) => {
+                const newOrderPositionId = this.orderPositionId++
                 orderPositionTable.insert(
                     {
                         id: newOrderPositionId,

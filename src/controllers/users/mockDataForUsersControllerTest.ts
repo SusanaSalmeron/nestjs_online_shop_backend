@@ -388,8 +388,6 @@ export const newOrderBody: CreateNewOrderDto = {
     status: "In process",
     products: [
         {
-            id: 1,
-            orderId: 1,
             productId: 1062,
             productName: "Biba Palette",
             colour_name: "Biba Palette",
@@ -397,8 +395,6 @@ export const newOrderBody: CreateNewOrderDto = {
             total: 129
         },
         {
-            id: 2,
-            orderId: 1,
             productId: 1063,
             productName: "Pastel Palette",
             colour_name: "Pastel Palette",
@@ -407,40 +403,3 @@ export const newOrderBody: CreateNewOrderDto = {
         },
     ]
 }
-
-
-
-export const newOrderBody2 = {
-    name: "Susana",
-    surname: "Salmeron",
-    deliveryAddress: "Fuencarral 39",
-    postalZip: "29004",
-    city: "Madrid",
-    country: "Spain",
-    orderDate: "30/01/2023",
-    status: "In process",
-    products: [
-        {
-            id: 1,
-            orderId: 1,
-            productId: 1062,
-            productName: "Biba Palette",
-            colour_name: "Biba Palette",
-            units: 1,
-            price: 129
-        },
-        {
-            id: 2,
-            orderId: 1,
-            productId: 1063,
-            productName: "Pastel Palette",
-            colour_name: "Pastel Palette",
-            units: 1,
-            price: 65
-        },
-    ]
-}
-
-
-
-

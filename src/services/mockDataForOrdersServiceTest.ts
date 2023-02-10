@@ -15,7 +15,7 @@ export const mockFindOrders = (criteria) => {
 }
 
 export const mockFindOneOrder = (criteria) => {
-    const order = mockOrdersData.filter(fo => fo.id === criteria("orderId"))
+    const order = mockOrdersData.filter(fo => fo.id === criteria["orderId"])
     return order
 }
 
@@ -203,14 +203,24 @@ const mockOrdersData = [
     {
         "id": 1,
         "userId": 1000,
-        "deliveryAddressId": 1,
+        "name": "Peter",
+        "surname": "Smith",
+        "deliveryAddress": "Gran Via 39",
+        "postalZip": "28013",
+        "city": "Madrid",
+        "country": "Spain",
         "orderDate": "17/05/2021",
         "status": "Shipped"
     },
     {
         "id": 2,
         "userId": 1000,
-        "deliveryAddressId": 2,
+        "name": "Peter",
+        "surname": "Smith",
+        "deliveryAddress": "Gran Via 39",
+        "postalZip": "28013",
+        "city": "Madrid",
+        "country": "Spain",
         "orderDate": "03/06/2022",
         "status": "In process"
     }
@@ -235,3 +245,45 @@ const mockOrderPositionData = [
     },
 
 ]
+
+export const mockNewOrder = {
+    name: "Peter",
+    surname: "Smith",
+    deliveryAddress: "Gran Via 39",
+    postalZip: "28013",
+    city: "Madrid",
+    country: "Spain",
+    orderDate: "2/2/2023",
+    status: "In process",
+    products: [
+        {
+
+            productId: 1066,
+            productName: "Pastel Palette",
+            colour_name: "Pastel Palette",
+            units: 1,
+            total: 59
+        },
+        {
+
+            productId: 1001,
+            productName: "Mini Star Palette",
+            colour_name: "Mini Star Palette",
+            units: 1,
+            total: 26
+        }
+    ]
+}
+
+export const mockBuildOrderOverview = {
+    id: 1,
+    userId: 1000,
+    name: "Peter",
+    surname: "Smith",
+    deliveryAddress: "Gran Via 39",
+    postalZip: "28013",
+    city: "Madrid",
+    country: "Spain",
+    orderDate: "17/05/2021",
+    status: "Shipped",
+}

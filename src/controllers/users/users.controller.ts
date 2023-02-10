@@ -442,22 +442,29 @@ export class UsersController {
         description: 'Getting orders successfully',
         type: OrderOverviewDto
     })
-    @ApiNotFoundResponse({ description: 'No Orders' })
+    @ApiNotFoundResponse({ description: 'No Orders or User does not exists' })
     @ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
     async userOrdersByStatus(@Param('id', ParseIntPipe) userId: number, @Param('status') status: string, @Res() response) {
-        try {
-            const orders: OrderOverview[] = await this.ordersService.findAllOrdersBy(status, userId)
-            if (orders) {
-                this.logger.log('Orders finded successfully')
-                response.status(HttpStatus.OK).json(orders)
-            } else {
-                this.logger.error(`The user with id ${userId} does not exists`)
-                response.status(HttpStatus.NOT_FOUND).json({ error: `The user with id ${userId} does not exists` })
+        const userExists = await this.usersService.exists(userId)
+        if (userExists) {
+            try {
+                const orders: OrderOverview[] = await this.ordersService.findAllOrdersBy(status, userId)
+                if (orders) {
+                    this.logger.log('Orders finded successfully')
+                    response.status(HttpStatus.OK).json(orders)
+                } else {
+                    this.logger.warn(`The user ${userId} does not have orders`)
+                    response.status(HttpStatus.NOT_FOUND).json(orders)
+                }
+            } catch (err) {
+                this.logger.error('Internal Server Error', err)
+                response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
             }
-        } catch (err) {
-            this.logger.error('Internal Server Error', err)
-            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
+        } else {
+            this.logger.error(`The user with id ${userId} does not exists`)
+            response.status(HttpStatus.NOT_FOUND).json({ error: `The user with id ${userId} does not exists` })
         }
+
     }
 
     @Head(':id/wishlist/:productid')

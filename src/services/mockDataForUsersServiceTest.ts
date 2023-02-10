@@ -323,6 +323,18 @@ export const newUser = {
     userId: 1
 }
 
+
+export const newDefaultAddress = {
+    userName: 'Ann',
+    surname: 'Smith',
+    address: 'Calle Fuencarral 39',
+    postalZip: '28004',
+    city: 'Madrid',
+    country: 'Spain',
+    defaultAddress: true,
+    userId: 1
+}
+
 export const addressToDelete = {
     addressId: '1',
     userId: '1'

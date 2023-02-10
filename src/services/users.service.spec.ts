@@ -4,11 +4,13 @@ import { AccountUserData } from "../classes/accountUserData"
 import { LoginUser } from "../classes/loginUser"
 import { ProductCard } from "../classes/productCard";
 import { newProducts, productToShow } from "./mockDataForOrdersServiceTest";
-import { addressToDelete, nonValidAddressToDelete, nonValidAddressAndUserToDelete, mockFindAddresses, mockFindOneAddress, mockFindOneProductOnWishlist, mockFindOneUser, mockFindProdyctsById, mockFindWishlist, newUser, mockUserReviews, mockUserReviews2 } from "./mockDataForUsersServiceTest"
+import { addressToDelete, nonValidAddressToDelete, nonValidAddressAndUserToDelete, mockFindAddresses, mockFindOneAddress, mockFindOneProductOnWishlist, mockFindOneUser, mockFindProdyctsById, mockFindWishlist, newUser, newDefaultAddress, mockUserReviews, mockUserReviews2 } from "./mockDataForUsersServiceTest"
 import { ProductsService } from "./products.service"
 import { UsersService } from "./users.service";
 import { OrdersService } from "./orders.service";
 import { mockFindOrdersBy, mockOrders, mockOrdersPositions } from "../controllers/users/mockDataForUsersControllerTest";
+import * as bcrypt from 'bcrypt'
+import { UpdateBillingAddress } from "../classes/updateBillingAddresses";
 import { Review } from "../classes/review";
 import { encrypt } from "./security.service";
 
@@ -56,9 +58,10 @@ describe('UsersService', () => {
         addressesMockDBCollection = {
             find: jest.fn().mockImplementation(mockFindAddresses),
             insert: jest.fn(),
+            findAndUpdate: jest.fn(),
             findOne: jest.fn().mockImplementation(mockFindOneAddress),
             remove: jest.fn(),
-            update: jest.fn()
+            update: jest.fn(),
         }
 
         wishlistMockDBCollection = {
@@ -179,11 +182,11 @@ describe('UsersService', () => {
         const addresses = await usersService.findAddressesBy(2)
         expect(addresses).toBeNull()
         expect(addressesMockDBCollection.find).toHaveBeenCalledWith({ userId: 2 })
-
     })
 
     it('should add a new shipping address to a valid user', async () => {
         const newAddressId = await usersService.addNewShippingAddress(1, newUser)
+        expect(usersService.exists(1)).toBeTruthy()
         expect(newAddressId).toEqual(32)
         expect(addressesMockDBCollection.insert).toHaveBeenLastCalledWith({
             userName: "Ann",
@@ -196,8 +199,24 @@ describe('UsersService', () => {
             userId: 1,
             id: 32
         })
-        expect(usersService.exists(1)).toBeTruthy()
+    })
 
+    it('should add a new default address to a valid user', async () => {
+        const newAddressId = await usersService.addNewShippingAddress(1, newDefaultAddress)
+        expect(usersService.exists(1)).toBeTruthy()
+        expect(newAddressId).toEqual(32)
+        expect(addressesMockDBCollection.insert).toHaveBeenLastCalledWith({
+            userName: "Ann",
+            surname: "Smith",
+            address: "Calle Fuencarral 39",
+            postalZip: "28004",
+            city: "Madrid",
+            country: "Spain",
+            defaultAddress: true,
+            userId: 1,
+            id: 32
+        })
+        expect(addressesMockDBCollection.findAndUpdate).toHaveBeenCalledWith({ "defaultAddress": true, "id": { "$ne": 32 }, "userId": 1 }, expect.any(Function))
     })
 
     it('should return null when the user is not valid', async () => {
@@ -238,18 +257,31 @@ describe('UsersService', () => {
         expect(addressesMockDBCollection.remove).not.toHaveBeenCalled()
     })
 
-    /* it('should change the valid password from a valid user', async () => {
-        jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(true))
-        
+    it('should change the valid password from a valid user', async () => {
+        jest.spyOn(bcrypt, 'compare').mockReturnValueOnce(true)
+        jest.spyOn(bcrypt, 'hash').mockReturnValueOnce('dshfljlkdsfjgdl')
         const passwordChange = await usersService.changeUserAccountPassword(1, "Rwm31Irh7Og!", "Mamama9933!", "Mamama9933!")
-        console.log(passwordChange)
-
+        expect(passwordChange).toBeTruthy()
+        expect(usersMockDBCollection.findOne).toHaveBeenCalledWith({ "id": 1 })
+        expect(usersMockDBCollection.update).toHaveBeenCalledWith({
+            'id': 1,
+            'userName': 'Joseph',
+            'surname': 'Hinton',
+            'address': 'P.O. Box 328, 3703 Et Ave',
+            'postalZip': '859181',
+            'city': 'Canela',
+            'country': 'Philippines',
+            'phone': '+63765875543',
+            'email': 'eu.tellus@outlook.edu',
+            'dateOfBirth': '18/01/1943',
+            'identification': '05022081I',
+            'password': 'dshfljlkdsfjgdl'
+        },)
     })
- */
 
-    it('should return undefined when user data has change from a valid user', async () => {
+    it('should change user data from a valid user', async () => {
         const userDataChange = await usersService.changeUserAccountData(1, "Susana", "Salmeron", "1234567T", "04/05/1976", "mmmm@gmail.com", "+34123456789")
-        expect(userDataChange).toBeUndefined()
+        expect(userDataChange).toBeTruthy()
         expect(usersMockDBCollection.findOne).toHaveBeenCalledWith({ id: 1 })
         expect(usersMockDBCollection.update).toHaveBeenCalledWith(new AccountUserData(
             1,
@@ -262,20 +294,21 @@ describe('UsersService', () => {
             "+34123456789",
             "mmmm@gmail.com",
             "04/05/1976",
-            "1234567T", 'Rwm31Irh7Og!'
+            "1234567T",
+            'dshfljlkdsfjgdl'
         ))
     })
 
-    it('should return false when user try to change data from a non valid user', async () => {
+    it('should return false when try to change data from a non valid user', async () => {
         const userDataChange = await usersService.changeUserAccountData(7, "Susana", "Salmeron", "1234567T", "04/05/1976", "mmmm@gmail.com", "+34123456789")
         expect(userDataChange).toBeFalsy()
         expect(usersMockDBCollection.findOne).toHaveBeenCalledWith({ id: 7 })
         expect(usersMockDBCollection.update).not.toHaveBeenCalled()
     })
 
-    it('should return undefined when user address has change from a valid user', async () => {
+    it('should return true when user address has change from a valid user', async () => {
         const addressChanged = await usersService.changeUserAccountAddress(1, "Susana", "Salmeron", "Marcelina 32", "28029", "Madrid", "Spain", false, 1)
-        expect(addressChanged).toBeUndefined()
+        expect(addressChanged).toBeTruthy()
         expect(addressesMockDBCollection.findOne).toHaveBeenCalledWith({ userId: 1, id: 1 })
         expect(addressesMockDBCollection.update).toHaveBeenCalledWith(new AccountUserAddresses(
             1,
@@ -290,27 +323,33 @@ describe('UsersService', () => {
         ))
     })
 
-    it('should return false when user try to change an  address a non valid user', async () => {
-        const addressChanged = await usersService.changeUserAccountAddress(1, "Susana", "Salmeron", "Marcelina 32", "28029", "Madrid", "Spain", false, 7)
+    //TODO - MockFindOneAddress function not working properly
+    it('should return false when try to change an  address from a non valid user', async () => {
+        const addressChanged = await usersService.changeUserAccountAddress(5, "Susana", "Salmeron", "Marcelina 32", "28029", "Madrid", "Spain", false, 7)
         expect(addressChanged).toBeFalsy()
-        expect(addressesMockDBCollection.findOne).toHaveBeenCalledWith({ userId: 7, id: 1 })
-        /* expect(addressesMockDBCollection.update).not.toHaveBeenCalled() */
+        expect(addressesMockDBCollection.findOne).toHaveBeenCalledWith({ userId: 7, id: 5 })
+        expect(addressesMockDBCollection.update).not.toHaveBeenCalled()
     })
 
-    it('should return undefined when user change billing address', async () => {
+    it('should return true when user change billing address', async () => {
         const addressChanged = await usersService.changeUserAccountBillingAddress(1, "Susana", "Salmeron", "Calle Marcelina 32", "28029", "Madrid", "Spain", "1234567T")
-        /* console.log(addressChanged) */
-        expect(addressChanged).toBeUndefined()
+        expect(addressChanged).toBeTruthy()
         expect(usersMockDBCollection.findOne).toHaveBeenCalledWith({ id: 1 })
-        /* expect(usersMockDBCollection.update).toHaveBeenCalledWith(new UpdateBillingAddress(
+        expect(usersMockDBCollection.update).toHaveBeenCalledWith(new UpdateBillingAddress(
+            1,
             "Susana",
             "Salmeron",
             "Calle Marcelina 32",
             "28029",
             "Madrid",
             "Spain",
-            "1234567T"
-        )) */
+            "1234567T",
+            "04/05/1976",
+            "mmmm@gmail.com",
+            "+34123456789",
+            "dshfljlkdsfjgdl",
+
+        ))
     })
 
     it('should return wishlist from a valid user', async () => {
@@ -400,6 +439,7 @@ describe('UsersService', () => {
         expect(wishlistMockDBCollection.find).toHaveBeenCalledWith({ userId: 1 })
         expect(spyProductService.findProductById).toHaveBeenCalled()
     })
+
     it('should return an empty array when user has no wishlist', async () => {
         const wishlist = await usersService.getWishlist(2)
         expect(wishlist).toHaveLength(0)
@@ -556,7 +596,6 @@ describe('UsersService', () => {
             rating: 4,
             comment: ""
         })
-        /* expect(usersMockDBCollection.getNextReviewId).toHaveBeenCalledWith(12) */
     })
 
     it('should return a review when review exists', async () => {
@@ -589,7 +628,7 @@ describe('UsersService', () => {
         expect(findReviewBy).toEqual(null)
     })
 
-    it('should update a review when exists previously ', async () => {
+    it('should return true when updates a review that exists previously ', async () => {
         jest.spyOn(reviewsMockDBCollection, 'findOne').mockReturnValueOnce(new Review(
             1,
             5,
@@ -597,9 +636,10 @@ describe('UsersService', () => {
             5,
             "tfukygilhoñp´ìopiñyuligykfugiloñp´òuylgluhoñp´`ç"
         ))
-        await usersService.updateUserReview(1, 1, {
+        const updateUser = await usersService.updateUserReview(1, 1, {
             productId: 5, rating: 5, comment: "DFGHJKJHGFdfghfgjhg"
         })
+        expect(updateUser).toBeTruthy()
         expect(reviewsMockDBCollection.update).toHaveBeenCalledWith({
             id: 1,
             productId: 5,
@@ -609,30 +649,30 @@ describe('UsersService', () => {
         })
     })
 
-    it('should not update a review when review not exists previously ', async () => {
+    it('should return false when review not exists previously ', async () => {
         jest.spyOn(reviewsMockDBCollection, 'findOne').mockReturnValueOnce(null)
-        await usersService.updateUserReview(1, 1, {
+        const updateReview = await usersService.updateUserReview(1, 1, {
             productId: 5, rating: 5, comment: "DFGHJKJHGFdfghfgjhg"
         })
+        expect(updateReview).toBeFalsy()
         expect(reviewsMockDBCollection.update).not.toHaveBeenCalledWith()
     })
 
     it('should return false when email does not exist on database', async () => {
         const exists = await usersService.emailExistsOnDB('exdream76@gmail.com')
-        expect(exists).toEqual(false)
+        expect(exists).toBeFalsy()
     })
 
-    it('should return false when email does not exist on database', async () => {
+    it('should return true when email exists on database', async () => {
         jest.spyOn(usersMockDBCollection, 'findOne').mockReturnValueOnce('exdream76@gmail.com')
         const exists = await usersService.emailExistsOnDB('exdream76@gmail.com')
         expect(exists).toEqual(true)
     })
 
     it('add new user to database', async () => {
+        jest.spyOn(bcrypt, 'hash').mockReturnValueOnce('ytiuiloñ5')
         const newUser = await usersService.addNewUser({ email: "exdream76@gmail.com", password: "Abcde123!", repeatPassword: "Abcde123!" })
-        const password = "Abcde123!"
-        const newPassword = await encrypt(password)
-        expect(usersMockDBCollection.insert).toHaveBeenCalledWith({ id: 1001, email: "exdream76@gmail.com", password: newPassword })
+        expect(usersMockDBCollection.insert).toHaveBeenCalledWith({ id: 1001, email: "exdream76@gmail.com", password: 'ytiuiloñ5' })
         expect(newUser).toEqual(1001)
     })
 

@@ -78,7 +78,8 @@ export class ProductsService {
         try {
             response = (await this.httpService.axiosRef.get(`${this.baseUrl}/?product_type=${type}`)).data
             this.logger.log('response from api')
-        } catch (err) {
+/*             console.log(response)
+ */        } catch (err) {
             this.logger.warn('Api not available', err)
             const responseFromCopy = await this.loadAndGetShadowCopy()
             response = responseFromCopy.filter(p =>
@@ -115,7 +116,6 @@ export class ProductsService {
 
     async checkProductAvailability(productId: string): Promise<boolean> {
         const productFound: ProductCard = await this.findProductById(productId)
-        console.log(productFound.price !== "0.0")
         if (productFound.price && productFound.price !== "0.0") {
             this.logger.log('This product has stock')
             return true

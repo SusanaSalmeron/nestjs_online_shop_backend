@@ -3,10 +3,6 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateOrderPositionDto {
     @ApiProperty()
-    readonly id: number;
-    @ApiProperty()
-    readonly orderId: number;
-    @ApiProperty()
     readonly productId: number;
     @ApiProperty()
     readonly productName: string;

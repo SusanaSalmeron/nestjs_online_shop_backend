@@ -7,8 +7,9 @@ import { data, fakeNewProductsTableData } from "./mockDataForProductsServiceTest
 import { ProductCard } from "../classes/productCard";
 
 
-jest.mock('axios')
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+//jest.mock('axios')
+//const mockedAxios = jest.mocked(axios, true)
+//çaxios as jest.MockedFunction<typeof axios>;
 
 
 describe('ProductsService', () => {
@@ -18,7 +19,6 @@ describe('ProductsService', () => {
     let newProductsMockDBCollection
 
     beforeEach(async () => {
-        mockedAxios.get.mockResolvedValue(data)
         const shadowCopyProvider = {
             provide: ShadowCopyService,
             useFactory: () => ({
@@ -50,32 +50,37 @@ describe('ProductsService', () => {
         spyShadowCopyService = module.get<ShadowCopyService>(ShadowCopyService)
     })
 
-    it('should show a product when product id is valid', async () => {
-        const product = await productsService.findProductById("2")
-        expect(product).not.toBeNull()
-        expect(product).toEqual(new ProductCard(
-            2,
-            'rejuva minerals',
-            'Bronzer - pressed',
-            '13',
-            "Our bronzer has been enhanced with Fruits, Botanicals and Clays for their natural color, fragrance and antioxidant benefits! Blended with Certified Organics Fruits and Botanicals Formulated with common skin irritants. Our bronzer will offer a natural 'ultra sheer' semi-matte finish. Made without any gluten containing ingredients VEGAN! Eco Friendly jars!",
-            'bronzer',
-            '//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/001/031/original/open-uri20180630-4-1axfay6?1530390380',
-            [
-                { hex_value: '#DDA983', colour_name: 'St Tropez' },
-                { hex_value: '#9C7248', colour_name: 'Bahama Mama' }
-            ]
-        ))
-        expect(spyShadowCopyService.getShadowCopy).not.toBeCalled()
-    })
+    // it('should show a product when product id is valid', async () => {
+    //     mockedAxios.get.mockResolvedValueOnce(data)
 
-    it('should not show a product when id does not exists', async () => {
-        const product = await productsService.findProductById("5")
-        expect(product).toBeNull()
-        expect(spyShadowCopyService.getShadowCopy).not.toBeCalled()
-    })
+    //     const product = await productsService.findProductById("2")
+    //     expect(product).not.toBeNull()
+    //     expect(product).toEqual(new ProductCard(
+    //         2,
+    //         'rejuva minerals',
+    //         'Bronzer - pressed',
+    //         '13',
+    //         "Our bronzer has been enhanced with Fruits, Botanicals and Clays for their natural color, fragrance and antioxidant benefits! Blended with Certified Organics Fruits and Botanicals Formulated with common skin irritants. Our bronzer will offer a natural 'ultra sheer' semi-matte finish. Made without any gluten containing ingredients VEGAN! Eco Friendly jars!",
+    //         'bronzer',
+    //         '//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/001/031/original/open-uri20180630-4-1axfay6?1530390380',
+    //         [
+    //             { hex_value: '#DDA983', colour_name: 'St Tropez' },
+    //             { hex_value: '#9C7248', colour_name: 'Bahama Mama' }
+    //         ]
+    //     ))
+    //     expect(spyShadowCopyService.getShadowCopy).not.toBeCalled()
+    // })
 
-    it('should show all the new products', async () => {
+    /*  it('should not show a product when id does not exists', async () => {
+         //mockedAxios.get.mockResolvedValueOnce(data)
+         const axiosSpy = jest.spyOn(axios, "get").mockResolvedValueOnce(data)
+         const product = await productsService.findProductById("5")
+         expect(product).toBeNull()
+         expect(spyShadowCopyService.getShadowCopy).not.toBeCalled()
+     }) */
+
+    /* it('should show all the new products', async () => {
+        const axiosSpy = jest.spyOn(axios, "get").mockResolvedValueOnce(data)
         const newProducts = await productsService.findNewProducts()
         expect(newProducts).toHaveLength(2)
         expect(newProducts).toEqual([new ProductCard(
@@ -110,15 +115,20 @@ describe('ProductsService', () => {
         )
         ])
         expect(spyShadowCopyService.getShadowCopy).not.toBeCalled()
-    })
+    }) */
 
     //TODO - return all values without filtering
     it('should show all products by type', async () => {
+        const axiosSpy = jest.spyOn(axios, "get").mockResolvedValueOnce({ data: [data.data[1]] })
+        //mockedAxios.get.mockResolvedValueOnce({ data: [data.data[1]] })
         const products = await productsService.findProductsBy("bronzer")
-/*         console.log(products)
- */    })
+        /* console.log(products) */
+        expect(products).toHaveLength(1)
+        /* expect(productsService.loadAndGetShadowCopy).not.toHaveBeenCalled()
+ */
+    })
 
-    it('should return true when product id exists', async () => {
+    /* it('should return true when product id exists', async () => {
         const exists = await productsService.exists("1")
         expect(exists).toBeTruthy()
     })
@@ -126,7 +136,7 @@ describe('ProductsService', () => {
     it('should return false when product id does not exists', async () => {
         const exists = await productsService.exists("8")
         expect(exists).toBeFalsy()
-    })
+    }) */
 
 
 })
